@@ -1,0 +1,54 @@
+<section id="login">
+    <div class="auth-container">
+        <div id="loginSection" class="auth-form-container">
+            <h2 data-translate="login-title">Login</h2>
+            <form id="loginForm" class="auth-form" autocomplete="off">
+                <div class="form-group">
+                    <label for="loginEmail" data-translate="login-email">Email:</label>
+                    <input type="email" id="loginEmail" required autocomplete="off">
+                </div>
+
+                <div class="form-group">
+                    <label for="loginPassword" data-translate="login-password">Password:</label>
+                    <input type="password" id="loginPassword" required autocomplete="off">
+                </div>
+
+                <button type="submit" data-translate="login-button">Login</button>
+            </form>
+            <div class="auth-switch">
+                <p>
+                    <span data-translate="login-no-account">Don't have an account?</span>
+                    <button id="showRegisterButton" class="switch-button" data-translate="login-register-link">Register here</button>
+                </p>
+            </div>
+        </div>
+
+        <div id="registerSection" class="auth-form-container" style="display: none;">
+            <h2 data-translate="register-title">Register</h2>
+            <form id="registerForm" class="auth-form" autocomplete="off">
+                <div class="form-group">
+                    <label for="registerName" data-translate="register-name">Name:</label>
+                    <input type="text" id="registerName" required autocomplete="off">
+                </div>
+
+                <div class="form-group">
+                    <label for="registerEmail" data-translate="register-email">Email:</label>
+                    <input type="email" id="registerEmail" required autocomplete="off">
+                </div>
+
+                <div class="form-group">
+                    <label for="registerPassword" data-translate="register-password">Password:</label>
+                    <input type="password" id="registerPassword" required autocomplete="off">
+                </div>
+
+                <button type="submit" data-translate="register-button">Register</button>
+            </form>
+            <div class="auth-switch">
+                <p>
+                    <span data-translate="register-has-account">Already have an account?</span>
+                    <button id="showLoginButton" class="switch-button" data-translate="register-login-link">Login here</button>
+                </p>
+            </div>
+        </div>
+    </div>
+</section>

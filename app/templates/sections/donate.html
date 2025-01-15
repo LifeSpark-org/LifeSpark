@@ -1,0 +1,74 @@
+<section id="donate">
+    <div class="donate-container" style="max-width: 800px; margin: auto; font-family: Arial, sans-serif;">
+        <h2 data-translate="donate-title" style="text-align: center; color: #4CAF50;">Donate</h2>
+        <div class="donation-options" style="background: #f9f9f9; padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+
+            <div class="form-group" style="text-align: center; margin-bottom: 20px;">
+                <button type="button" id="connectWallet" style="background: #4CAF50; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">
+                    Connect Wallet
+                </button>
+                <div id="walletStatus" style="margin-top: 10px; font-size: 14px;">Not connected</div>
+            </div>
+
+
+            <form id="donationForm" class="donation-form" style="margin-bottom: 20px;">
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label for="region" data-translate="donate-region" style="font-weight: bold;">Choose a region:</label>
+                    <select id="region" required style="width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 5px;">
+                        <option value="south" data-translate="donate-region-south">Southern Israel</option>
+                        <option value="north" data-translate="donate-region-north">Northern Israel</option>
+                    </select>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label for="amount" data-translate="donate-amount" style="font-weight: bold;">Donation Amount (ETH):</label>
+                    <input type="number" id="amount" min="0.01" step="0.01" required style="width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 5px;">
+                </div>
+
+                <div class="form-group" style="text-align: center;">
+                    <button type="submit" class="donate-button" data-translate="donate-button" style="background: #4CAF50; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">Donate Now</button>
+                </div>
+            </form>
+
+            <div class="donation-info" style="margin-top: 20px;">
+                <div class="info-box" style="background: #ffffff; padding: 15px; border-radius: 10px;">
+                    <h4 data-translate="donate-info-title" style="color: #4CAF50;">Why Donate with Crypto?</h4>
+                    <ul style="padding-left: 20px; list-style-type: disc;">
+                        <li data-translate="donate-info-1">Secure and transparent transactions</li>
+                        <li data-translate="donate-info-2">Immediate transfer of funds</li>
+                        <li data-translate="donate-info-3">Lower transaction fees</li>
+                        <li data-translate="donate-info-4">Track your donation's impact</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div id="statusMessage" class="info" style="margin-top: 20px;"></div>
+
+        <!-- Real-Time Crypto Conversion Widget -->
+        <div id="crypto-widget" style="margin-top: 20px; background: #ffffff; padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+            <h3 style="text-align: center; color: #4CAF50;">Convert ETH to Other Currencies</h3>
+            <div class="form-group" style="margin-bottom: 15px;">
+                <label for="ethInput" style="font-weight: bold;">Enter ETH Amount:</label>
+                <input type="number" id="ethInput" min="0.01" step="0.01" placeholder="0.01" style="width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 5px;">
+            </div>
+            <div class="form-group" style="margin-bottom: 15px;">
+                <label for="currencySelect" style="font-weight: bold;">Select Currency:</label>
+                <select id="currencySelect" style="width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 5px;">
+                    <option value="usd">USD</option>
+                    <option value="eur">EUR</option>
+                    <option value="gbp">GBP</option>
+                    <option value="ils">ILS (Israeli Shekel)</option>
+                    <option value="jpy">JPY (Japanese Yen)</option>
+                    <option value="aud">AUD (Australian Dollar)</option>
+                    <option value="cad">CAD (Canadian Dollar)</option>
+                </select>
+            </div>
+            <div class="form-group" style="text-align: center;">
+                <button type="button" id="convertButton" style="background: #4CAF50; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">Convert</button>
+            </div>
+            <div id="conversionResult" style="text-align: center; color: #333; margin-top: 10px;"></div>
+        </div>
+
+    </div>
+</section>
