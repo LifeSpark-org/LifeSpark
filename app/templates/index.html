@@ -3,28 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>lifeSpark</title>
-    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='Images/favicon.ico') }}">
+    <title>LifeSpark</title>
 
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
 
+    <!-- CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/components.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/pages.css') }}">
+
+    <!-- Leaflet -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <link rel="stylesheet" href="/static/css/base.css">
-    <link rel="stylesheet" href="/static/css/components.css">
-    <link rel="stylesheet" href="/static/css/pages.css">
 </head>
 
 <body>
+    <!-- Header with logo -->
+    <header class="main-header">
+        <img src="{{ url_for('static', filename='Images/logo.png') }}" alt="LifeSpark Logo" class="site-logo">
+        <h1 class="site-title">LifeSpark - Together We Rebuild</h1>
+    </header>
+
     <!-- Navigation Bar -->
     <nav class="navbar">
-        <ul class="left-menu">
-            <li><a href="#" onclick="showSection('home')" data-translate="nav-home">Home</a></li>
-            <li><a href="#" onclick="showSection('about')" data-translate="nav-about">About Us</a></li>
-            <li><a href="#" onclick="showSection('donate')" data-translate="nav-donate">Donate</a></li>
-            <li><a href="#" onclick="showSection('map')" data-translate="nav-map">Map</a></li>
-            <li><a href="#" onclick="showSection('contact')" data-translate="nav-contact">Contact Us</a></li>
+        <ul class="nav-left">
+            <li><a href="#" onclick="showSection('home')">Home</a></li>
+            <li><a href="#" onclick="showSection('about')">About Us</a></li>
+            <li><a href="#" onclick="showSection('donate')">Donate</a></li>
+            <li><a href="#" onclick="showSection('map')">Map</a></li>
+            <li><a href="#" onclick="showSection('contact')">Contact</a></li>
         </ul>
-        <ul class="right-menu">
+        <ul class="nav-right">
             <li>
                 <select id="languageSelector" class="language-selector">
                     <option value="en">English</option>
@@ -33,9 +43,7 @@
                     <option value="ar">العربية</option>
                 </select>
             </li>
-            <li id="authMenu">
-                <!-- תוכן דינמי להתחברות -->
-            </li>
+            <li id="authMenu"></li>
         </ul>
     </nav>
 
@@ -49,16 +57,16 @@
 
     <!-- Footer -->
     <footer>
-        <p data-translate="footer-text">&copy; 2024 lifeSpark. All rights reserved.</p>
+        <p>&copy; 2024 LifeSpark. Built with compassion 💙</p>
     </footer>
 
     <!-- Scripts -->
-    <script src="/static/js/translations.js"></script>
-    <script src="/static/js/main.js"></script>
-    <script src="/static/js/forms.js"></script>
-    <script src="/static/js/map.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/forms.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/map.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/metamask.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/translations.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.8.1/web3.min.js"></script>
-    <script src="/static/js/metamask.js"></script>
-    <script src="/static/js/scripts.js"></script>
 </body>
 </html>
