@@ -1,24 +1,136 @@
 <section id="map">
     <div class="map-container">
-        <h2 data-translate="map-title">Map of Israel</h2>
-        <div class="map-content">
+        <div class="map-header" data-aos="fade-up">
+            <h2 class="section-title" data-translate="map-title">Impact Map</h2>
+            <p class="section-subtitle" data-translate="map-subtitle">See Where Your Donations Are Making a Difference</p>
+        </div>
+        
+        <div class="map-content" data-aos="fade-up" data-aos-delay="200">
             <div id="leafletMap" class="map-view"></div>
-            <div class="map-legend">
-                <h4 data-translate="map-legend-title">Legend</h4>
-                <div class="legend-item">
-                    <span class="legend-dot south"></span>
-                    <span data-translate="map-legend-south">Southern Region</span>
+            
+            <div class="map-sidebar">
+                <div class="map-legend">
+                    <h4 data-translate="map-legend-title">Legend</h4>
+                    <div class="legend-item">
+                        <span class="legend-dot south"></span>
+                        <span data-translate="map-legend-south">Southern Region</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-dot north"></span>
+                        <span data-translate="map-legend-north">Northern Region</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-icon"><i class="fas fa-home"></i></span>
+                        <span data-translate="map-legend-homes">Rebuilt Homes</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-icon"><i class="fas fa-medkit"></i></span>
+                        <span data-translate="map-legend-medical">Medical Support</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-icon"><i class="fas fa-utensils"></i></span>
+                        <span data-translate="map-legend-food">Food Aid</span>
+                    </div>
                 </div>
-                <div class="legend-item">
-                    <span class="legend-dot north"></span>
-                    <span data-translate="map-legend-north">Northern Region</span>
+                
+                <div class="map-info">
+                    <h4 data-translate="map-info-title">Region Information</h4>
+                    <div id="regionInfo">
+                        <p data-translate="map-info-description">
+                            Click on markers to see detailed information about each region and the impact of donations there.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="map-stats">
+                    <h4 data-translate="map-stats-title">Impact Statistics</h4>
+                    <div class="map-stat-row">
+                        <div class="map-stat">
+                            <div class="stat-value">27</div>
+                            <div class="stat-label" data-translate="map-stat-communities">Communities</div>
+                        </div>
+                        <div class="map-stat">
+                            <div class="stat-value">320</div>
+                            <div class="stat-label" data-translate="map-stat-families">Families Helped</div>
+                        </div>
+                    </div>
+                    <div class="map-stat-row">
+                        <div class="map-stat">
+                            <div class="stat-value">15</div>
+                            <div class="stat-label" data-translate="map-stat-projects">Projects</div>
+                        </div>
+                        <div class="map-stat">
+                            <div class="stat-value">6.1 ETH</div>
+                            <div class="stat-label" data-translate="map-stat-donated">Total Donated</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="map-action">
+                    <button onclick="showSection('donate')" class="btn btn-primary">
+                        <i class="fas fa-heart"></i> <span data-translate="map-donate">Make a Donation</span>
+                    </button>
                 </div>
             </div>
-            <div class="map-info">
-                <h4 data-translate="map-info-title">Region Information</h4>
-                <p data-translate="map-info-description">
-                    Click on markers to see detailed information about each region.
-                </p>
+        </div>
+        
+        <div class="map-projects" data-aos="fade-up" data-aos-delay="400">
+            <h3 class="section-subtitle" data-translate="map-projects-title">Featured Projects</h3>
+            
+            <div class="projects-slider">
+                <div class="project-card">
+                    <div class="project-image south"></div>
+                    <div class="project-content">
+                        <div class="project-badge" data-translate="map-project-south">Southern Region</div>
+                        <h4 data-translate="map-project1-title">Sderot Community Center</h4>
+                        <p data-translate="map-project1-desc">Rebuilding the community center damaged during conflict.</p>
+                        <div class="project-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 75%"></div>
+                            </div>
+                            <div class="progress-stats">
+                                <span>1.5 / 2.0 ETH</span>
+                                <span>75%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="project-card">
+                    <div class="project-image north"></div>
+                    <div class="project-content">
+                        <div class="project-badge" data-translate="map-project-north">Northern Region</div>
+                        <h4 data-translate="map-project2-title">Kiryat Shmona Medical Supplies</h4>
+                        <p data-translate="map-project2-desc">Providing essential medical equipment to northern communities.</p>
+                        <div class="project-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 60%"></div>
+                            </div>
+                            <div class="progress-stats">
+                                <span>0.9 / 1.5 ETH</span>
+                                <span>60%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="project-card">
+                    <div class="project-image south"></div>
+                    <div class="project-content">
+                        <div class="project-badge" data-translate="map-project-south">Southern Region</div>
+                        <h4 data-translate="map-project3-title">Ashkelon Food Support</h4>
+                        <p data-translate="map-project3-desc">Emergency food distribution for displaced families.</p>
+                        <div class="project-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 85%"></div>
+                            </div>
+                            <div class="progress-stats">
+                                <span>0.85 / 1.0 ETH</span>
+                                <span>85%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

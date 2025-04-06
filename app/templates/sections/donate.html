@@ -1,74 +1,206 @@
 <section id="donate">
-    <div class="donate-container" style="max-width: 800px; margin: auto; font-family: Arial, sans-serif;">
-        <h2 data-translate="donate-title" style="text-align: center; color: #4CAF50;">Donate</h2>
-        <div class="donation-options" style="background: #f9f9f9; padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
-
-            <div class="form-group" style="text-align: center; margin-bottom: 20px;">
-                <button type="button" id="connectWallet" style="background: #4CAF50; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">
-                    Connect Wallet
+    <div class="donate-container">
+        <div class="donate-header" data-aos="fade-up">
+            <h2 class="section-title" data-translate="donate-title">Donate</h2>
+            <p class="section-subtitle" data-translate="donate-subtitle">Make a Direct Impact Today</p>
+        </div>
+        
+        <div class="donation-process" data-aos="fade-up" data-aos-delay="200">
+            <div class="process-steps">
+                <div class="process-step">
+                    <div class="step-icon">
+                        <i class="fas fa-wallet"></i>
+                    </div>
+                    <h4 data-translate="donate-step1">Connect Wallet</h4>
+                </div>
+                <div class="step-connector"></div>
+                <div class="process-step">
+                    <div class="step-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <h4 data-translate="donate-step2">Choose Region</h4>
+                </div>
+                <div class="step-connector"></div>
+                <div class="process-step">
+                    <div class="step-icon">
+                        <i class="fas fa-coins"></i>
+                    </div>
+                    <h4 data-translate="donate-step3">Enter Amount</h4>
+                </div>
+                <div class="step-connector"></div>
+                <div class="process-step">
+                    <div class="step-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h4 data-translate="donate-step4">Confirm</h4>
+                </div>
+            </div>
+        </div>
+        
+        <div class="donation-options" data-aos="fade-up" data-aos-delay="300">
+            <div class="wallet-section">
+                <h3 data-translate="donate-wallet-title">Connect Your Wallet</h3>
+                <p data-translate="donate-wallet-desc">First, connect your Ethereum wallet to begin the donation process.</p>
+                
+                <button type="button" id="connectWallet" class="btn btn-primary">
+                    <i class="fas fa-link"></i> <span data-translate="donate-connect-wallet">Connect Wallet</span>
                 </button>
-                <div id="walletStatus" style="margin-top: 10px; font-size: 14px;">Not connected</div>
+                
+                <div id="walletStatus" class="wallet-status">
+                    <span data-translate="donate-wallet-status">Not connected</span>
+                </div>
             </div>
 
-
-            <form id="donationForm" class="donation-form" style="margin-bottom: 20px;">
-                <div class="form-group" style="margin-bottom: 15px;">
-                    <label for="region" data-translate="donate-region" style="font-weight: bold;">Choose a region:</label>
-                    <select id="region" required style="width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 5px;">
-                        <option value="south" data-translate="donate-region-south">Southern Israel</option>
-                        <option value="north" data-translate="donate-region-north">Northern Israel</option>
-                    </select>
+            <form id="donationForm" class="donation-form">
+                <div class="form-group">
+                    <label for="region" data-translate="donate-region">Choose a region:</label>
+                    <div class="region-selector">
+                        <div class="region-option" onclick="selectRegion('south')">
+                            <input type="radio" id="regionSouth" name="region" value="south" checked>
+                            <label for="regionSouth">
+                                <div class="region-card">
+                                    <div class="region-img south"></div>
+                                    <div class="region-info">
+                                        <h4 data-translate="donate-region-south">Southern Israel</h4>
+                                        <p data-translate="donate-region-south-desc">Supporting communities in the south affected by conflict.</p>
+                                        <div class="region-stats">
+                                            <div class="region-stat">
+                                                <span class="stat-value">15</span>
+                                                <span class="stat-label" data-translate="donate-communities">Communities</span>
+                                            </div>
+                                            <div class="region-stat">
+                                                <span class="stat-value">3.2 ETH</span>
+                                                <span class="stat-label" data-translate="donate-raised">Raised</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </label>
+                        </div>
+                        
+                        <div class="region-option" onclick="selectRegion('north')">
+                            <input type="radio" id="regionNorth" name="region" value="north">
+                            <label for="regionNorth">
+                                <div class="region-card">
+                                    <div class="region-img north"></div>
+                                    <div class="region-info">
+                                        <h4 data-translate="donate-region-north">Northern Israel</h4>
+                                        <p data-translate="donate-region-north-desc">Helping northern communities rebuild infrastructure.</p>
+                                        <div class="region-stats">
+                                            <div class="region-stat">
+                                                <span class="stat-value">12</span>
+                                                <span class="stat-label" data-translate="donate-communities">Communities</span>
+                                            </div>
+                                            <div class="region-stat">
+                                                <span class="stat-value">2.8 ETH</span>
+                                                <span class="stat-label" data-translate="donate-raised">Raised</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="form-group" style="margin-bottom: 15px;">
-                    <label for="amount" data-translate="donate-amount" style="font-weight: bold;">Donation Amount (ETH):</label>
-                    <input type="number" id="amount" min="0.01" step="0.01" required style="width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 5px;">
+                <div class="form-group">
+                    <label for="amount" data-translate="donate-amount">Donation Amount (ETH):</label>
+                    <div class="amount-input-group">
+                        <div class="amount-prefix">ETH</div>
+                        <input type="number" id="amount" min="0.01" step="0.01" required placeholder="0.1">
+                    </div>
+                    
+                    <div class="amount-suggestions">
+                        <button type="button" class="amount-suggestion" data-value="0.01">0.01</button>
+                        <button type="button" class="amount-suggestion" data-value="0.05">0.05</button>
+                        <button type="button" class="amount-suggestion" data-value="0.1">0.1</button>
+                        <button type="button" class="amount-suggestion" data-value="0.5">0.5</button>
+                        <button type="button" class="amount-suggestion" data-value="1">1.0</button>
+                    </div>
                 </div>
 
-                <div class="form-group" style="text-align: center;">
-                    <button type="submit" class="donate-button" data-translate="donate-button" style="background: #4CAF50; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">Donate Now</button>
+                <div class="donation-summary">
+                    <h4 data-translate="donate-summary">Donation Summary</h4>
+                    <div class="summary-row">
+                        <span data-translate="donate-selected-region">Selected Region:</span>
+                        <span id="summaryRegion">Southern Israel</span>
+                    </div>
+                    <div class="summary-row">
+                        <span data-translate="donate-donation-amount">Donation Amount:</span>
+                        <span id="summaryAmount">0 ETH</span>
+                    </div>
+                    <div class="summary-row">
+                        <span data-translate="donate-gas-fee">Estimated Gas Fee:</span>
+                        <span id="summaryGasFee">~ 0.001 ETH</span>
+                    </div>
+                    <div class="summary-row total">
+                        <span data-translate="donate-total">Total:</span>
+                        <span id="summaryTotal">0 ETH</span>
+                    </div>
+                </div>
+
+                <div class="form-group donation-message">
+                    <label for="message" data-translate="donate-message">Optional Message (will be stored on blockchain):</label>
+                    <textarea id="message" rows="3" placeholder="Your message of support (optional)"></textarea>
+                    <small data-translate="donate-message-note">Note: This message will be publicly visible on the blockchain.</small>
+                </div>
+
+                <div class="form-group submit-group">
+                    <button type="submit" class="donate-button" data-translate="donate-button">
+                        <i class="fas fa-heart"></i> Donate Now
+                    </button>
                 </div>
             </form>
+        </div>
+        
+        <div id="statusMessage" class="donation-status"></div>
+        
+        <div class="donation-info" data-aos="fade-up" data-aos-delay="400">
+            <div class="info-box">
+                <h4 data-translate="donate-info-title">Why Donate with Crypto?</h4>
+                <ul>
+                    <li data-translate="donate-info-1">Secure and transparent transactions</li>
+                    <li data-translate="donate-info-2">Immediate transfer of funds</li>
+                    <li data-translate="donate-info-3">Lower transaction fees</li>
+                    <li data-translate="donate-info-4">Track your donation's impact</li>
+                </ul>
+            </div>
+        </div>
 
-            <div class="donation-info" style="margin-top: 20px;">
-                <div class="info-box" style="background: #ffffff; padding: 15px; border-radius: 10px;">
-                    <h4 data-translate="donate-info-title" style="color: #4CAF50;">Why Donate with Crypto?</h4>
-                    <ul style="padding-left: 20px; list-style-type: disc;">
-                        <li data-translate="donate-info-1">Secure and transparent transactions</li>
-                        <li data-translate="donate-info-2">Immediate transfer of funds</li>
-                        <li data-translate="donate-info-3">Lower transaction fees</li>
-                        <li data-translate="donate-info-4">Track your donation's impact</li>
-                    </ul>
+        <!-- Crypto Conversion Widget -->
+        <div id="crypto-widget" data-aos="fade-up" data-aos-delay="500">
+            <h3 data-translate="donate-converter-title">ETH Conversion Calculator</h3>
+            <p data-translate="donate-converter-subtitle">See the value of your donation in other currencies</p>
+            
+            <div class="converter-container">
+                <div class="converter-input">
+                    <div class="form-group">
+                        <label for="ethInput" data-translate="donate-eth-amount">ETH Amount:</label>
+                        <input type="number" id="ethInput" min="0.01" step="0.01" placeholder="0.1" class="converter-field">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="currencySelect" data-translate="donate-currency">Currency:</label>
+                        <select id="currencySelect" class="converter-field">
+                            <option value="usd">USD</option>
+                            <option value="eur">EUR</option>
+                            <option value="gbp">GBP</option>
+                            <option value="ils">ILS (Israeli Shekel)</option>
+                            <option value="jpy">JPY (Japanese Yen)</option>
+                            <option value="aud">AUD (Australian Dollar)</option>
+                            <option value="cad">CAD (Canadian Dollar)</option>
+                        </select>
+                    </div>
+                    
+                    <button type="button" id="convertButton" class="btn btn-primary">
+                        <i class="fas fa-exchange-alt"></i> <span data-translate="donate-convert">Convert</span>
+                    </button>
+                </div>
+                
+                <div id="conversionResult" class="conversion-result">
+                    <span data-translate="donate-conversion-placeholder">Enter an amount to see the conversion</span>
                 </div>
             </div>
         </div>
-
-        <div id="statusMessage" class="info" style="margin-top: 20px;"></div>
-
-        <!-- Real-Time Crypto Conversion Widget -->
-        <div id="crypto-widget" style="margin-top: 20px; background: #ffffff; padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
-            <h3 style="text-align: center; color: #4CAF50;">Convert ETH to Other Currencies</h3>
-            <div class="form-group" style="margin-bottom: 15px;">
-                <label for="ethInput" style="font-weight: bold;">Enter ETH Amount:</label>
-                <input type="number" id="ethInput" min="0.01" step="0.01" placeholder="0.01" style="width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 5px;">
-            </div>
-            <div class="form-group" style="margin-bottom: 15px;">
-                <label for="currencySelect" style="font-weight: bold;">Select Currency:</label>
-                <select id="currencySelect" style="width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 5px;">
-                    <option value="usd">USD</option>
-                    <option value="eur">EUR</option>
-                    <option value="gbp">GBP</option>
-                    <option value="ils">ILS (Israeli Shekel)</option>
-                    <option value="jpy">JPY (Japanese Yen)</option>
-                    <option value="aud">AUD (Australian Dollar)</option>
-                    <option value="cad">CAD (Canadian Dollar)</option>
-                </select>
-            </div>
-            <div class="form-group" style="text-align: center;">
-                <button type="button" id="convertButton" style="background: #4CAF50; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">Convert</button>
-            </div>
-            <div id="conversionResult" style="text-align: center; color: #333; margin-top: 10px;"></div>
-        </div>
-
     </div>
 </section>

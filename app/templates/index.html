@@ -5,25 +5,51 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>lifeSpark</title>
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='Images/favicon.ico') }}">
-
-
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Leaflet Map -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="/static/css/base.css">
     <link rel="stylesheet" href="/static/css/components.css">
     <link rel="stylesheet" href="/static/css/pages.css">
+    <link rel="stylesheet" href="/static/css/auth.css">
+    <link rel="stylesheet" href="/static/css/additional-styles.css">
+    <link rel="stylesheet" href="/static/css/map-styles.css">
+    
+    <!-- AOS Animation Library -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
 </head>
-
 
 <body>
     <!-- Navigation Bar -->
     <nav class="navbar">
+        <div class="logo">
+            <img src="/static/Images/logo.png" alt="lifeSpark Logo" class="main-logo">
+            <span>life<span style="color: var(--secondary-color)">Spark</span></span>
+        </div>
+        
+        <button class="mobile-menu-btn">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        
         <ul class="left-menu">
-            <li><a href="#" onclick="showSection('home')" data-translate="nav-home">Home</a></li>
-            <li><a href="#" onclick="showSection('about')" data-translate="nav-about">About Us</a></li>
-            <li><a href="#" onclick="showSection('donate')" data-translate="nav-donate">Donate</a></li>
-            <li><a href="#" onclick="showSection('map')" data-translate="nav-map">Map</a></li>
-            <li><a href="#" onclick="showSection('contact')" data-translate="nav-contact">Contact Us</a></li>
+            <li><a href="#" onclick="showSection('home')" data-translate="nav-home"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="#" onclick="showSection('about')" data-translate="nav-about"><i class="fas fa-info-circle"></i> About Us</a></li>
+            <li><a href="#" onclick="showSection('donate')" data-translate="nav-donate"><i class="fas fa-heart"></i> Donate</a></li>
+            <li><a href="#" onclick="showSection('map')" data-translate="nav-map"><i class="fas fa-map-marked-alt"></i> Map</a></li>
+            <li><a href="#" onclick="showSection('contact')" data-translate="nav-contact"><i class="fas fa-envelope"></i> Contact Us</a></li>
         </ul>
         <ul class="right-menu">
             <li>
@@ -35,7 +61,7 @@
                 </select>
             </li>
             <li id="authMenu">
-                <!-- תוכן דינמי להתחברות -->
+                <!-- Dynamic authentication content -->
             </li>
         </ul>
     </nav>
@@ -50,17 +76,43 @@
 
     <!-- Footer -->
     <footer>
-        <p data-translate="footer-text">&copy; 2024 lifeSpark. All rights reserved.</p>
+        <div class="footer-content">
+            <div class="footer-logo">
+                <img src="/static/Images/logo.png" alt="lifeSpark Logo">
+                <span>life<span style="color: var(--secondary-color)">Spark</span></span>
+            </div>
+            <div class="social-links">
+                <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            </div>
+            <p data-translate="footer-text">&copy; 2024 lifeSpark. All rights reserved.</p>
+        </div>
     </footer>
 
+    <!-- Back to top button -->
+    <button id="backToTopBtn" aria-label="Back to top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
     <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
     <script src="/static/js/translations.js"></script>
     <script src="/static/js/main.js"></script>
+    <script src="/static/js/animations.js"></script>
     <script src="/static/js/forms.js"></script>
     <script src="/static/js/map.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.8.1/web3.min.js"></script>
     <script src="/static/js/metamask.js"></script>
     <script src="/static/js/scripts.js"></script>
+
+    <!-- Initialize AOS animations -->
+    <script>
+        AOS.init({
+            duration: 800,
+            once: true
+        });
+    </script>
 
     <div id="bthn" lang="en"></div>
     <script>

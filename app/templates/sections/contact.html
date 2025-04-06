@@ -1,42 +1,160 @@
 <section id="contact">
     <div class="contact-container">
-        <h2 data-translate="contact-title">Contact Us</h2>
-        <div class="contact-content">
+        <div class="contact-header" data-aos="fade-up">
+            <h2 class="section-title" data-translate="contact-title">Contact Us</h2>
+            <p class="section-subtitle" data-translate="contact-subtitle">We're Here to Help and Answer Any Questions</p>
+        </div>
+        
+        <div class="contact-content" data-aos="fade-up" data-aos-delay="200">
             <div class="contact-info">
-                <div class="info-box">
-                    <h4 data-translate="contact-info-title">Get in Touch</h4>
-                    <p data-translate="contact-info-text">We're here to help and answer any questions you might have.</p>
+                <div class="info-card">
+                    <h3 data-translate="contact-info-title">Get in Touch</h3>
+                    <p data-translate="contact-info-text">We're here to help and answer any questions you might have about lifeSpark donations and our mission.</p>
+                    
                     <div class="contact-details">
                         <div class="contact-item">
-                            <i class="icon-email"></i>
-                            <span>info@lifespark.org</span>
+                            <div class="contact-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div class="contact-text">
+                                <h4 data-translate="contact-email-label">Email</h4>
+                                <p>info@lifespark.org</p>
+                            </div>
                         </div>
+                        
                         <div class="contact-item">
-                            <i class="icon-phone"></i>
-                            <span>+972-XX-XXX-XXXX</span>
+                            <div class="contact-icon">
+                                <i class="fas fa-phone-alt"></i>
+                            </div>
+                            <div class="contact-text">
+                                <h4 data-translate="contact-phone-label">Phone</h4>
+                                <p>+972-XX-XXX-XXXX</p>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <div class="contact-text">
+                                <h4 data-translate="contact-address-label">Address</h4>
+                                <p>Tel Aviv, Israel</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="social-links">
+                        <h4 data-translate="contact-social-label">Follow Us</h4>
+                        <div class="social-icons">
+                            <a href="#" aria-label="Facebook">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+                            <a href="#" aria-label="Twitter">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                            <a href="#" aria-label="Instagram">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                            <a href="#" aria-label="LinkedIn">
+                                <i class="fab fa-linkedin-in"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="faq-preview">
+                    <h3 data-translate="contact-faq-title">FAQs</h3>
+                    
+                    <div class="accordion">
+                        <div class="accordion-item">
+                            <div class="accordion-header">
+                                <h4 data-translate="contact-faq1-question">How does blockchain donation work?</h4>
+                                <span class="accordion-icon"><i class="fas fa-plus"></i></span>
+                            </div>
+                            <div class="accordion-content">
+                                <p data-translate="contact-faq1-answer">Blockchain donations use cryptocurrency to transfer funds directly and transparently. Each transaction is recorded on a public ledger that anyone can verify, ensuring complete transparency and security.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="accordion-item">
+                            <div class="accordion-header">
+                                <h4 data-translate="contact-faq2-question">Is my donation tax-deductible?</h4>
+                                <span class="accordion-icon"><i class="fas fa-plus"></i></span>
+                            </div>
+                            <div class="accordion-content">
+                                <p data-translate="contact-faq2-answer">Donations may be tax-deductible depending on your country's regulations regarding cryptocurrency donations. We recommend consulting with a tax professional for advice specific to your situation.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="accordion-item">
+                            <div class="accordion-header">
+                                <h4 data-translate="contact-faq3-question">How can I track my donation?</h4>
+                                <span class="accordion-icon"><i class="fas fa-plus"></i></span>
+                            </div>
+                            <div class="accordion-content">
+                                <p data-translate="contact-faq3-answer">After making a donation, you'll receive a transaction hash that you can use to track your donation on the blockchain. You can also view impact reports on our platform.</p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
             
-            <form id="contactForm" class="contact-form">
+            <form id="contactForm" class="contact-form" data-aos="fade-up" data-aos-delay="300">
+                <h3 data-translate="contact-form-title">Send us a Message</h3>
+                
                 <div class="form-group">
                     <label for="name" data-translate="contact-name">Name:</label>
-                    <input type="text" id="name" required>
+                    <div class="input-with-icon">
+                        <i class="fas fa-user icon"></i>
+                        <input type="text" id="name" required>
+                    </div>
                 </div>
 
                 <div class="form-group">
                     <label for="email" data-translate="contact-email">Email:</label>
-                    <input type="email" id="email" required>
+                    <div class="input-with-icon">
+                        <i class="fas fa-envelope icon"></i>
+                        <input type="email" id="email" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="subject" data-translate="contact-subject">Subject:</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-tag icon"></i>
+                        <input type="text" id="subject">
+                    </div>
                 </div>
 
                 <div class="form-group">
                     <label for="message" data-translate="contact-message">Message:</label>
-                    <textarea id="message" rows="4" required></textarea>
+                    <textarea id="message" rows="5" required></textarea>
                 </div>
 
-                <button type="submit" data-translate="contact-button">Send</button>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-paper-plane"></i> <span data-translate="contact-button">Send Message</span>
+                </button>
+                
+                <div class="form-status" id="formStatus"></div>
             </form>
+        </div>
+        
+        <div class="newsletter-section" data-aos="fade-up" data-aos-delay="400">
+            <div class="newsletter-card">
+                <div class="newsletter-content">
+                    <h3 data-translate="contact-newsletter-title">Stay Updated</h3>
+                    <p data-translate="contact-newsletter-text">Subscribe to our newsletter to receive updates about our projects and impact.</p>
+                </div>
+                
+                <form class="newsletter-form">
+                    <div class="newsletter-input-group">
+                        <input type="email" placeholder="Your email address" required>
+                        <button type="submit" class="btn btn-secondary">
+                            <span data-translate="contact-subscribe">Subscribe</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </section>

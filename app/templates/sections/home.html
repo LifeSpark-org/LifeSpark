@@ -1,29 +1,137 @@
 <section id="home">
     <div class="home-container">
-        <h1 data-translate="home-title">Welcome to lifeSpark</h1>
-        <p class="subtitle" data-translate="home-subtitle">Ignite hope, spark change.</p>
-        <div class="featured-content">
+        <div class="hero-content" data-aos="fade-up">
+            <div class="logo-container" data-aos="zoom-in">
+                <img src="/static/Images/logo.png" alt="lifeSpark Logo" class="hero-logo">
+            </div>
+            <h1 class="main-title" data-translate="home-title">Welcome to <span class="highlight">lifeSpark</span></h1>
+            <p class="subtitle parallax" data-speed="0.3" data-translate="home-subtitle">Ignite hope, spark change.</p>
+            <div class="hero-description">
+                <p data-translate="home-description">lifeSpark connects donors with communities in need through secure, transparent blockchain technology. Every donation creates immediate impact where it's needed most.</p>
+            </div>
+            
+            <div class="cta-container" data-aos="fade-up" data-aos-delay="200">
+                <button onclick="showSection('donate')" class="donate-button" data-translate="home-donate-button">
+                    <i class="fas fa-heart"></i> Donate Now
+                </button>
+                <button onclick="showSection('about')" class="btn btn-outline" data-translate="home-learn-more">
+                    <i class="fas fa-info-circle"></i> Learn More
+                </button>
+            </div>
+        </div>
+        
+        <div class="impact-spotlight" data-aos="fade-up" data-aos-delay="300">
+            <h2 data-translate="home-impact-title">Our Impact So Far</h2>
+            
             <div class="stats-container">
-                <div class="stat-item">
-                    <h3>200+</h3>
+                <div class="stat-item animate-on-scroll" data-aos="zoom-in" data-aos-delay="400">
+                    <div class="stat-icon">
+                        <i class="fas fa-hand-holding-heart"></i>
+                    </div>
+                    <h3 class="counter">200+</h3>
                     <p data-translate="home-donations">Donations</p>
                 </div>
-                <div class="stat-item">
-                    <h3>50+</h3>
+                
+                <div class="stat-item animate-on-scroll" data-aos="zoom-in" data-aos-delay="500">
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3 class="counter">50+</h3>
                     <p data-translate="home-communities">Communities</p>
                 </div>
-                <div class="stat-item">
-                    <h3>1000+</h3>
+                
+                <div class="stat-item animate-on-scroll" data-aos="zoom-in" data-aos-delay="600">
+                    <div class="stat-icon">
+                        <i class="fas fa-globe"></i>
+                    </div>
+                    <h3 class="counter">1000+</h3>
                     <p data-translate="home-supporters">Supporters</p>
                 </div>
             </div>
-            <div class="cta-container">
-                <button onclick="showSection('donate')" class="donate-button" data-translate="home-donate-button">
-                    Donate Now
-                </button>
-                <button onclick="showSection('about')" class="learn-more-button" data-translate="home-learn-more">
-                    Learn More
-                </button>
+        </div>
+        
+        <div class="featured-causes" data-aos="fade-up" data-aos-delay="700">
+            <h2 data-translate="home-causes-title">Current Initiatives</h2>
+            
+            <div class="causes-grid">
+                <div class="cause-card animate-on-scroll">
+                    <div class="cause-image">
+                        <div class="image-placeholder"></div>
+                        <div class="cause-badge south" data-translate="donate-region-south">Southern Israel</div>
+                    </div>
+                    <div class="cause-content">
+                        <h3 data-translate="home-cause1-title">Southern Communities Relief</h3>
+                        <p data-translate="home-cause1-desc">Supporting families and rebuilding communities in southern Israel affected by conflict.</p>
+                        <div class="progress-container">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 65%"></div>
+                            </div>
+                            <div class="progress-stats">
+                                <span class="raised">65%</span>
+                                <span class="goal">Goal: 10 ETH</span>
+                            </div>
+                        </div>
+                        <button onclick="showSection('donate')" class="btn btn-outline btn-sm">
+                            <i class="fas fa-heart"></i> Donate
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="cause-card animate-on-scroll">
+                    <div class="cause-image">
+                        <div class="image-placeholder"></div>
+                        <div class="cause-badge north" data-translate="donate-region-north">Northern Israel</div>
+                    </div>
+                    <div class="cause-content">
+                        <h3 data-translate="home-cause2-title">Northern Region Recovery</h3>
+                        <p data-translate="home-cause2-desc">Providing essential aid and support to northern communities working to rebuild.</p>
+                        <div class="progress-container">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 42%"></div>
+                            </div>
+                            <div class="progress-stats">
+                                <span class="raised">42%</span>
+                                <span class="goal">Goal: 8 ETH</span>
+                            </div>
+                        </div>
+                        <button onclick="showSection('donate')" class="btn btn-outline btn-sm">
+                            <i class="fas fa-heart"></i> Donate
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="testimonials-section" data-aos="fade-up">
+            <h2 data-translate="home-testimonials-title">Voices of Impact</h2>
+            <div class="testimonials-container">
+                <div class="testimonial-card">
+                    <div class="testimonial-content">
+                        <i class="fas fa-quote-left"></i>
+                        <p data-translate="home-testimonial1-text">The transparency of lifeSpark allowed me to see exactly how my donation helped a family in need. It's incredible to have this direct connection.</p>
+                    </div>
+                    <div class="testimonial-author">
+                        <div class="author-avatar"></div>
+                        <div class="author-info">
+                            <h4 data-translate="home-testimonial1-name">David Cohen</h4>
+                            <p data-translate="home-testimonial1-location">Tel Aviv</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card">
+                    <div class="testimonial-content">
+                        <i class="fas fa-quote-left"></i>
+                        <p data-translate="home-testimonial2-text">As a community leader, I've seen firsthand how lifeSpark donations have rebuilt what we lost. The impact is immediate and meaningful.</p>
+                    </div>
+                    <div class="testimonial-author">
+                        <div class="author-avatar"></div>
+                        <div class="author-info">
+                            <h4 data-translate="home-testimonial2-name">Sarah Levin</h4>
+                            <p data-translate="home-testimonial2-location">Sderot</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
