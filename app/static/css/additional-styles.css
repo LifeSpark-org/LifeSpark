@@ -1027,11 +1027,11 @@ section.fade-out {
 /* עיצוב הלוגו בדף הבית */
 .logo-container {
     margin-bottom: 2rem;
-    animation: pulse 2s infinite alternate ease-in-out;
+    animation: pulse 1.5s infinite alternate ease-in-out;
 }
 
 .hero-logo {
-    max-width: 200px;
+    max-width: 250px;
     filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
     transition: all 0.5s ease;
     opacity: 0;
