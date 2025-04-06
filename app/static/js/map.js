@@ -201,4 +201,3 @@ function addRefreshButton(map) {
 if (mapInstance) {
     addRefreshButton(mapInstance);
 }
-// הוספת כפתור רענון למפה
