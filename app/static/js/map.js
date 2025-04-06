@@ -174,7 +174,6 @@ function refreshMap() {
     }
 }
 
-// הוסף את הקוד הזה לקובץ map.js אחרי האתחול של המפה
 
 // הוספת כפתור רענון למפה
 function addRefreshButton(map) {
