@@ -369,6 +369,17 @@ function showSection(sectionId) {
     
     // Update active state in navigation
     updateActiveNavLink(sectionId);
+    // רענון המפה במקרה שהשתנה למקטע המפה
+if (sectionId === 'map') {
+    // מחכה 500 מילישניות ואז מרענן את המפה
+    setTimeout(function() {
+        if (typeof refreshMap === 'function') {
+            refreshMap();
+        } else if (window.mapInstance) {
+            window.mapInstance.invalidateSize();
+        }
+    }, 500);
+}
 }
 
 // Helper function to show target section

@@ -1,214 +1,114 @@
-/* Enhanced Map Styles */
-
-/* Custom Marker Styling */
-.custom-marker {
-    background: transparent;
-    border: none;
+/* תיקון סופי למפה - לכל ההודעות */
+#leafletMap {
+    width: 100% !important;
+    height: 500px !important;
+    min-height: 500px !important;
+    background-color: #f0f0f0;
+    display: block !important;
+    position: relative;
+    z-index: 1;
 }
 
-.marker-icon {
-    width: 40px;
-    height: 40px;
+/* תצוגת לואדר כשהמפה מתחילה להיטען */
+#leafletMap::after {
+    content: "המפה בטעינה...";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.8);
+    font-size: 18px;
+    z-index: -1;
+}
+
+/* תיקונים לספריית Leaflet */
+.leaflet-container {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+/* וידוא שהמפה מוצגת בצורה תקינה */
+.map-content {
+    display: block;
+}
+
+@media (min-width: 768px) {
+    .map-content {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 2rem;
+    }
+}
+
+/* תיקון למצב מסך קטן */
+@media (max-width: 768px) {
+    #leafletMap {
+        height: 350px !important;
+        min-height: 350px !important;
+    }
+    
+    .map-sidebar {
+        margin-top: 1rem;
+    }
+}
+
+/* תיקון למצב דארק */
+.dark-theme .leaflet-tile-pane {
+    filter: brightness(0.7) invert(1) contrast(1.2);
+}
+
+/* כדי לוודא שהמפה מוצגת כראוי כשהיא מציגה את המידע */
+section#map.active {
+    opacity: 1 !important;
+    visibility: visible !important;
+    height: auto !important;
+    overflow: visible !important;
+}
+
+/* תיקון לפופאפים במפה */
+.leaflet-popup-content-wrapper {
+    min-width: 200px;
+}
+
+.leaflet-popup-content {
+    margin: 10px !important;
+}
+
+
+
+.map-refresh-button {
+    margin-right: 10px;
+    margin-top: 10px;
+}
+
+.map-refresh-button button {
+    background: white;
+    border: none;
+    border-radius: 4px;
+    color: #333;
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.4);
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 50% 50% 50% 0;
-    background-color: #ef4444;
-    transform: rotate(-45deg);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-    position: relative;
-    animation: markerBounce 1s ease-in-out infinite alternate;
-}
-
-.marker-icon i {
-    transform: rotate(45deg);
-    color: white;
-    font-size: 16px;
-}
-
-@keyframes markerBounce {
-    from {
-        transform: rotate(-45deg) translateY(0);
-    }
-    to {
-        transform: rotate(-45deg) translateY(-5px);
-    }
-}
-
-/* Custom Popup Styling */
-.map-custom-popup .leaflet-popup-content-wrapper {
-    border-radius: 10px;
-    padding: 0;
-    overflow: hidden;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-}
-
-.map-custom-popup .leaflet-popup-content {
-    margin: 0;
-    width: 100% !important;
-}
-
-.map-custom-popup .leaflet-popup-tip {
-    background-color: white;
-}
-
-.map-popup {
-    padding: 0;
-}
-
-.map-popup h3 {
-    background: linear-gradient(90deg, var(--primary-color), var(--primary-dark));
-    color: white;
-    margin: 0;
-    padding: 12px 15px;
-    font-size: 16px;
-    font-weight: 600;
-}
-
-.popup-type {
-    padding: 8px 15px;
-    background-color: rgba(79, 70, 229, 0.1);
-    color: var(--primary-color);
     font-size: 14px;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
 }
 
-.popup-type i {
-    margin-right: 8px;
-}
-
-.map-popup p {
-    padding: 15px;
-    margin: 0;
-    font-size: 14px;
-    color: var(--text-color);
-}
-
-.popup-stats {
-    display: flex;
-    padding: 0 15px 15px;
-    gap: 20px;
-}
-
-.popup-stat {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.popup-stat .stat-value {
-    font-weight: 600;
-    color: var(--primary-color);
-    font-size: 16px;
-}
-
-.popup-stat .stat-label {
-    font-size: 12px;
-    color: var(--text-light);
-}
-
-.popup-button {
-    width: 100%;
-    padding: 10px;
-    background-color: var(--primary-color);
-    color: white;
-    border: none;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.popup-button:hover {
-    background-color: var(--primary-dark);
-}
-
-/* Map Title Overlay */
-.map-title-overlay {
-    background-color: white;
-    padding: 10px 15px;
-    border-radius: 8px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    max-width: 250px;
-}
-
-.map-title-overlay h4 {
-    margin: 0 0 5px;
-    color: var(--primary-color);
-    font-size: 16px;
-}
-
-.map-title-overlay p {
-    margin: 0;
-    font-size: 12px;
-    color: var(--text-light);
-}
-
-/* Region Info Styling */
-.region-info-stats {
-    display: flex;
-    justify-content: space-between;
-    margin: 15px 0;
-    background-color: rgba(79, 70, 229, 0.05);
-    padding: 12px;
-    border-radius: 8px;
-}
-
-.info-stat {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.info-stat .stat-value {
-    font-weight: 600;
-    color: var(--primary-color);
-    font-size: 18px;
-}
-
-.info-stat .stat-label {
-    font-size: 12px;
-    color: var(--text-light);
-}
-
-/* Dark Theme Adjustments */
-.dark-theme .map-title-overlay {
-    background-color: #1e293b;
-}
-
-.dark-theme .map-title-overlay h4 {
-    color: #818cf8;
-}
-
-.dark-theme .map-title-overlay p {
-    color: #94a3b8;
-}
-
-.dark-theme .map-custom-popup .leaflet-popup-content-wrapper,
-.dark-theme .map-custom-popup .leaflet-popup-tip {
-    background-color: #1e293b;
-}
-
-.dark-theme .map-popup p {
+.dark-theme .map-refresh-button button {
+    background: #1e293b;
     color: #e2e8f0;
 }
 
-.dark-theme .popup-type {
-    background-color: rgba(129, 140, 248, 0.1);
+.map-refresh-button button:hover {
+    background: #f0f0f0;
 }
 
-/* Responsive Adjustments */
-@media (max-width: 768px) {
-    .map-content {
-        grid-template-columns: 1fr;
-    }
-    
-    #leafletMap {
-        height: 400px;
-    }
-    
-    .map-custom-popup .leaflet-popup-content {
-        width: 100% !important;
-    }
+.dark-theme .map-refresh-button button:hover {
+    background: #2d3748;
 }
