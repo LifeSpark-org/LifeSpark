@@ -1,4 +1,125 @@
-// Enhanced Form Interactions
+// Close notification
+function closeNotification(notification) {
+    if (!notification) return;
+    
+    notification.style.transform = 'translateX(100%)';
+    notification.style.opacity = '0';
+    
+    // Remove after animation completes
+    setTimeout(() => {
+        if (notification.parentNode) {
+            notification.parentNode.removeChild(notification);
+        }
+    }, 300);
+}
+
+// Update auth menu based on login state
+function updateAuthMenu(userData = null) {
+    const authMenu = document.getElementById('authMenu');
+    if (!authMenu) return;
+    
+    if (userData) {
+        // Display for logged-in user
+        const greeting = translations[currentLanguage]?.['hello-user'] || 'Hello, {name}';
+        const formattedGreeting = greeting.replace('{name}', userData.name);
+        
+        authMenu.innerHTML = `
+            <li class="user-greeting">${formattedGreeting}</li>
+            <li><button onclick="logout()" class="logout-button"><i class="fas fa-sign-out-alt"></i> <span data-translate="logout">Logout</span></button></li>
+        `;
+    } else {
+        // Display for non-logged-in user
+        authMenu.innerHTML = `
+            <li><a href="#" onclick="showSection('login')" data-translate="login-register"><i class="fas fa-user"></i> Login / Register</a></li>
+        `;
+    }
+    
+    // Update translations after menu change
+    updateContent();
+}
+
+// Logout function
+async function logout() {
+    try {
+        // Show loading indicator
+        const logoutButton = document.querySelector('.logout-button');
+        const originalText = logoutButton?.innerHTML || '';
+        
+        if (logoutButton) {
+            logoutButton.disabled = true;
+            logoutButton.innerHTML = '<div class="loader-inline"></div> Logging out...';
+        }
+        
+        // Simulate API call (for demonstration)
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        // Remove token and user data from localStorage
+        localStorage.removeItem('token');
+        localStorage.removeItem('userData');
+        
+        // Update auth menu
+        updateAuthMenu();
+        
+        // Show notification
+        showNotification('success', 'Logged out successfully!');
+        
+        // Navigate to home page
+        showSection('home');
+        
+    } catch (error) {
+        console.error('Logout error:', error);
+        showNotification('error', 'Error during logout');
+    }
+}
+
+// Check auth state on page load
+async function checkAuthState() {
+    const token = localStorage.getItem('token');
+    
+    if (token) {
+        try {
+            const response = await fetch('/check-auth', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            
+            if (response.ok) {
+                const userData = await response.json();
+                
+                // Save data to localStorage for offline access
+                localStorage.setItem('userData', JSON.stringify(userData));
+                
+                // Update auth menu
+                updateAuthMenu(userData);
+            } else {
+                // Token invalid or expired
+                localStorage.removeItem('token');
+                localStorage.removeItem('userData');
+                updateAuthMenu();
+            }
+        } catch (error) {
+            console.error('Auth check error:', error);
+            
+            // If offline, try to use cached user data
+            const cachedUserData = localStorage.getItem('userData');
+            if (cachedUserData) {
+                try {
+                    const userData = JSON.parse(cachedUserData);
+                    updateAuthMenu(userData);
+                } catch (e) {
+                    // Invalid JSON, clear data
+                    localStorage.removeItem('userData');
+                    updateAuthMenu();
+                }
+            } else {
+                updateAuthMenu();
+            }
+        }
+    } else {
+        updateAuthMenu();
+    }
+}// Enhanced Form Interactions
 document.addEventListener('DOMContentLoaded', () => {
     // Initialize all form elements
     initializeFormToggles();
@@ -27,6 +148,9 @@ function initializeFormToggles() {
             setTimeout(() => {
                 registerSection.classList.remove('fade-in');
             }, 500);
+            
+            // איפוס CAPTCHA
+            resetCaptcha();
         }
     });
 
@@ -40,6 +164,9 @@ function initializeFormToggles() {
             setTimeout(() => {
                 loginSection.classList.remove('fade-in');
             }, 500);
+            
+            // איפוס CAPTCHA
+            resetCaptcha();
         }
     });
 }
@@ -241,6 +368,18 @@ function selectRegion(region) {
     }
 }
 
+// פונקציה לאיפוס ה-CAPTCHA
+function resetCaptcha() {
+    if (typeof grecaptcha !== 'undefined') {
+        try {
+            grecaptcha.reset(0); // איפוס CAPTCHA בטופס הרשמה
+            grecaptcha.reset(1); // איפוס CAPTCHA בטופס התחברות
+        } catch (e) {
+            console.log('Error resetting CAPTCHA:', e);
+        }
+    }
+}
+
 // Form submissions
 function initializeFormSubmissions() {
     // Registration form handler
@@ -252,19 +391,26 @@ function initializeFormSubmissions() {
     // Registration form
     registerForm?.addEventListener('submit', async (event) => {
         event.preventDefault();
+        
+        // בדיקת CAPTCHA
+        const recaptchaResponse = grecaptcha.getResponse(0); // משתמש בתיבת ה-CAPTCHA הראשונה
+        if (!recaptchaResponse) {
+            document.getElementById('registerCaptchaError').style.display = 'block';
+            return;
+        } else {
+            document.getElementById('registerCaptchaError').style.display = 'none';
+        }
+        
         showFormLoading(registerForm);
         
-        try {
-            // קבלת טוקן reCAPTCHA v3
-            const recaptchaToken = await executeRecaptcha('register');
-            
-            const formData = {
-                name: document.getElementById('registerName').value,
-                email: document.getElementById('registerEmail').value,
-                password: document.getElementById('registerPassword').value,
-                recaptcha: recaptchaToken  // הוספת תגובת ה-CAPTCHA לנתונים שנשלחים
-            };
+        const formData = {
+            name: document.getElementById('registerName').value,
+            email: document.getElementById('registerEmail').value,
+            password: document.getElementById('registerPassword').value,
+            recaptcha: recaptchaResponse  // הוספת תגובת ה-CAPTCHA לנתונים שנשלחים
+        };
 
+        try {
             const response = await fetch('/register', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -326,18 +472,25 @@ function initializeFormSubmissions() {
     // Login form handler
     loginForm?.addEventListener('submit', async (event) => {
         event.preventDefault();
+        
+        // בדיקת CAPTCHA
+        const recaptchaResponse = grecaptcha.getResponse(1); // משתמש בתיבת ה-CAPTCHA השנייה
+        if (!recaptchaResponse) {
+            document.getElementById('loginCaptchaError').style.display = 'block';
+            return;
+        } else {
+            document.getElementById('loginCaptchaError').style.display = 'none';
+        }
+        
         showFormLoading(loginForm);
         
-        try {
-            // קבלת טוקן reCAPTCHA v3
-            const recaptchaToken = await executeRecaptcha('login');
-            
-            const formData = {
-                email: loginEmailInput.value,
-                password: document.getElementById('loginPassword').value,
-                recaptcha: recaptchaToken  // הוספת תגובת ה-CAPTCHA לנתונים שנשלחים
-            };
+        const formData = {
+            email: loginEmailInput.value,
+            password: document.getElementById('loginPassword').value,
+            recaptcha: recaptchaResponse  // הוספת תגובת ה-CAPTCHA לנתונים שנשלחים
+        };
 
+        try {
             const response = await fetch('/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -407,26 +560,6 @@ function initializeFormSubmissions() {
         
         hideFormLoading(contactForm);
     });
-}
-
-// פונקציה לביצוע reCAPTCHA v3
-async function executeRecaptcha(action) {
-    try {
-        return new Promise((resolve, reject) => {
-            grecaptcha.ready(function() {
-                grecaptcha.execute('6Le3fw4rAAAAAK3_rqyMtMcd0ierf1yIzlc8zwVe', {action: action})
-                .then(function(token) {
-                    resolve(token);
-                })
-                .catch(function(error) {
-                    reject(error);
-                });
-            });
-        });
-    } catch (error) {
-        console.error('reCAPTCHA error:', error);
-        throw new Error('Failed to execute reCAPTCHA check');
-    }
 }
 
 // Show loading state on form
@@ -636,128 +769,5 @@ function showNotification(type, message) {
         setTimeout(() => {
             closeNotification(notification);
         }, 5000);
-    }
-}
-
-// Close notification
-function closeNotification(notification) {
-    if (!notification) return;
-    
-    notification.style.transform = 'translateX(100%)';
-    notification.style.opacity = '0';
-    
-    // Remove after animation completes
-    setTimeout(() => {
-        if (notification.parentNode) {
-            notification.parentNode.removeChild(notification);
-        }
-    }, 300);
-}
-
-// Update auth menu based on login state
-function updateAuthMenu(userData = null) {
-    const authMenu = document.getElementById('authMenu');
-    if (!authMenu) return;
-    
-    if (userData) {
-        // Display for logged-in user
-        const greeting = translations[currentLanguage]?.['hello-user'] || 'Hello, {name}';
-        const formattedGreeting = greeting.replace('{name}', userData.name);
-        
-        authMenu.innerHTML = `
-            <li class="user-greeting">${formattedGreeting}</li>
-            <li><button onclick="logout()" class="logout-button"><i class="fas fa-sign-out-alt"></i> <span data-translate="logout">Logout</span></button></li>
-        `;
-    } else {
-        // Display for non-logged-in user
-        authMenu.innerHTML = `
-            <li><a href="#" onclick="showSection('login')" data-translate="login-register"><i class="fas fa-user"></i> Login / Register</a></li>
-        `;
-    }
-    
-    // Update translations after menu change
-    updateContent();
-}
-
-// Logout function
-async function logout() {
-    try {
-        // Show loading indicator
-        const logoutButton = document.querySelector('.logout-button');
-        const originalText = logoutButton?.innerHTML || '';
-        
-        if (logoutButton) {
-            logoutButton.disabled = true;
-            logoutButton.innerHTML = '<div class="loader-inline"></div> Logging out...';
-        }
-        
-        // Simulate API call (for demonstration)
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        
-        // Remove token and user data from localStorage
-        localStorage.removeItem('token');
-        localStorage.removeItem('userData');
-        
-        // Update auth menu
-        updateAuthMenu();
-        
-        // Show notification
-        showNotification('success', 'Logged out successfully!');
-        
-        // Navigate to home page
-        showSection('home');
-        
-    } catch (error) {
-        console.error('Logout error:', error);
-        showNotification('error', 'Error during logout');
-    }
-}
-
-// Check auth state on page load
-async function checkAuthState() {
-    const token = localStorage.getItem('token');
-    
-    if (token) {
-        try {
-            const response = await fetch('/check-auth', {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-            
-            if (response.ok) {
-                const userData = await response.json();
-                
-                // Save data to localStorage for offline access
-                localStorage.setItem('userData', JSON.stringify(userData));
-                
-                // Update auth menu
-                updateAuthMenu(userData);
-            } else {
-                // Token invalid or expired
-                localStorage.removeItem('token');
-                localStorage.removeItem('userData');
-                updateAuthMenu();
-            }
-        } catch (error) {
-            console.error('Auth check error:', error);
-            
-            // If offline, try to use cached user data
-            const cachedUserData = localStorage.getItem('userData');
-            if (cachedUserData) {
-                try {
-                    const userData = JSON.parse(cachedUserData);
-                    updateAuthMenu(userData);
-                } catch (e) {
-                    // Invalid JSON, clear data
-                    localStorage.removeItem('userData');
-                    updateAuthMenu();
-                }
-            } else {
-                updateAuthMenu();
-            }
-        }
-    } else {
-        updateAuthMenu();
     }
 }

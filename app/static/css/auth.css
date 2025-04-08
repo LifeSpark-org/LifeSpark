@@ -262,6 +262,8 @@
 
 .g-recaptcha {
     margin-bottom: 0.5rem;
+    transform-origin: center;
+    transform: scale(1);
 }
 
 .captcha-error {
@@ -270,30 +272,9 @@
     margin-top: 0.5rem;
 }
 
-/* Responsive Design */
-@media (max-width: 500px) {
-    .auth-container {
-        padding: 1rem;
-    }
-    
-    .auth-form-container {
-        padding: 2rem;
-    }
-    
-    .auth-form-container h2 {
-        font-size: 1.6rem;
-    }
-
-    .social-login p::before,
-    .social-login p::after {
-        width: 25%;
-    }
-    
-    /* מותאם למובייל */
-    @media (max-width: 350px) {
-        .g-recaptcha {
-            transform: scale(0.85);
-            transform-origin: center;
-        }
+/* מותאם למובייל */
+@media (max-width: 350px) {
+    .g-recaptcha {
+        transform: scale(0.85);
     }
 }
