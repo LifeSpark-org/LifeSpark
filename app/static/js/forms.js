@@ -27,6 +27,9 @@ function initializeFormToggles() {
             setTimeout(() => {
                 registerSection.classList.remove('fade-in');
             }, 500);
+            
+            // איפוס CAPTCHA
+            resetCaptcha();
         }
     });
 
@@ -40,6 +43,9 @@ function initializeFormToggles() {
             setTimeout(() => {
                 loginSection.classList.remove('fade-in');
             }, 500);
+            
+            // איפוס CAPTCHA
+            resetCaptcha();
         }
     });
 }
@@ -241,6 +247,18 @@ function selectRegion(region) {
     }
 }
 
+// פונקציה לאיפוס ה-CAPTCHA
+function resetCaptcha() {
+    if (typeof grecaptcha !== 'undefined') {
+        try {
+            grecaptcha.reset(0); // איפוס CAPTCHA בטופס הרשמה
+            grecaptcha.reset(1); // איפוס CAPTCHA בטופס התחברות
+        } catch (e) {
+            console.log('Error resetting CAPTCHA:', e);
+        }
+    }
+}
+
 // Form submissions
 function initializeFormSubmissions() {
     // Registration form handler
@@ -252,12 +270,23 @@ function initializeFormSubmissions() {
     // Registration form
     registerForm?.addEventListener('submit', async (event) => {
         event.preventDefault();
+        
+        // בדיקת CAPTCHA
+        const recaptchaResponse = grecaptcha.getResponse(0); // משתמש בתיבת ה-CAPTCHA הראשונה
+        if (!recaptchaResponse) {
+            document.getElementById('registerCaptchaError').style.display = 'block';
+            return;
+        } else {
+            document.getElementById('registerCaptchaError').style.display = 'none';
+        }
+        
         showFormLoading(registerForm);
         
         const formData = {
             name: document.getElementById('registerName').value,
             email: document.getElementById('registerEmail').value,
-            password: document.getElementById('registerPassword').value
+            password: document.getElementById('registerPassword').value,
+            recaptcha: recaptchaResponse  // הוספת תגובת ה-CAPTCHA לנתונים שנשלחים
         };
 
         try {
@@ -322,11 +351,22 @@ function initializeFormSubmissions() {
     // Login form handler
     loginForm?.addEventListener('submit', async (event) => {
         event.preventDefault();
+        
+        // בדיקת CAPTCHA
+        const recaptchaResponse = grecaptcha.getResponse(1); // משתמש בתיבת ה-CAPTCHA השנייה
+        if (!recaptchaResponse) {
+            document.getElementById('loginCaptchaError').style.display = 'block';
+            return;
+        } else {
+            document.getElementById('loginCaptchaError').style.display = 'none';
+        }
+        
         showFormLoading(loginForm);
         
         const formData = {
             email: loginEmailInput.value,
-            password: document.getElementById('loginPassword').value
+            password: document.getElementById('loginPassword').value,
+            recaptcha: recaptchaResponse  // הוספת תגובת ה-CAPTCHA לנתונים שנשלחים
         };
 
         try {

@@ -13,6 +13,10 @@ const translations = {
         "logout": "Logout",
         "login-register": "Login / Register",
         
+        // חדש - CAPTCHA
+        "login-captcha-error": "Please complete the captcha",
+        "register-captcha-error": "Please complete the captcha",
+        
         // קיים
         "home-title": "Welcome to lifeSpark",
         "home-subtitle": "Ignite hope, spark change.",
@@ -58,6 +62,10 @@ const translations = {
         "hello-user": "שלום, {name}",
         "logout": "התנתק",
         "login-register": "התחברות / הרשמה",
+        
+        // חדש - CAPTCHA
+        "login-captcha-error": "אנא השלם את בדיקת האבטחה",
+        "register-captcha-error": "אנא השלם את בדיקת האבטחה",
         
         // קיים
         "home-title": "ברוכים הבאים ל-lifeSpark",
@@ -105,6 +113,10 @@ const translations = {
         "logout": "Выйти",
         "login-register": "Вход / Регистрация",
         
+        // חדש - CAPTCHA
+        "login-captcha-error": "Пожалуйста, пройдите проверку captcha",
+        "register-captcha-error": "Пожалуйста, пройдите проверку captcha",
+        
         // קיים
         "home-title": "Добро пожаловать в lifeSpark",
         "home-subtitle": "Зажигаем надежду, создаем перемены.",
@@ -150,6 +162,10 @@ const translations = {
         "hello-user": "مرحباً, {name}",
         "logout": "تسجيل خروج",
         "login-register": "تسجيل الدخول / التسجيل",
+        
+        // חדש - CAPTCHA
+        "login-captcha-error": "يرجى إكمال اختبار التحقق",
+        "register-captcha-error": "يرجى إكمال اختبار التحقق",
         
         // קיים
         "home-title": "مرحباً بكم في lifeSpark",

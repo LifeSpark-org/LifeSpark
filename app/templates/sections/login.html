@@ -30,6 +30,14 @@
                     </div>
                 </div>
 
+                <!-- CAPTCHA Container -->
+                <div class="form-group captcha-container">
+                    <div class="g-recaptcha" data-sitekey="{{ config.RECAPTCHA_SITE_KEY }}"></div>
+                    <div class="captcha-error" id="loginCaptchaError" style="display: none; color: red;">
+                        <small data-translate="login-captcha-error">Please complete the captcha</small>
+                    </div>
+                </div>
+
                 <button type="submit" data-translate="login-button">
                     <i class="fas fa-sign-in-alt"></i> Login
                 </button>
@@ -105,6 +113,14 @@
                     </div>
                 </div>
 
+                <!-- CAPTCHA Container -->
+                <div class="form-group captcha-container">
+                    <div class="g-recaptcha" data-sitekey="{{ config.RECAPTCHA_SITE_KEY }}"></div>
+                    <div class="captcha-error" id="registerCaptchaError" style="display: none; color: red;">
+                        <small data-translate="register-captcha-error">Please complete the captcha</small>
+                    </div>
+                </div>
+
                 <button type="submit" data-translate="register-button">
                     <i class="fas fa-user-plus"></i> Register
                 </button>
@@ -133,4 +149,7 @@
             </div>
         </div>
     </div>
+
+    <!-- reCAPTCHA Script -->
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </section>

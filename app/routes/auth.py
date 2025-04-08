@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, timedelta
 import jwt
+import requests
 from bson.objectid import ObjectId
 from .. import mongo
 from ..config import Config
@@ -10,9 +11,30 @@ from ..services.email_service import generate_verification_code, send_verificati
 
 auth_bp = Blueprint('auth', __name__)
 
+# פונקציית עזר לאימות CAPTCHA
+def verify_recaptcha(recaptcha_response):
+    if not recaptcha_response:
+        return False
+        
+    verify_url = 'https://www.google.com/recaptcha/api/siteverify'
+    payload = {
+        'secret': Config.RECAPTCHA_SECRET_KEY,
+        'response': recaptcha_response
+    }
+    
+    response = requests.post(verify_url, data=payload)
+    result = response.json()
+    
+    return result.get('success', False)
+
 @auth_bp.route('/register', methods=['POST'])
 def register():
     data = request.get_json()
+    
+    # בדיקת CAPTCHA
+    recaptcha_response = data.get('recaptcha')
+    if not verify_recaptcha(recaptcha_response):
+        return jsonify({'error': 'CAPTCHA verification failed'}), 400
     
     if not all(k in data for k in ['name', 'email', 'password']):
         return jsonify({'error': 'Missing required fields'}), 400
@@ -81,6 +103,11 @@ def verify_code():
 @auth_bp.route('/login', methods=['POST'])
 def login():
     data = request.get_json()
+    
+    # בדיקת CAPTCHA
+    recaptcha_response = data.get('recaptcha')
+    if not verify_recaptcha(recaptcha_response):
+        return jsonify({'error': 'CAPTCHA verification failed'}), 400
     
     if not all(k in data for k in ['email', 'password']):
         return jsonify({'error': 'Missing email or password'}), 400
