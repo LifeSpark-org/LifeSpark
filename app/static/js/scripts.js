@@ -2,59 +2,76 @@
 
 document.getElementById('donationForm').addEventListener('submit', async function (e) {
     e.preventDefault();
-    const region = document.getElementById('region').value;
+    
+    // בדיקה שהארנק מחובר
+    if (!window.userWalletAddress) {
+        showNotification('error', 'אנא התחבר לארנק קודם');
+        const connectWalletButton = document.getElementById('connectWallet');
+        if (connectWalletButton) {
+            connectWalletButton.scrollIntoView({ behavior: 'smooth' });
+        }
+        return;
+    }
+    
+    const region = document.querySelector('input[name="region"]:checked').value;
     const amount = parseFloat(document.getElementById('amount').value);
+    const message = document.getElementById('message')?.value || '';
 
     if (!region || amount <= 0) {
-        displayStatus('Please fill all fields correctly.', 'error');
+        showNotification('error', 'אנא מלא את כל השדות בצורה נכונה');
         return;
     }
 
     try {
-        displayStatus('Processing your donation...', 'info');
-
-        // Send donation details to the server
-        const txHash = await donateToBlockchain(region, amount);
+        showNotification('info', 'מעבד את התרומה שלך...');
         
-        displayStatus(`Donation successful! Transaction Hash: ${txHash}`, 'success');
+        // הצגת חיווי טעינה
+        const submitButton = document.querySelector('#donationForm button[type="submit"]');
+        if (submitButton) {
+            submitButton.disabled = true;
+            submitButton.innerHTML = '<div class="loader-inline"></div> מעבד...';
+        }
+
+        // ביצוע תרומה דרך בלוקצ'יין
+        const txHash = await donateToBlockchain(region, amount, message);
+        
+        showNotification('success', `התרומה בוצעה בהצלחה! מזהה עסקה: ${txHash.substring(0, 10)}...`);
+        
+        // איפוס טופס
+        document.getElementById('donationForm').reset();
+        updateDonationSummary();
+        
+        // החזרת כפתור השליחה למצב רגיל
+        if (submitButton) {
+            submitButton.disabled = false;
+            submitButton.innerHTML = '<i class="fas fa-heart"></i> תרום עכשיו';
+        }
     } catch (error) {
-        displayStatus(`Error: ${error.message}`, 'error');
+        console.error('Error processing donation:', error);
+        showNotification('error', `שגיאה: ${error.message}`);
+        
+        // החזרת כפתור השליחה למצב רגיל
+        const submitButton = document.querySelector('#donationForm button[type="submit"]');
+        if (submitButton) {
+            submitButton.disabled = false;
+            submitButton.innerHTML = '<i class="fas fa-heart"></i> תרום עכשיו';
+        }
     }
 });
 
 function displayStatus(message, statusType) {
     const statusMessage = document.getElementById('statusMessage');
-    statusMessage.textContent = message;
-    statusMessage.className = statusType;
+    if (statusMessage) {
+        statusMessage.textContent = message;
+        statusMessage.className = statusType;
+    } else {
+        // אם אלמנט הסטטוס לא קיים, נשתמש בפונקציית ההודעות הכללית
+        showNotification(statusType, message);
+    }
 }
 
-// // Blockchain donation logic
-// async function donateToBlockchain(region, amount) {
-//     try {
-//         const response = await fetch('/donate', {
-//             method: 'POST',
-//             headers: {
-//                 'Content-Type': 'application/json',
-//             },
-//             body: JSON.stringify({ region, amount }),
-//         });
-
-//         if (!response.ok) {
-//             const error = await response.json();
-//             throw new Error(error.message || 'Failed to process donation.');
-//         }
-
-//         const result = await response.json();
-//         return result.transaction; // Transaction hash from the server
-//     } catch (error) {
-//         throw new Error(error.message || 'Error connecting to the server.');
-//     }
-// }
-
-
-// בקובץ scripts.js, החלף את הפונקציה הקיימת
 // פונקציה לביצוע תרומה באמצעות MetaMask
-async function donateToBlockchain(region, amount) {
+async function donateToBlockchain(region, amount, message = '') {
     try {
         if (typeof window.ethereum === 'undefined') {
             window.open('https://metamask.io/download.html', '_blank');
@@ -65,27 +82,65 @@ async function donateToBlockchain(region, amount) {
             throw new Error('אנא התחבר לארנק קודם.');
         }
 
+        // בדיקה שה-ABI וכתובת החוזה הוגדרו כראוי
+        if (!window.CONTRACT_ABI || !window.CONTRACT_ADDRESS) {
+            throw new Error('הגדרות החוזה החכם חסרות. אנא רענן את הדף ונסה שוב.');
+        }
+
         const web3 = new Web3(window.ethereum);
-        // שימוש במשתנים הגלובליים
-        const contract = new web3.eth.Contract(window.CONTRACT_ABI, window.CONTRACT_ADDRESS);
         
+        // יצירת מופע של החוזה החכם
+        const contract = new web3.eth.Contract(
+            window.CONTRACT_ABI, 
+            window.CONTRACT_ADDRESS
+        );
+        
+        // המרת הסכום ל-wei
         const amountInWei = web3.utils.toWei(amount.toString(), 'ether');
         
-        displayStatus('מעבד את התרומה שלך...', 'info');
+        console.log('Preparing transaction:', {
+            contract: window.CONTRACT_ADDRESS,
+            region: region,
+            amount: amount,
+            amountInWei: amountInWei,
+            from: window.userWalletAddress
+        });
         
-        const result = await contract.methods.donate(region).send({
+        // בניית טרנזקציה והוספת פרמטר של הודעה אם קיים
+        const transactionParameters = {
             from: window.userWalletAddress,
             value: amountInWei,
-            gas: 200000
-        });
+            gas: web3.utils.toHex(200000)
+        };
+        
+        // אם נוספה הודעה ואפשר לצרף אותה לעסקה
+        if (message) {
+            // אפשרות להוסיף את ההודעה כנתונים נוספים, אם החוזה תומך בכך
+            // transactionParameters.data = web3.utils.utf8ToHex(message);
+            console.log('Message included:', message);
+        }
+        
+        // קריאה לפונקציית התרומה בחוזה
+        const result = await contract.methods.donate(region).send(transactionParameters);
 
+        console.log('Transaction result:', result);
         return result.transactionHash;
 
     } catch (error) {
-        console.error('שגיאה בביצוע התרומה:', error);
-        throw new Error(error.message || 'שגיאה בביצוע התרומה');
+        console.error('Error in donateToBlockchain:', error);
+        
+        // טיפול בשגיאות ספציפיות של MetaMask
+        if (error.code === 4001) {
+            throw new Error('העסקה בוטלה על ידי המשתמש');
+        } else if (error.message.includes('insufficient funds')) {
+            throw new Error('אין מספיק כספים בארנק לביצוע העסקה');
+        } else {
+            throw new Error(error.message || 'שגיאה בביצוע התרומה');
+        }
     }
 }
+
+// הפונקציות הבאות נשארות כפי שהן
 // Update Navbar dynamically based on session
 window.onload = async () => {
     try {
@@ -138,4 +193,3 @@ document.getElementById("convertButton").addEventListener("click", async () => {
         document.getElementById("conversionResult").innerText = "Unable to fetch conversion rate. Please try again later.";
     }
 });
-

@@ -1,7 +1,8 @@
 // metamask.js
 
 // הגדרות החוזה החכם - גלובליות
-window.CONTRACT_ADDRESS = "0x54B942Bf5a6D83acEc459828d273Ee9a9046c86A";
+// העדכון העיקרי: הכתובת החדשה תואמת את הכתובת בקובץ Config.py
+window.CONTRACT_ADDRESS = "0xd9145CCE52D386f254917e481eB44e9943F39138";
 window.CONTRACT_ABI = [
     {
         "inputs": [
@@ -64,7 +65,11 @@ window.userWalletAddress = null;
 
 function resetConnection() {
     window.userWalletAddress = null;
-    document.getElementById('walletStatus').textContent = 'Not connected';
+    const walletStatus = document.getElementById('walletStatus');
+    if (walletStatus) {
+        walletStatus.textContent = 'Not connected';
+        walletStatus.classList.remove('connected');
+    }
     const connectButton = document.getElementById('connectWallet');
     if (connectButton) {
         connectButton.style.display = 'block';
@@ -74,6 +79,7 @@ function resetConnection() {
 function checkMetaMask() {
     if (typeof window.ethereum === 'undefined') {
         window.open('https://metamask.io/download.html', '_blank');
+        showNotification('error', 'MetaMask אינו מותקן. אנא התקן אותו כדי לתרום.');
         return false;
     }
     return true;
@@ -85,28 +91,47 @@ async function connectWallet() {
     }
 
     try {
-        // ראשית, נתנתק מכל חיבור קיים
-        await window.ethereum.request({
-            method: 'wallet_requestPermissions',
-            params: [{
-                eth_accounts: {}
-            }]
-        });
-        
-        // עכשיו נבקש חיבור חדש
+        // הצגת חיווי טעינה
+        const connectButton = document.getElementById('connectWallet');
+        if (connectButton) {
+            connectButton.disabled = true;
+            connectButton.innerHTML = '<div class="loader-inline"></div> מתחבר...';
+        }
+
+        // בקשת התחברות חדשה
         const accounts = await window.ethereum.request({ 
             method: 'eth_requestAccounts' 
         });
         
         window.userWalletAddress = accounts[0];
-        document.getElementById('walletStatus').textContent = 
-            'Connected: ' + window.userWalletAddress.substring(0, 6) + '...';
-            
-        document.getElementById('connectWallet').style.display = 'none';
+        
+        // עדכון ממשק המשתמש
+        const walletStatus = document.getElementById('walletStatus');
+        if (walletStatus) {
+            walletStatus.textContent = 'Connected: ' + window.userWalletAddress.substring(0, 6) + '...';
+            walletStatus.classList.add('connected');
+        }
+
+        if (connectButton) {
+            connectButton.style.display = 'none';
+            connectButton.disabled = false;
+            connectButton.innerHTML = '<i class="fas fa-link"></i> <span data-translate="donate-connect-wallet">התחבר לארנק</span>';
+        }
+        
+        // הצגת הודעה מוצלחת
+        showNotification('success', 'הארנק חובר בהצלחה!');
             
     } catch (error) {
         console.error('Error connecting to wallet:', error);
-        document.getElementById('walletStatus').textContent = 'Connection failed';
+        showNotification('error', 'חיבור הארנק נכשל: ' + error.message);
+        
+        // איפוס הכפתור
+        const connectButton = document.getElementById('connectWallet');
+        if (connectButton) {
+            connectButton.disabled = false;
+            connectButton.innerHTML = '<i class="fas fa-link"></i> <span data-translate="donate-connect-wallet">התחבר לארנק</span>';
+        }
+        
         // במקרה של שגיאה, נוודא שהמצב מאופס
         resetConnection();
     }
@@ -117,11 +142,25 @@ if (window.ethereum) {
     window.ethereum.on('accountsChanged', function (accounts) {
         if (accounts.length === 0) {
             resetConnection();
+            showNotification('info', 'הארנק נותק');
         } else {
             window.userWalletAddress = accounts[0];
-            document.getElementById('walletStatus').textContent = 
-                'Connected: ' + window.userWalletAddress.substring(0, 6) + '...';
+            const walletStatus = document.getElementById('walletStatus');
+            if (walletStatus) {
+                walletStatus.textContent = 'Connected: ' + window.userWalletAddress.substring(0, 6) + '...';
+                walletStatus.classList.add('connected');
+            }
+            showNotification('info', 'חשבון הארנק שונה');
         }
+    });
+    
+    // האזנה לשינוי רשת
+    window.ethereum.on('chainChanged', function () {
+        showNotification('info', 'רשת הבלוקצ\'יין השתנתה, מרענן דף...');
+        // מקובל לרענן את הדפדפן בעת שינוי רשת
+        setTimeout(() => {
+            window.location.reload();
+        }, 1500);
     });
 }
 
@@ -130,17 +169,28 @@ document.addEventListener('DOMContentLoaded', async function() {
     // קודם כל נאפס את החיבור
     resetConnection();
     
-    // ננסה לנתק כל חיבור קיים
+    // בדיקת חיבור קיים
     if (window.ethereum) {
         try {
-            await window.ethereum.request({
+            const accounts = await window.ethereum.request({
                 method: 'eth_accounts'
-            }).then(accounts => {
-                if (accounts.length > 0) {
-                    // אם יש חיבור קיים, נאפס אותו
-                    resetConnection();
-                }
             });
+            
+            if (accounts.length > 0) {
+                // אם יש חיבור קיים, נעדכן את הממשק
+                window.userWalletAddress = accounts[0];
+                
+                const walletStatus = document.getElementById('walletStatus');
+                if (walletStatus) {
+                    walletStatus.textContent = 'Connected: ' + window.userWalletAddress.substring(0, 6) + '...';
+                    walletStatus.classList.add('connected');
+                }
+                
+                const connectButton = document.getElementById('connectWallet');
+                if (connectButton) {
+                    connectButton.style.display = 'none';
+                }
+            }
         } catch (error) {
             console.error('Error checking existing connection:', error);
         }
