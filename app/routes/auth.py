@@ -11,8 +11,7 @@ from ..services.email_service import generate_verification_code, send_verificati
 
 auth_bp = Blueprint('auth', __name__)
 
-# פונקציית עזר לאימות CAPTCHA
-# עדכן את פונקציית האימות של reCAPTCHA
+# פונקציית עזר לאימות CAPTCHA v3
 def verify_recaptcha(recaptcha_response):
     if not recaptcha_response:
         return False

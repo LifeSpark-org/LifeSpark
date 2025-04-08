@@ -27,9 +27,6 @@ function initializeFormToggles() {
             setTimeout(() => {
                 registerSection.classList.remove('fade-in');
             }, 500);
-            
-            // איפוס CAPTCHA
-            resetCaptcha();
         }
     });
 
@@ -43,9 +40,6 @@ function initializeFormToggles() {
             setTimeout(() => {
                 loginSection.classList.remove('fade-in');
             }, 500);
-            
-            // איפוס CAPTCHA
-            resetCaptcha();
         }
     });
 }
@@ -247,18 +241,6 @@ function selectRegion(region) {
     }
 }
 
-// פונקציה לאיפוס ה-CAPTCHA
-function resetCaptcha() {
-    if (typeof grecaptcha !== 'undefined') {
-        try {
-            grecaptcha.reset(0); // איפוס CAPTCHA בטופס הרשמה
-            grecaptcha.reset(1); // איפוס CAPTCHA בטופס התחברות
-        } catch (e) {
-            console.log('Error resetting CAPTCHA:', e);
-        }
-    }
-}
-
 // Form submissions
 function initializeFormSubmissions() {
     // Registration form handler
@@ -270,26 +252,19 @@ function initializeFormSubmissions() {
     // Registration form
     registerForm?.addEventListener('submit', async (event) => {
         event.preventDefault();
-        
-        // בדיקת CAPTCHA
-        const recaptchaResponse = grecaptcha.getResponse(0); // משתמש בתיבת ה-CAPTCHA הראשונה
-        if (!recaptchaResponse) {
-            document.getElementById('registerCaptchaError').style.display = 'block';
-            return;
-        } else {
-            document.getElementById('registerCaptchaError').style.display = 'none';
-        }
-        
         showFormLoading(registerForm);
         
-        const formData = {
-            name: document.getElementById('registerName').value,
-            email: document.getElementById('registerEmail').value,
-            password: document.getElementById('registerPassword').value,
-            recaptcha: recaptchaResponse  // הוספת תגובת ה-CAPTCHA לנתונים שנשלחים
-        };
-
         try {
+            // קבלת טוקן reCAPTCHA v3
+            const recaptchaToken = await executeRecaptcha('register');
+            
+            const formData = {
+                name: document.getElementById('registerName').value,
+                email: document.getElementById('registerEmail').value,
+                password: document.getElementById('registerPassword').value,
+                recaptcha: recaptchaToken  // הוספת תגובת ה-CAPTCHA לנתונים שנשלחים
+            };
+
             const response = await fetch('/register', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -351,25 +326,18 @@ function initializeFormSubmissions() {
     // Login form handler
     loginForm?.addEventListener('submit', async (event) => {
         event.preventDefault();
-        
-        // בדיקת CAPTCHA
-        const recaptchaResponse = grecaptcha.getResponse(1); // משתמש בתיבת ה-CAPTCHA השנייה
-        if (!recaptchaResponse) {
-            document.getElementById('loginCaptchaError').style.display = 'block';
-            return;
-        } else {
-            document.getElementById('loginCaptchaError').style.display = 'none';
-        }
-        
         showFormLoading(loginForm);
         
-        const formData = {
-            email: loginEmailInput.value,
-            password: document.getElementById('loginPassword').value,
-            recaptcha: recaptchaResponse  // הוספת תגובת ה-CAPTCHA לנתונים שנשלחים
-        };
-
         try {
+            // קבלת טוקן reCAPTCHA v3
+            const recaptchaToken = await executeRecaptcha('login');
+            
+            const formData = {
+                email: loginEmailInput.value,
+                password: document.getElementById('loginPassword').value,
+                recaptcha: recaptchaToken  // הוספת תגובת ה-CAPTCHA לנתונים שנשלחים
+            };
+
             const response = await fetch('/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -439,6 +407,26 @@ function initializeFormSubmissions() {
         
         hideFormLoading(contactForm);
     });
+}
+
+// פונקציה לביצוע reCAPTCHA v3
+async function executeRecaptcha(action) {
+    try {
+        return new Promise((resolve, reject) => {
+            grecaptcha.ready(function() {
+                grecaptcha.execute('6Le3fw4rAAAAAK3_rqyMtMcd0ierf1yIzlc8zwVe', {action: action})
+                .then(function(token) {
+                    resolve(token);
+                })
+                .catch(function(error) {
+                    reject(error);
+                });
+            });
+        });
+    } catch (error) {
+        console.error('reCAPTCHA error:', error);
+        throw new Error('Failed to execute reCAPTCHA check');
+    }
 }
 
 // Show loading state on form
@@ -773,68 +761,3 @@ async function checkAuthState() {
         updateAuthMenu();
     }
 }
-
-// הוסף פונקציה חדשה לביצוע reCAPTCHA v3
-async function executeRecaptcha(action) {
-    return new Promise((resolve) => {
-        grecaptcha.ready(function() {
-            grecaptcha.execute('6Le3fw4rAAAAAK3_rqyMtMcd0ierf1yIzlc8zwVe', {action: action})
-            .then(function(token) {
-                resolve(token);
-            });
-        });
-    });
-}
-
-// עדכן את הטיפול בטופס ההרשמה
-registerForm?.addEventListener('submit', async (event) => {
-    event.preventDefault();
-    showFormLoading(registerForm);
-    
-    try {
-        // קבלת טוקן reCAPTCHA v3
-        const recaptchaToken = await executeRecaptcha('register');
-        
-        const formData = {
-            name: document.getElementById('registerName').value,
-            email: document.getElementById('registerEmail').value,
-            password: document.getElementById('registerPassword').value,
-            recaptcha: recaptchaToken  // הוספת תגובת ה-CAPTCHA לנתונים שנשלחים
-        };
-        
-        // שאר הקוד נשאר זהה
-        const response = await fetch('/register', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(formData)
-        });
-        // המשך כמו קודם...
-    } catch (error) {
-        showNotification('error', 'An error occurred during registration');
-    } finally {
-        hideFormLoading(registerForm);
-    }
-});
-
-// עדכן את הטיפול בטופס ההתחברות באופן דומה
-loginForm?.addEventListener('submit', async (event) => {
-    event.preventDefault();
-    showFormLoading(loginForm);
-    
-    try {
-        // קבלת טוקן reCAPTCHA v3
-        const recaptchaToken = await executeRecaptcha('login');
-        
-        const formData = {
-            email: loginEmailInput.value,
-            password: document.getElementById('loginPassword').value,
-            recaptcha: recaptchaToken  // הוספת תגובת ה-CAPTCHA לנתונים שנשלחים
-        };
-        
-        // שאר הקוד נשאר זהה...
-    } catch (error) {
-        showNotification('error', 'An error occurred during login');
-    } finally {
-        hideFormLoading(loginForm);
-    }
-});
