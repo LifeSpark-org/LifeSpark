@@ -119,7 +119,45 @@ async function checkAuthState() {
     } else {
         updateAuthMenu();
     }
-}// Enhanced Form Interactions
+}
+
+// פונקציית עזר לקבלת תגובת ה-CAPTCHA
+function getCaptchaResponse(captchaIndex) {
+    if (typeof grecaptcha === 'undefined') {
+        console.error('reCAPTCHA לא נטען');
+        return null;
+    }
+
+    try {
+        // ניסיון לקבל את התגובה לפי אינדקס
+        const response = grecaptcha.getResponse(captchaIndex);
+        return response;
+    } catch (e) {
+        console.error('שגיאה בקבלת תגובת reCAPTCHA:', e);
+        return null;
+    }
+}
+
+// פונקציה לאיפוס ה-CAPTCHA
+function resetCaptcha() {
+    if (typeof grecaptcha !== 'undefined') {
+        try {
+            // ניסיון לאפס את כל ה-CAPTCHA
+            const captchaElements = document.querySelectorAll('.g-recaptcha');
+            captchaElements.forEach((element, index) => {
+                try {
+                    grecaptcha.reset(index);
+                } catch (e) {
+                    console.log('שגיאה באיפוס CAPTCHA באינדקס ' + index + ':', e);
+                }
+            });
+        } catch (e) {
+            console.log('שגיאה כללית באיפוס CAPTCHA:', e);
+        }
+    }
+}
+
+// Enhanced Form Interactions
 document.addEventListener('DOMContentLoaded', () => {
     // Initialize all form elements
     initializeFormToggles();
@@ -368,18 +406,6 @@ function selectRegion(region) {
     }
 }
 
-// פונקציה לאיפוס ה-CAPTCHA
-function resetCaptcha() {
-    if (typeof grecaptcha !== 'undefined') {
-        try {
-            grecaptcha.reset(0); // איפוס CAPTCHA בטופס הרשמה
-            grecaptcha.reset(1); // איפוס CAPTCHA בטופס התחברות
-        } catch (e) {
-            console.log('Error resetting CAPTCHA:', e);
-        }
-    }
-}
-
 // Form submissions
 function initializeFormSubmissions() {
     // Registration form handler
@@ -392,10 +418,13 @@ function initializeFormSubmissions() {
     registerForm?.addEventListener('submit', async (event) => {
         event.preventDefault();
         
-        // בדיקת CAPTCHA
-        const recaptchaResponse = grecaptcha.getResponse(0); // משתמש בתיבת ה-CAPTCHA הראשונה
+        // בדיקת CAPTCHA - שימוש בפונקציה המשופרת
+        const recaptchaResponse = getCaptchaResponse(0); // CAPTCHA הרישום
+        
         if (!recaptchaResponse) {
             document.getElementById('registerCaptchaError').style.display = 'block';
+            // גלילה אל הודעת השגיאה
+            document.getElementById('registerCaptchaError').scrollIntoView({ behavior: 'smooth', block: 'center' });
             return;
         } else {
             document.getElementById('registerCaptchaError').style.display = 'none';
@@ -407,7 +436,7 @@ function initializeFormSubmissions() {
             name: document.getElementById('registerName').value,
             email: document.getElementById('registerEmail').value,
             password: document.getElementById('registerPassword').value,
-            recaptcha: recaptchaResponse  // הוספת תגובת ה-CAPTCHA לנתונים שנשלחים
+            recaptcha: recaptchaResponse
         };
 
         try {
@@ -473,10 +502,13 @@ function initializeFormSubmissions() {
     loginForm?.addEventListener('submit', async (event) => {
         event.preventDefault();
         
-        // בדיקת CAPTCHA
-        const recaptchaResponse = grecaptcha.getResponse(1); // משתמש בתיבת ה-CAPTCHA השנייה
+        // בדיקת CAPTCHA - שימוש בפונקציה המשופרת
+        const recaptchaResponse = getCaptchaResponse(1); // CAPTCHA ההתחברות
+        
         if (!recaptchaResponse) {
             document.getElementById('loginCaptchaError').style.display = 'block';
+            // גלילה אל הודעת השגיאה
+            document.getElementById('loginCaptchaError').scrollIntoView({ behavior: 'smooth', block: 'center' });
             return;
         } else {
             document.getElementById('loginCaptchaError').style.display = 'none';
@@ -487,7 +519,7 @@ function initializeFormSubmissions() {
         const formData = {
             email: loginEmailInput.value,
             password: document.getElementById('loginPassword').value,
-            recaptcha: recaptchaResponse  // הוספת תגובת ה-CAPTCHA לנתונים שנשלחים
+            recaptcha: recaptchaResponse
         };
 
         try {
