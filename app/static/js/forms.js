@@ -778,7 +778,7 @@ async function checkAuthState() {
 async function executeRecaptcha(action) {
     return new Promise((resolve) => {
         grecaptcha.ready(function() {
-            grecaptcha.execute('{{ config.RECAPTCHA_SITE_KEY }}', {action: action})
+            grecaptcha.execute('6Lfadg4rAAAAACQ_EsCQexqkNh_DGHiWkC79E-zg', {action: action})
             .then(function(token) {
                 resolve(token);
             });
