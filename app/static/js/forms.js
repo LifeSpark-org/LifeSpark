@@ -121,7 +121,8 @@ async function checkAuthState() {
     }
 }
 
-// פונקציית עזר לקבלת תגובת ה-CAPTCHA
+
+// שינוי פונקציית בדיקת reCAPTCHA
 function getCaptchaResponse(captchaIndex) {
     if (typeof grecaptcha === 'undefined') {
         console.error('reCAPTCHA לא נטען');
@@ -129,15 +130,25 @@ function getCaptchaResponse(captchaIndex) {
     }
 
     try {
-        // ניסיון לקבל את התגובה לפי אינדקס
-        const response = grecaptcha.getResponse(captchaIndex);
+        // נסה לקבל את התגובה
+        let response = null;
+        
+        // נסה לקבל תגובה לפי אינדקס ספציפי
+        try {
+            response = grecaptcha.getResponse(captchaIndex);
+        } catch (e) {
+            console.log("שגיאה בקבלת תגובה לפי אינדקס, מנסה לקבל ללא אינדקס");
+            // נסה לקבל תגובה ללא אינדקס במקרה שיש רק אחד בדף
+            response = grecaptcha.getResponse();
+        }
+        
+        console.log("reCAPTCHA response:", response ? "received" : "empty");
         return response;
     } catch (e) {
         console.error('שגיאה בקבלת תגובת reCAPTCHA:', e);
         return null;
     }
 }
-
 // פונקציה לאיפוס ה-CAPTCHA
 function resetCaptcha() {
     if (typeof grecaptcha !== 'undefined') {

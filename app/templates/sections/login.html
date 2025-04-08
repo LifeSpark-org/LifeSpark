@@ -153,43 +153,32 @@
     <!-- reCAPTCHA Script - מעודכן לטעינה מפורשת יותר -->
     <script src="https://www.google.com/recaptcha/api.js?onload=initRecaptcha&render=explicit" async defer></script>
     <script>
-        // פונקציה לאתחול ה-reCAPTCHA באופן מפורש
         function initRecaptcha() {
-            // מפתח האתר נלקח מהשרת ומוכנס כאן
             var siteKey = "{{ config.RECAPTCHA_SITE_KEY }}";
+            console.log("Initializing reCAPTCHA with site key:", siteKey);  // בדיקת לוג
             
-            // אתחול reCAPTCHA לטופס ההתחברות
-            if (document.getElementById('login-recaptcha')) {
-                try {
+            // נסה לאתחל את ה-reCAPTCHA
+            try {
+                if (document.getElementById('login-recaptcha')) {
                     grecaptcha.render('login-recaptcha', {
                         'sitekey': siteKey,
                         'callback': function(response) {
+                            console.log("reCAPTCHA response received");  // בדיקת לוג
                             document.getElementById('loginCaptchaError').style.display = 'none';
-                        },
-                        'expired-callback': function() {
-                            document.getElementById('loginCaptchaError').style.display = 'block';
                         }
                     });
-                } catch (e) {
-                    console.error('Error rendering login reCAPTCHA:', e);
                 }
-            }
-            
-            // אתחול reCAPTCHA לטופס ההרשמה
-            if (document.getElementById('register-recaptcha')) {
-                try {
+                
+                if (document.getElementById('register-recaptcha')) {
                     grecaptcha.render('register-recaptcha', {
                         'sitekey': siteKey,
                         'callback': function(response) {
                             document.getElementById('registerCaptchaError').style.display = 'none';
-                        },
-                        'expired-callback': function() {
-                            document.getElementById('registerCaptchaError').style.display = 'block';
                         }
                     });
-                } catch (e) {
-                    console.error('Error rendering register reCAPTCHA:', e);
                 }
+            } catch (e) {
+                console.error("reCAPTCHA initialization error:", e);
             }
         }
     </script>

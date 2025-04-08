@@ -14,6 +14,7 @@ auth_bp = Blueprint('auth', __name__)
 # פונקציית עזר לאימות CAPTCHA v2
 def verify_recaptcha(recaptcha_response):
     if not recaptcha_response:
+        print("No recaptcha response provided")  # בדיקת לוג
         return False
         
     verify_url = 'https://www.google.com/recaptcha/api/siteverify'
@@ -22,10 +23,13 @@ def verify_recaptcha(recaptcha_response):
         'response': recaptcha_response
     }
     
+    print(f"Verifying recaptcha with payload: {payload}")  # בדיקת לוג
+    
     response = requests.post(verify_url, data=payload)
     result = response.json()
     
-    # בגרסה 2 של reCAPTCHA, אנחנו פשוט בודקים אם האימות הצליח
+    print(f"reCAPTCHA verification result: {result}")  # בדיקת לוג
+    
     return result.get('success', False)
 
 
