@@ -1,0 +1,108 @@
+/* Custom CAPTCHA Styling */
+.captcha-container {
+    margin: 1.5rem 0;
+}
+
+.captcha-wrapper {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.captcha-image {
+    max-width: 200px;
+    height: 80px;
+    border-radius: 4px;
+    border: 1px solid var(--border-color);
+    background-color: #f8fafc;
+}
+
+.refresh-captcha {
+    background: none;
+    border: none;
+    color: var(--primary-color);
+    font-size: 1.2rem;
+    cursor: pointer;
+    margin-left: 0.5rem;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.refresh-captcha:hover {
+    background-color: rgba(79, 70, 229, 0.1);
+    transform: rotate(30deg);
+}
+
+.captcha-input {
+    width: 100%;
+    padding: 0.85rem 1rem;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background-color: #f8fafc;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.captcha-input:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+    outline: none;
+    background-color: #fff;
+}
+
+.captcha-error {
+    margin-top: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--error-color);
+}
+
+/* Dark mode support */
+.dark-theme .captcha-image {
+    background-color: #1e293b;
+    border-color: #334155;
+}
+
+.dark-theme .captcha-input {
+    background-color: #0f172a;
+    color: #e2e8f0;
+    border-color: #334155;
+}
+
+.dark-theme .refresh-captcha:hover {
+    background-color: rgba(79, 70, 229, 0.2);
+}
+
+/* RTL Support */
+[dir="rtl"] .refresh-captcha {
+    margin-left: 0;
+    margin-right: 0.5rem;
+}
+
+/* Mobile Responsive */
+@media (max-width: 480px) {
+    .captcha-wrapper {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .captcha-image {
+        max-width: 100%;
+        margin-bottom: 0.5rem;
+    }
+    
+    .refresh-captcha {
+        margin-left: 0;
+        margin-top: 0.5rem;
+    }
+    
+    [dir="rtl"] .refresh-captcha {
+        margin-right: 0;
+    }
+}

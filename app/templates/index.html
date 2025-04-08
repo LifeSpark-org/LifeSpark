@@ -25,6 +25,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/additional-styles.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/map-styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/captcha.css') }}">
     
     <!-- AOS Animation Library -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
@@ -100,6 +101,7 @@
     <script src="/static/js/translations.js"></script>
     <script src="/static/js/main.js"></script>
     <script src="/static/js/animations.js"></script>
+    <script src="/static/js/captcha.js"></script>
     <script src="/static/js/forms.js"></script>
     <script src="/static/js/map.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.8.1/web3.min.js"></script>
@@ -128,5 +130,7 @@
         document.getElementsByTagName("head")[0].appendChild(script);
     })();
     </script>
+    
+    <!-- Removed reCAPTCHA scripts - using custom CAPTCHA instead -->
 </body>
 </html>

@@ -121,53 +121,6 @@ async function checkAuthState() {
     }
 }
 
-
-// שינוי פונקציית בדיקת reCAPTCHA
-function getCaptchaResponse(captchaIndex) {
-    if (typeof grecaptcha === 'undefined') {
-        console.error('reCAPTCHA לא נטען');
-        return null;
-    }
-
-    try {
-        // נסה לקבל את התגובה
-        let response = null;
-        
-        // נסה לקבל תגובה לפי אינדקס ספציפי
-        try {
-            response = grecaptcha.getResponse(captchaIndex);
-        } catch (e) {
-            console.log("שגיאה בקבלת תגובה לפי אינדקס, מנסה לקבל ללא אינדקס");
-            // נסה לקבל תגובה ללא אינדקס במקרה שיש רק אחד בדף
-            response = grecaptcha.getResponse();
-        }
-        
-        console.log("reCAPTCHA response:", response ? "received" : "empty");
-        return response;
-    } catch (e) {
-        console.error('שגיאה בקבלת תגובת reCAPTCHA:', e);
-        return null;
-    }
-}
-// פונקציה לאיפוס ה-CAPTCHA
-function resetCaptcha() {
-    if (typeof grecaptcha !== 'undefined') {
-        try {
-            // ניסיון לאפס את כל ה-CAPTCHA
-            const captchaElements = document.querySelectorAll('.g-recaptcha');
-            captchaElements.forEach((element, index) => {
-                try {
-                    grecaptcha.reset(index);
-                } catch (e) {
-                    console.log('שגיאה באיפוס CAPTCHA באינדקס ' + index + ':', e);
-                }
-            });
-        } catch (e) {
-            console.log('שגיאה כללית באיפוס CAPTCHA:', e);
-        }
-    }
-}
-
 // Enhanced Form Interactions
 document.addEventListener('DOMContentLoaded', () => {
     // Initialize all form elements
@@ -198,8 +151,8 @@ function initializeFormToggles() {
                 registerSection.classList.remove('fade-in');
             }, 500);
             
-            // איפוס CAPTCHA
-            resetCaptcha();
+            // Load new CAPTCHA for registration form
+            loadCaptcha('register');
         }
     });
 
@@ -214,8 +167,8 @@ function initializeFormToggles() {
                 loginSection.classList.remove('fade-in');
             }, 500);
             
-            // איפוס CAPTCHA
-            resetCaptcha();
+            // Load new CAPTCHA for login form
+            loadCaptcha('login');
         }
     });
 }
@@ -429,16 +382,9 @@ function initializeFormSubmissions() {
     registerForm?.addEventListener('submit', async (event) => {
         event.preventDefault();
         
-        // בדיקת CAPTCHA - שימוש בפונקציה המשופרת
-        const recaptchaResponse = getCaptchaResponse(0); // CAPTCHA הרישום
-        
-        if (!recaptchaResponse) {
-            document.getElementById('registerCaptchaError').style.display = 'block';
-            // גלילה אל הודעת השגיאה
-            document.getElementById('registerCaptchaError').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        // Validate CAPTCHA input
+        if (!validateCaptcha('register')) {
             return;
-        } else {
-            document.getElementById('registerCaptchaError').style.display = 'none';
         }
         
         showFormLoading(registerForm);
@@ -447,7 +393,7 @@ function initializeFormSubmissions() {
             name: document.getElementById('registerName').value,
             email: document.getElementById('registerEmail').value,
             password: document.getElementById('registerPassword').value,
-            recaptcha: recaptchaResponse
+            captcha: document.getElementById('registerCaptcha').value
         };
 
         try {
@@ -493,6 +439,8 @@ function initializeFormSubmissions() {
                                 registerSection.style.display = 'none';
                                 loginSection.style.display = 'block';
                                 loginEmailInput.value = formData.email;
+                                // Load fresh CAPTCHA for login
+                                loadCaptcha('login');
                             }
                         } else {
                             showNotification('error', verifyResult.error || 'Invalid verification code');
@@ -500,10 +448,17 @@ function initializeFormSubmissions() {
                     }
                 });
             } else {
-                showNotification('error', result.error || 'Registration failed');
+                // If CAPTCHA verification failed, load a new one
+                if (result.error && result.error.includes('CAPTCHA')) {
+                    loadCaptcha('register');
+                    document.getElementById('registerCaptchaError').style.display = 'block';
+                } else {
+                    showNotification('error', result.error || 'Registration failed');
+                }
             }
         } catch (error) {
             showNotification('error', 'An error occurred during registration');
+            loadCaptcha('register');
         }
         
         hideFormLoading(registerForm);
@@ -513,16 +468,9 @@ function initializeFormSubmissions() {
     loginForm?.addEventListener('submit', async (event) => {
         event.preventDefault();
         
-        // בדיקת CAPTCHA - שימוש בפונקציה המשופרת
-        const recaptchaResponse = getCaptchaResponse(1); // CAPTCHA ההתחברות
-        
-        if (!recaptchaResponse) {
-            document.getElementById('loginCaptchaError').style.display = 'block';
-            // גלילה אל הודעת השגיאה
-            document.getElementById('loginCaptchaError').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        // Validate CAPTCHA input
+        if (!validateCaptcha('login')) {
             return;
-        } else {
-            document.getElementById('loginCaptchaError').style.display = 'none';
         }
         
         showFormLoading(loginForm);
@@ -530,7 +478,7 @@ function initializeFormSubmissions() {
         const formData = {
             email: loginEmailInput.value,
             password: document.getElementById('loginPassword').value,
-            recaptcha: recaptchaResponse
+            captcha: document.getElementById('loginCaptcha').value
         };
 
         try {
@@ -561,10 +509,17 @@ function initializeFormSubmissions() {
                     showSection('home');
                 }, 1000);
             } else {
-                showNotification('error', result.error || 'Login failed');
+                // If CAPTCHA verification failed, load a new one
+                if (result.error && result.error.includes('CAPTCHA')) {
+                    loadCaptcha('login');
+                    document.getElementById('loginCaptchaError').style.display = 'block';
+                } else {
+                    showNotification('error', result.error || 'Login failed');
+                }
             }
         } catch (error) {
             showNotification('error', 'An error occurred during login');
+            loadCaptcha('login');
         }
         
         hideFormLoading(loginForm);

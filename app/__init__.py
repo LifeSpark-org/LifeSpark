@@ -2,6 +2,7 @@ from flask import Flask
 from flask_pymongo import PyMongo
 from flask_mail import Mail
 from .config import Config
+import os
 
 mongo = PyMongo()
 mail = Mail()
@@ -9,6 +10,10 @@ mail = Mail()
 def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(config_class)
+    
+    # Make sure we have a secret key for sessions
+    if not app.config.get('SECRET_KEY'):
+        app.config['SECRET_KEY'] = os.urandom(24)
     
     # Initialize 
     mongo.init_app(app)

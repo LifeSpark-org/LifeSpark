@@ -30,11 +30,18 @@
                     </div>
                 </div>
 
-                <!-- reCAPTCHA Container - עודכן עם explicit rendering -->
+                <!-- Custom CAPTCHA Container -->
                 <div class="form-group captcha-container">
-                    <div id="login-recaptcha" class="g-recaptcha"></div>
+                    <label for="loginCaptcha" data-translate="login-captcha">Enter CAPTCHA:</label>
+                    <div class="captcha-wrapper">
+                        <img id="loginCaptchaImage" src="" alt="CAPTCHA" class="captcha-image">
+                        <button type="button" id="refreshLoginCaptcha" class="refresh-captcha">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                    </div>
+                    <input type="text" id="loginCaptcha" class="captcha-input" required placeholder="Enter the characters above">
                     <div class="captcha-error" id="loginCaptchaError" style="display: none; color: red;">
-                        <small data-translate="login-captcha-error">Please complete the captcha</small>
+                        <small data-translate="login-captcha-error">Please enter the correct CAPTCHA</small>
                     </div>
                 </div>
 
@@ -113,11 +120,18 @@
                     </div>
                 </div>
 
-                <!-- reCAPTCHA Container - עודכן עם explicit rendering -->
+                <!-- Custom CAPTCHA Container -->
                 <div class="form-group captcha-container">
-                    <div id="register-recaptcha" class="g-recaptcha"></div>
+                    <label for="registerCaptcha" data-translate="register-captcha">Enter CAPTCHA:</label>
+                    <div class="captcha-wrapper">
+                        <img id="registerCaptchaImage" src="" alt="CAPTCHA" class="captcha-image">
+                        <button type="button" id="refreshRegisterCaptcha" class="refresh-captcha">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                    </div>
+                    <input type="text" id="registerCaptcha" class="captcha-input" required placeholder="Enter the characters above">
                     <div class="captcha-error" id="registerCaptchaError" style="display: none; color: red;">
-                        <small data-translate="register-captcha-error">Please complete the captcha</small>
+                        <small data-translate="register-captcha-error">Please enter the correct CAPTCHA</small>
                     </div>
                 </div>
 
@@ -149,37 +163,4 @@
             </div>
         </div>
     </div>
-
-    <!-- reCAPTCHA Script - מעודכן לטעינה מפורשת יותר -->
-    <script src="https://www.google.com/recaptcha/api.js?onload=initRecaptcha&render=explicit" async defer></script>
-    <script>
-        function initRecaptcha() {
-            var siteKey = "{{ config.RECAPTCHA_SITE_KEY }}";
-            console.log("Initializing reCAPTCHA with site key:", siteKey);  // בדיקת לוג
-            
-            // נסה לאתחל את ה-reCAPTCHA
-            try {
-                if (document.getElementById('login-recaptcha')) {
-                    grecaptcha.render('login-recaptcha', {
-                        'sitekey': siteKey,
-                        'callback': function(response) {
-                            console.log("reCAPTCHA response received");  // בדיקת לוג
-                            document.getElementById('loginCaptchaError').style.display = 'none';
-                        }
-                    });
-                }
-                
-                if (document.getElementById('register-recaptcha')) {
-                    grecaptcha.render('register-recaptcha', {
-                        'sitekey': siteKey,
-                        'callback': function(response) {
-                            document.getElementById('registerCaptchaError').style.display = 'none';
-                        }
-                    });
-                }
-            } catch (e) {
-                console.error("reCAPTCHA initialization error:", e);
-            }
-        }
-    </script>
 </section>
