@@ -12,6 +12,7 @@ from ..services.email_service import generate_verification_code, send_verificati
 auth_bp = Blueprint('auth', __name__)
 
 # פונקציית עזר לאימות CAPTCHA
+# עדכן את פונקציית האימות של reCAPTCHA
 def verify_recaptcha(recaptcha_response):
     if not recaptcha_response:
         return False
@@ -25,7 +26,12 @@ def verify_recaptcha(recaptcha_response):
     response = requests.post(verify_url, data=payload)
     result = response.json()
     
-    return result.get('success', False)
+    # בדיקת הציון שהתקבל (בין 0.0 ל-1.0) לעומת הסף שהוגדר
+    if result.get('success') and result.get('score', 0) >= Config.RECAPTCHA_THRESHOLD:
+        return True
+    
+    return False
+
 
 @auth_bp.route('/register', methods=['POST'])
 def register():

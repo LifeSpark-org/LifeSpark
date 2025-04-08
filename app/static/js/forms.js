@@ -773,3 +773,68 @@ async function checkAuthState() {
         updateAuthMenu();
     }
 }
+
+// הוסף פונקציה חדשה לביצוע reCAPTCHA v3
+async function executeRecaptcha(action) {
+    return new Promise((resolve) => {
+        grecaptcha.ready(function() {
+            grecaptcha.execute('{{ config.RECAPTCHA_SITE_KEY }}', {action: action})
+            .then(function(token) {
+                resolve(token);
+            });
+        });
+    });
+}
+
+// עדכן את הטיפול בטופס ההרשמה
+registerForm?.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    showFormLoading(registerForm);
+    
+    try {
+        // קבלת טוקן reCAPTCHA v3
+        const recaptchaToken = await executeRecaptcha('register');
+        
+        const formData = {
+            name: document.getElementById('registerName').value,
+            email: document.getElementById('registerEmail').value,
+            password: document.getElementById('registerPassword').value,
+            recaptcha: recaptchaToken  // הוספת תגובת ה-CAPTCHA לנתונים שנשלחים
+        };
+        
+        // שאר הקוד נשאר זהה
+        const response = await fetch('/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(formData)
+        });
+        // המשך כמו קודם...
+    } catch (error) {
+        showNotification('error', 'An error occurred during registration');
+    } finally {
+        hideFormLoading(registerForm);
+    }
+});
+
+// עדכן את הטיפול בטופס ההתחברות באופן דומה
+loginForm?.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    showFormLoading(loginForm);
+    
+    try {
+        // קבלת טוקן reCAPTCHA v3
+        const recaptchaToken = await executeRecaptcha('login');
+        
+        const formData = {
+            email: loginEmailInput.value,
+            password: document.getElementById('loginPassword').value,
+            recaptcha: recaptchaToken  // הוספת תגובת ה-CAPTCHA לנתונים שנשלחים
+        };
+        
+        // שאר הקוד נשאר זהה...
+    } catch (error) {
+        showNotification('error', 'An error occurred during login');
+    } finally {
+        hideFormLoading(loginForm);
+    }
+});
