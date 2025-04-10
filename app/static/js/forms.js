@@ -127,6 +127,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeFormToggles();
     initializeFormSubmissions();
     initializePasswordStrength();
+    initializePasswordConfirmValidation(); // קריאה לפונקציה החדשה
     initializeAccordion();
     initializeAmountSuggestions();
     initializeDonationSummary();
@@ -244,6 +245,34 @@ function initializePasswordStrength() {
                 break;
         }
     });
+}
+
+// הוספת בדיקת אימות סיסמאות בזמן אמת
+function initializePasswordConfirmValidation() {
+    const passwordInput = document.getElementById('registerPassword');
+    const confirmInput = document.getElementById('registerPasswordConfirm');
+    const errorElement = document.getElementById('passwordMatchError');
+    
+    if (!passwordInput || !confirmInput || !errorElement) return;
+    
+    // פונקציה לבדיקת התאמה
+    const validateMatch = () => {
+        if (confirmInput.value.length === 0) {
+            // אם שדה האימות ריק, לא נציג שגיאה
+            errorElement.style.display = 'none';
+            return;
+        }
+        
+        if (passwordInput.value !== confirmInput.value) {
+            errorElement.style.display = 'block';
+        } else {
+            errorElement.style.display = 'none';
+        }
+    };
+    
+    // הפעלת הבדיקה בעת שינוי בשדות
+    confirmInput.addEventListener('input', validateMatch);
+    passwordInput.addEventListener('input', validateMatch);
 }
 
 // Initialize accordion for FAQs
@@ -381,6 +410,19 @@ function initializeFormSubmissions() {
     // Registration form
     registerForm?.addEventListener('submit', async (event) => {
         event.preventDefault();
+        
+        // בדיקת התאמה בין הסיסמאות
+        const password = document.getElementById('registerPassword').value;
+        const passwordConfirm = document.getElementById('registerPasswordConfirm').value;
+        const passwordMatchError = document.getElementById('passwordMatchError');
+        
+        if (password !== passwordConfirm) {
+            passwordMatchError.style.display = 'block';
+            document.getElementById('registerPasswordConfirm').focus();
+            return;
+        } else {
+            passwordMatchError.style.display = 'none';
+        }
         
         // Validate CAPTCHA input
         if (!validateCaptcha('register')) {

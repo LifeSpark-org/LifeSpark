@@ -123,6 +123,20 @@
     display: block;
 }
 
+/* הוספת עיצוב לשגיאת אימות סיסמה */
+.password-error {
+    color: var(--error-color);
+    font-size: 0.85rem;
+    margin-top: 0.5rem;
+    animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+    20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
 .auth-form button[type="submit"] {
     width: 100%;
     padding: 0.95rem;

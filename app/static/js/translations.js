@@ -17,6 +17,10 @@ const translations = {
         "login-captcha-error": "Please complete the captcha",
         "register-captcha-error": "Please complete the captcha",
         
+        // חדש - אימות סיסמה
+        "register-password-confirm": "Confirm Password:",
+        "register-password-mismatch": "Passwords do not match",
+        
         // קיים
         "home-title": "Welcome to lifeSpark",
         "home-subtitle": "Ignite hope, spark change.",
@@ -66,6 +70,10 @@ const translations = {
         // חדש - CAPTCHA
         "login-captcha-error": "אנא השלם את בדיקת האבטחה",
         "register-captcha-error": "אנא השלם את בדיקת האבטחה",
+        
+        // חדש - אימות סיסמה
+        "register-password-confirm": "אימות סיסמה:",
+        "register-password-mismatch": "הסיסמאות אינן תואמות",
         
         // קיים
         "home-title": "ברוכים הבאים ל-lifeSpark",
@@ -117,6 +125,10 @@ const translations = {
         "login-captcha-error": "Пожалуйста, пройдите проверку captcha",
         "register-captcha-error": "Пожалуйста, пройдите проверку captcha",
         
+        // חדש - אימות סיסמה
+        "register-password-confirm": "Подтвердите пароль:",
+        "register-password-mismatch": "Пароли не совпадают",
+        
         // קיים
         "home-title": "Добро пожаловать в lifeSpark",
         "home-subtitle": "Зажигаем надежду, создаем перемены.",
@@ -166,6 +178,10 @@ const translations = {
         // חדש - CAPTCHA
         "login-captcha-error": "يرجى إكمال اختبار التحقق",
         "register-captcha-error": "يرجى إكمال اختبار التحقق",
+        
+        // חדש - אימות סיסמה
+        "register-password-confirm": "تأكيد كلمة المرور:",
+        "register-password-mismatch": "كلمات المرور غير متطابقة",
         
         // קיים
         "home-title": "مرحباً بكم في lifeSpark",
