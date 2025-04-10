@@ -300,3 +300,48 @@
     height: 78px !important;
     width: 304px !important;
 }
+
+/* עיצוב שדה הסיסמה ואייקון העין */
+.password-input-container {
+    position: relative;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: var(--text-light);
+    transition: color 0.3s ease;
+    z-index: 10;
+}
+
+.password-toggle:hover {
+    color: var(--primary-color);
+}
+
+.input-with-icon.password-input-container input {
+    padding-right: 40px; /* מתן מקום לאייקון העין */
+}
+
+/* תמיכה ב-RTL עבור עברית וערבית */
+[dir="rtl"] .password-toggle {
+    right: auto;
+    left: 10px;
+}
+
+[dir="rtl"] .input-with-icon.password-input-container input {
+    padding-right: 2.5rem; /* מקום לאייקון המנעול מימין */
+    padding-left: 40px; /* מקום לאייקון העין משמאל */
+}
+
+/* אנימציית הופעה/היעלמות לתצוגת סיסמה */
+.password-toggle {
+    opacity: 0.7;
+    transition: opacity 0.3s ease, color 0.3s ease;
+}
+
+.password-toggle:hover {
+    opacity: 1;
+}

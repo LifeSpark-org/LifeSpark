@@ -17,9 +17,9 @@
 
                 <div class="form-group">
                     <label for="loginPassword" data-translate="login-password">Password:</label>
-                    <div class="input-with-icon">
+                    <div class="input-with-icon password-input-container">
                         <input type="password" id="loginPassword" required autocomplete="off">
-                        <i class="fas fa-lock input-icon"></i>
+                        <i class="fas fa-eye password-toggle" onclick="togglePasswordVisibility('loginPassword')"></i>
                     </div>
                     <div class="password-options">
                         <label class="remember-me">
@@ -83,9 +83,9 @@
 
                 <div class="form-group">
                     <label for="registerPassword" data-translate="register-password">Password:</label>
-                    <div class="input-with-icon">
+                    <div class="input-with-icon password-input-container">
                         <input type="password" id="registerPassword" required autocomplete="off">
-                        <i class="fas fa-lock input-icon"></i>
+                        <i class="fas fa-eye password-toggle" onclick="togglePasswordVisibility('registerPassword')"></i>
                     </div>
                     <div class="password-strength">
                         <div class="strength-meter">
