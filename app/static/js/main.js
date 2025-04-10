@@ -341,59 +341,79 @@ function initializeRegionSelection() {
     });
 }
 
-// Enhanced section navigation with smoother transitions
-function showSection(sectionId) {
-    // First, hide all sections with a fade-out effect
-    const sections = document.querySelectorAll('section');
-    const currentSection = document.querySelector('section.active');
+// פונקציה משופרת לתפריט המובייל
+function initMobileMenu() {
+    const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+    const leftMenu = document.querySelector('.left-menu');
+    const rightMenu = document.querySelector('.right-menu');
     
-    // If a section is currently active, fade it out first
-    if (currentSection) {
-        currentSection.classList.add('fade-out');
-        
-        // Wait for fade-out animation to complete
-        setTimeout(() => {
-            // Hide all sections
-            sections.forEach(section => {
-                section.style.display = 'none';
-                section.classList.remove('active', 'fade-out');
-            });
+    if (mobileMenuBtn && leftMenu && rightMenu) {
+        // הפעלת התפריט בלחיצה על הכפתור
+        mobileMenuBtn.addEventListener('click', () => {
+            document.body.classList.toggle('mobile-menu-open');
+            leftMenu.classList.toggle('active');
+            rightMenu.classList.toggle('active');
             
-            // Show the target section
-            showTargetSection(sectionId);
-        }, 300);
-    } else {
-        // If no section is active, just show the target section
-        showTargetSection(sectionId);
+            // נגישות
+            const expanded = leftMenu.classList.contains('active');
+            mobileMenuBtn.setAttribute('aria-expanded', expanded);
+        });
+        
+        // סגירת התפריט בלחיצה על קישורים
+        const menuLinks = document.querySelectorAll('.left-menu a, .right-menu a');
+        menuLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                document.body.classList.remove('mobile-menu-open');
+                leftMenu.classList.remove('active');
+                rightMenu.classList.remove('active');
+                mobileMenuBtn.setAttribute('aria-expanded', 'false');
+            });
+        });
     }
-    
-    // Update active state in navigation
-    updateActiveNavLink(sectionId);
-    // רענון המפה במקרה שהשתנה למקטע המפה
-if (sectionId === 'map') {
-    // מחכה 500 מילישניות ואז מרענן את המפה
-    setTimeout(function() {
-        if (typeof refreshMap === 'function') {
-            refreshMap();
-        } else if (window.mapInstance) {
-            window.mapInstance.invalidateSize();
-        }
-    }, 500);
-}
 }
 
-// Helper function to show target section
-function showTargetSection(sectionId) {
-    const targetSection = document.getElementById(sectionId);
+// Enhanced section navigation with smoother transitions
+function showSection(sectionId) {
+    console.log("מציג מקטע:", sectionId);
     
+    // מסתיר את כל המקטעים
+    const sections = document.querySelectorAll('section');
+    sections.forEach(section => {
+        section.style.display = 'none';
+        section.classList.remove('active', 'fade-out');
+    });
+    
+    // מציג את המקטע הנבחר
+    const targetSection = document.getElementById(sectionId);
     if (targetSection) {
-        // Display the section
+        // מוודא שהמקטע מוצג
         targetSection.style.display = 'block';
         
-        // Slight delay to ensure display change is processed
+        // השהייה קלה כדי לוודא שהשינוי בתצוגה מעובד
         setTimeout(() => {
-            // Add active class to trigger entrance animation
+            // מוסיף מחלקה active כדי להפעיל אנימציה
             targetSection.classList.add('active');
+            
+            // גלילה לראש העמוד בצורה חלקה
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+            
+            // במובייל, סוגר את התפריט אם הוא פתוח
+            if (window.innerWidth <= 768) {
+                const leftMenu = document.querySelector('.left-menu');
+                const rightMenu = document.querySelector('.right-menu');
+                
+                document.body.classList.remove('mobile-menu-open');
+                if (leftMenu) leftMenu.classList.remove('active');
+                if (rightMenu) rightMenu.classList.remove('active');
+                
+                const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+                if (mobileMenuBtn) {
+                    mobileMenuBtn.setAttribute('aria-expanded', 'false');
+                }
+            }
             
             // Animate child elements with staggered delay
             const animateItems = targetSection.querySelectorAll('.animate-on-scroll');
@@ -403,16 +423,20 @@ function showTargetSection(sectionId) {
                 }, 100 + (index * 80));
             });
             
-            // Scroll to top with smooth behavior
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
+            // אם זה מקטע המפה, רענן את המפה
+            if (sectionId === 'map' && typeof refreshMap === 'function') {
+                setTimeout(refreshMap, 500);
+            }
             
             // Refresh AOS animations
             AOS.refresh();
-        }, 10);
+        }, 50);
+    } else {
+        console.error("המקטע לא נמצא:", sectionId);
     }
+    
+    // עדכון מצב פעיל בניווט
+    updateActiveNavLink(sectionId);
 }
 
 // Update active navigation link
@@ -430,6 +454,18 @@ function updateActiveNavLink(sectionId) {
         }
     });
 }
+
+// פונקציה לעזרה בדיבוג במידת הצורך
+function debugSections() {
+    const sections = document.querySelectorAll('section');
+    console.log("כל המקטעים:");
+    sections.forEach(section => {
+        console.log(`${section.id}: display=${section.style.display}, active=${section.classList.contains('active')}`);
+    });
+}
+
+// ניתן לקרוא לפונקציה זו מקונסולת הדפדפן לצורך דיבוג
+window.debugSections = debugSections;
 
 // Preload images for better performance
 function preloadImages() {
