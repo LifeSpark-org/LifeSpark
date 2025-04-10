@@ -317,11 +317,11 @@ footer {
     transition: all 0.3s ease;
 }
 
-/* שיפורים לתפריט המובייל */
+/* Mobile menu improvements */
 @media (max-width: 768px) {
     .mobile-menu-btn {
         display: flex;
-        z-index: 1001; /* ודא שהוא מעל התפריט כאשר פתוח */
+        z-index: 1001; /* Ensure it's above the menu when open */
     }
     
     .navbar {
@@ -341,19 +341,20 @@ footer {
         z-index: 1000;
         box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
         transition: right 0.3s ease;
-        overflow-y: auto; /* אפשר גלילה אם התפריט ארוך */
+        overflow-y: auto; /* Allow scrolling if menu is long */
+        align-items: flex-start; /* Align items to the start in mobile view */
     }
     
     .left-menu.active, .right-menu.active {
         right: 0;
     }
     
-    /* מניעת גלילת גוף כאשר התפריט פתוח */
+    /* Prevent body scrolling when menu is open */
     body.mobile-menu-open {
         overflow: hidden;
     }
     
-    /* אנימצית כפתור תפריט מובייל */
+    /* Mobile menu button animation */
     .mobile-menu-open .mobile-menu-btn span:nth-child(1) {
         transform: translateY(9px) rotate(45deg);
     }
@@ -366,12 +367,13 @@ footer {
         transform: translateY(-9px) rotate(-45deg);
     }
     
-    /* עיצוב משופר לפריטי תפריט */
+    /* Enhanced menu item styling */
     .navbar a {
         padding: 1rem;
         width: 100%;
         display: flex;
         align-items: center;
+        border-bottom: 1px solid var(--border-color);
     }
     
     .navbar a i {
@@ -380,7 +382,7 @@ footer {
         text-align: center;
     }
     
-    /* הוספת שכבת רקע כהה מאחורי התפריט */
+    /* Dark background overlay behind menu */
     .mobile-menu-backdrop {
         display: none;
         position: fixed;
@@ -396,7 +398,7 @@ footer {
         display: block;
     }
     
-    /* ודא שהסקשנים מוצגים כראוי במובייל */
+    /* Ensure sections display properly on mobile */
     section {
         display: none;
     }
@@ -406,24 +408,10 @@ footer {
         opacity: 1 !important;
         transform: translateY(0) !important;
     }
-}
-
-/* תיקונים רספונסיביים למסכים בגדלים שונים */
-@media (max-width: 480px) {
-    .home-container h1 {
-        font-size: 2rem;
-    }
     
-    .subtitle {
-        font-size: 1.1rem;
-    }
-    
-    .btn {
+    /* Fix for the language selector positioning */
+    .right-menu .language-selector {
         width: 100%;
-        margin-bottom: 10px;
-    }
-    
-    .cta-container {
-        flex-direction: column;
+        margin-bottom: 1rem;
     }
 }

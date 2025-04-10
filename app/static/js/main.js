@@ -15,6 +15,9 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeBackToTop();
     initializeRegionSelection();
     
+    // Initialize mobile menu - IMPORTANT: Call this function explicitly
+    initMobileMenu();
+    
     // Load saved language preference if exists
     const savedLanguage = localStorage.getItem('preferredLanguage');
     if (savedLanguage) {
@@ -341,25 +344,41 @@ function initializeRegionSelection() {
     });
 }
 
-// פונקציה משופרת לתפריט המובייל
+// Enhanced mobile menu function
 function initMobileMenu() {
     const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
     const leftMenu = document.querySelector('.left-menu');
     const rightMenu = document.querySelector('.right-menu');
     
     if (mobileMenuBtn && leftMenu && rightMenu) {
-        // הפעלת התפריט בלחיצה על הכפתור
+        // Toggle mobile menu on button click
         mobileMenuBtn.addEventListener('click', () => {
             document.body.classList.toggle('mobile-menu-open');
             leftMenu.classList.toggle('active');
             rightMenu.classList.toggle('active');
             
-            // נגישות
+            // Accessibility
             const expanded = leftMenu.classList.contains('active');
-            mobileMenuBtn.setAttribute('aria-expanded', expanded);
+            mobileMenuBtn.setAttribute('aria-expanded', expanded ? 'true' : 'false');
         });
         
-        // סגירת התפריט בלחיצה על קישורים
+        // Create backdrop element if it doesn't exist
+        let backdrop = document.querySelector('.mobile-menu-backdrop');
+        if (!backdrop) {
+            backdrop = document.createElement('div');
+            backdrop.className = 'mobile-menu-backdrop';
+            document.body.appendChild(backdrop);
+        }
+        
+        // Close menu when clicking on backdrop
+        backdrop.addEventListener('click', () => {
+            document.body.classList.remove('mobile-menu-open');
+            leftMenu.classList.remove('active');
+            rightMenu.classList.remove('active');
+            mobileMenuBtn.setAttribute('aria-expanded', 'false');
+        });
+        
+        // Close menu when clicking on links
         const menuLinks = document.querySelectorAll('.left-menu a, .right-menu a');
         menuLinks.forEach(link => {
             link.addEventListener('click', () => {
@@ -369,38 +388,47 @@ function initMobileMenu() {
                 mobileMenuBtn.setAttribute('aria-expanded', 'false');
             });
         });
+        
+        // Log mobile menu initialization
+        console.log('Mobile menu initialized successfully');
+    } else {
+        console.error('Mobile menu elements not found:',
+            mobileMenuBtn ? 'Button OK' : 'Button missing',
+            leftMenu ? 'Left menu OK' : 'Left menu missing',
+            rightMenu ? 'Right menu OK' : 'Right menu missing'
+        );
     }
 }
 
 // Enhanced section navigation with smoother transitions
 function showSection(sectionId) {
-    console.log("מציג מקטע:", sectionId);
+    console.log("Showing section:", sectionId);
     
-    // מסתיר את כל המקטעים
+    // Hide all sections
     const sections = document.querySelectorAll('section');
     sections.forEach(section => {
         section.style.display = 'none';
         section.classList.remove('active', 'fade-out');
     });
     
-    // מציג את המקטע הנבחר
+    // Show the selected section
     const targetSection = document.getElementById(sectionId);
     if (targetSection) {
-        // מוודא שהמקטע מוצג
+        // Make sure the section is displayed
         targetSection.style.display = 'block';
         
-        // השהייה קלה כדי לוודא שהשינוי בתצוגה מעובד
+        // Slight delay to ensure display change is processed
         setTimeout(() => {
-            // מוסיף מחלקה active כדי להפעיל אנימציה
+            // Add active class to trigger animation
             targetSection.classList.add('active');
             
-            // גלילה לראש העמוד בצורה חלקה
+            // Smooth scroll to top
             window.scrollTo({
                 top: 0,
                 behavior: 'smooth'
             });
             
-            // במובייל, סוגר את התפריט אם הוא פתוח
+            // On mobile, close the menu if open
             if (window.innerWidth <= 768) {
                 const leftMenu = document.querySelector('.left-menu');
                 const rightMenu = document.querySelector('.right-menu');
@@ -423,19 +451,21 @@ function showSection(sectionId) {
                 }, 100 + (index * 80));
             });
             
-            // אם זה מקטע המפה, רענן את המפה
+            // If this is the map section, refresh the map
             if (sectionId === 'map' && typeof refreshMap === 'function') {
                 setTimeout(refreshMap, 500);
             }
             
             // Refresh AOS animations
-            AOS.refresh();
+            if (typeof AOS !== 'undefined' && AOS.refresh) {
+                AOS.refresh();
+            }
         }, 50);
     } else {
-        console.error("המקטע לא נמצא:", sectionId);
+        console.error("Section not found:", sectionId);
     }
     
-    // עדכון מצב פעיל בניווט
+    // Update active state in navigation
     updateActiveNavLink(sectionId);
 }
 
@@ -455,16 +485,16 @@ function updateActiveNavLink(sectionId) {
     });
 }
 
-// פונקציה לעזרה בדיבוג במידת הצורך
+// Function to help with debugging if needed
 function debugSections() {
     const sections = document.querySelectorAll('section');
-    console.log("כל המקטעים:");
+    console.log("All sections:");
     sections.forEach(section => {
         console.log(`${section.id}: display=${section.style.display}, active=${section.classList.contains('active')}`);
     });
 }
 
-// ניתן לקרוא לפונקציה זו מקונסולת הדפדפן לצורך דיבוג
+// Can be called from browser console for debugging
 window.debugSections = debugSections;
 
 // Preload images for better performance
