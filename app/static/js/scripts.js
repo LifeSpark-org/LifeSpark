@@ -3,6 +3,15 @@
 document.getElementById('donationForm').addEventListener('submit', async function (e) {
     e.preventDefault();
     
+    // בדיקה שהמשתמש מחובר
+    if (!isUserLoggedIn()) {
+        showNotification('error', 'עליך להתחבר למערכת כדי לתרום');
+        setTimeout(() => {
+            showSection('login');
+        }, 1500);
+        return;
+    }
+    
     // בדיקה שהארנק מחובר
     if (!window.userWalletAddress) {
         showNotification('error', 'אנא התחבר לארנק קודם');
@@ -58,6 +67,11 @@ document.getElementById('donationForm').addEventListener('submit', async functio
         }
     }
 });
+
+// פונקציה לבדיקה האם המשתמש מחובר
+function isUserLoggedIn() {
+    return localStorage.getItem('token') !== null;
+}
 
 function displayStatus(message, statusType) {
     const statusMessage = document.getElementById('statusMessage');

@@ -37,7 +37,18 @@
             </div>
         </div>
         
-        <div class="donation-options" data-aos="fade-up" data-aos-delay="300">
+        <!-- Auth Check Message -->
+        <div id="donationAuthCheck" class="auth-message-container" style="display: none;">
+            <div class="auth-message">
+                <h3 data-translate="donate-auth-required">התחברות נדרשת</h3>
+                <p data-translate="donate-auth-message">עליך להתחבר למערכת כדי לבצע תרומה</p>
+                <button type="button" onclick="showSection('login')" class="btn btn-primary">
+                    <i class="fas fa-sign-in-alt"></i> <span data-translate="donate-auth-login">התחבר עכשיו</span>
+                </button>
+            </div>
+        </div>
+        
+        <div class="donation-options" data-aos="fade-up" data-aos-delay="300" id="donationOptionsContainer">
             <div class="wallet-section">
                 <h3 data-translate="donate-wallet-title">Connect Your Wallet</h3>
                 <p data-translate="donate-wallet-desc">First, connect your Ethereum wallet to begin the donation process.</p>

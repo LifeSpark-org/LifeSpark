@@ -86,6 +86,15 @@ function checkMetaMask() {
 }
 
 async function connectWallet() {
+    // בדיקה אם המשתמש מחובר - אם לא, נציג הודעה ונעביר אותו לדף ההתחברות
+    if (!isUserLoggedIn()) {
+        showNotification('error', 'עליך להתחבר למערכת לפני חיבור ארנק');
+        setTimeout(() => {
+            showSection('login');
+        }, 1500);
+        return;
+    }
+
     if (!checkMetaMask()) {
         return;
     }
@@ -135,6 +144,11 @@ async function connectWallet() {
         // במקרה של שגיאה, נוודא שהמצב מאופס
         resetConnection();
     }
+}
+
+// פונקציה לבדיקה האם המשתמש מחובר
+function isUserLoggedIn() {
+    return localStorage.getItem('token') !== null;
 }
 
 // האזנה לשינויים בחשבונות

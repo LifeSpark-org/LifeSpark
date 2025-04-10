@@ -27,6 +27,56 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/map-styles.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/captcha.css') }}">
     
+    <!-- New Auth Check CSS -->
+    <style>
+    /* Auth Message Styling */
+    .auth-message-container {
+        background-color: var(--card-bg);
+        border-radius: var(--border-radius-lg);
+        box-shadow: var(--box-shadow-lg);
+        padding: 2.5rem;
+        margin: 2rem auto;
+        max-width: 600px;
+        text-align: center;
+        border-left: 4px solid var(--primary-color);
+        animation: fadeIn 0.5s ease;
+    }
+
+    .auth-message h3 {
+        color: var(--primary-color);
+        margin-bottom: 1rem;
+    }
+
+    .auth-message p {
+        margin-bottom: 1.5rem;
+        color: var(--text-light);
+        font-size: 1.1rem;
+    }
+
+    .auth-message button {
+        padding: 0.75rem 1.5rem;
+        margin-top: 0.5rem;
+    }
+
+    /* Make sure RTL is handled correctly */
+    [dir="rtl"] .auth-message-container {
+        border-left: none;
+        border-right: 4px solid var(--primary-color);
+    }
+
+    /* Dark theme support */
+    .dark-theme .auth-message-container {
+        background-color: #1e293b;
+    }
+
+    /* Disable the donation form when not authenticated */
+    .disabled-donation-form {
+        pointer-events: none;
+        opacity: 0.6;
+        filter: blur(1px);
+    }
+    </style>
+    
     <!-- AOS Animation Library -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
 </head>
@@ -112,6 +162,66 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.8.1/web3.min.js"></script>
     <script src="/static/js/metamask.js"></script>
     <script src="/static/js/scripts.js"></script>
+    
+    <!-- New Auth Check Script for Donation Page -->
+    <script>
+    // Check auth status when donation section is shown
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add event listener for navigation to the donate section
+        document.body.addEventListener('click', function(e) {
+            if (e.target.matches('[onclick*="showSection(\'donate\'"]') || 
+                e.target.closest('[onclick*="showSection(\'donate\'"]')) {
+                setTimeout(checkDonationAuth, 100);
+            }
+        });
+        
+        // Also check on page load if we're starting on the donation page
+        if (window.location.hash === '#donate' || document.getElementById('donate').classList.contains('active')) {
+            setTimeout(checkDonationAuth, 100);
+        }
+    });
+
+    // Function to check auth state for donation page
+    function checkDonationAuth() {
+        const donationAuthCheck = document.getElementById('donationAuthCheck');
+        const donationOptionsContainer = document.getElementById('donationOptionsContainer');
+        
+        if (!donationAuthCheck || !donationOptionsContainer) return;
+        
+        // Check if user is logged in
+        const isLoggedIn = localStorage.getItem('token') !== null;
+        
+        if (isLoggedIn) {
+            // User is logged in, show donation options
+            donationAuthCheck.style.display = 'none';
+            donationOptionsContainer.style.display = 'block';
+            donationOptionsContainer.classList.remove('disabled-donation-form');
+        } else {
+            // User is not logged in, show auth message
+            donationAuthCheck.style.display = 'block';
+            donationOptionsContainer.style.display = 'none';
+        }
+    }
+
+    // Add this function to the global scope so it can be called from other places
+    window.checkDonationAuth = checkDonationAuth;
+
+    // Also check donation auth after login/logout
+    document.addEventListener('authStateChanged', function() {
+        // If we're on the donation page, check auth
+        if (document.getElementById('donate').classList.contains('active')) {
+            checkDonationAuth();
+        }
+    });
+
+    // Dispatch auth state changed event after login
+    const originalUpdateAuthMenu = window.updateAuthMenu;
+    window.updateAuthMenu = function(userData) {
+        originalUpdateAuthMenu(userData);
+        // Dispatch auth state changed event
+        document.dispatchEvent(new CustomEvent('authStateChanged'));
+    };
+    </script>
 
     <!-- Initialize AOS animations -->
     <script>
