@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeRegionSelection();
     
     // Initialize mobile menu - IMPORTANT: Call this function explicitly
-    initMobileMenu();
+    initializeMobileMenu();
     
     // Load saved language preference if exists
     const savedLanguage = localStorage.getItem('preferredLanguage');
@@ -38,7 +38,9 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.classList.add('page-loaded');
         
         // Initialize AOS animations after page load
-        AOS.refresh();
+        if (typeof AOS !== 'undefined') {
+            AOS.refresh();
+        }
     }, 800);
 });
 
@@ -345,14 +347,18 @@ function initializeRegionSelection() {
 }
 
 // Enhanced mobile menu function
-function initMobileMenu() {
+function initializeMobileMenu() {
+    console.log("Initializing mobile menu...");
     const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
     const leftMenu = document.querySelector('.left-menu');
     const rightMenu = document.querySelector('.right-menu');
     
     if (mobileMenuBtn && leftMenu && rightMenu) {
+        console.log("Mobile menu elements found");
+        
         // Toggle mobile menu on button click
-        mobileMenuBtn.addEventListener('click', () => {
+        mobileMenuBtn.addEventListener('click', function() {
+            console.log("Mobile menu button clicked");
             document.body.classList.toggle('mobile-menu-open');
             leftMenu.classList.toggle('active');
             rightMenu.classList.toggle('active');
@@ -371,7 +377,7 @@ function initMobileMenu() {
         }
         
         // Close menu when clicking on backdrop
-        backdrop.addEventListener('click', () => {
+        backdrop.addEventListener('click', function() {
             document.body.classList.remove('mobile-menu-open');
             leftMenu.classList.remove('active');
             rightMenu.classList.remove('active');
@@ -381,21 +387,18 @@ function initMobileMenu() {
         // Close menu when clicking on links
         const menuLinks = document.querySelectorAll('.left-menu a, .right-menu a');
         menuLinks.forEach(link => {
-            link.addEventListener('click', () => {
+            link.addEventListener('click', function() {
                 document.body.classList.remove('mobile-menu-open');
                 leftMenu.classList.remove('active');
                 rightMenu.classList.remove('active');
                 mobileMenuBtn.setAttribute('aria-expanded', 'false');
             });
         });
-        
-        // Log mobile menu initialization
-        console.log('Mobile menu initialized successfully');
     } else {
-        console.error('Mobile menu elements not found:',
-            mobileMenuBtn ? 'Button OK' : 'Button missing',
-            leftMenu ? 'Left menu OK' : 'Left menu missing',
-            rightMenu ? 'Right menu OK' : 'Right menu missing'
+        console.error("Mobile menu elements not found:", 
+            mobileMenuBtn ? "Button OK" : "Button missing",
+            leftMenu ? "Left menu OK" : "Left menu missing",
+            rightMenu ? "Right menu OK" : "Right menu missing"
         );
     }
 }
@@ -511,3 +514,7 @@ function preloadImages() {
         img.src = src;
     });
 }
+
+// Export for global access
+window.showSection = showSection;
+window.initializeMobileMenu = initializeMobileMenu;

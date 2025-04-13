@@ -1,5 +1,6 @@
 // Enhanced animations and interactive effects
 document.addEventListener('DOMContentLoaded', function() {
+    console.log("animations.js loaded");
     // Initialize scrolling animations
     initScrollAnimations();
     
@@ -11,6 +12,14 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Initialize section transitions
     initSectionTransitions();
+    
+    // אנימציית הלוגו בכניסה
+    const heroLogo = document.querySelector('.hero-logo');
+    if (heroLogo) {
+        setTimeout(() => {
+            heroLogo.classList.add('animated-logo');
+        }, 500);
+    }
 });
 
 // Animate elements as they come into viewport
@@ -53,12 +62,17 @@ function initNavbarEffects() {
 
 // Handle mobile menu interactions
 function initMobileMenu() {
+    console.log("initMobileMenu called from animations.js");
     const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
     const leftMenu = document.querySelector('.left-menu');
     const rightMenu = document.querySelector('.right-menu');
     
     if (mobileMenuBtn && leftMenu && rightMenu) {
-        mobileMenuBtn.addEventListener('click', () => {
+        console.log("Found mobile menu elements in animations.js");
+        
+        // Toggle mobile menu on button click
+        mobileMenuBtn.addEventListener('click', function() {
+            console.log("Mobile menu button clicked in animations.js");
             document.body.classList.toggle('mobile-menu-open');
             leftMenu.classList.toggle('active');
             rightMenu.classList.toggle('active');
@@ -73,6 +87,22 @@ function initMobileMenu() {
                 rightMenu.classList.remove('active');
             });
         });
+        
+        // Close menu when clicking on backdrop
+        const backdrop = document.querySelector('.mobile-menu-backdrop');
+        if (backdrop) {
+            backdrop.addEventListener('click', () => {
+                document.body.classList.remove('mobile-menu-open');
+                leftMenu.classList.remove('active');
+                rightMenu.classList.remove('active');
+            });
+        }
+    } else {
+        console.warn("Mobile menu elements not found in animations.js", 
+            mobileMenuBtn ? "Button OK" : "Button missing",
+            leftMenu ? "Left menu OK" : "Left menu missing",
+            rightMenu ? "Right menu OK" : "Right menu missing"
+        );
     }
 }
 
@@ -124,6 +154,16 @@ function showSection(sectionId) {
                 top: 0,
                 behavior: 'smooth'
             });
+            
+            // On mobile, close the menu if open
+            if (window.innerWidth <= 768) {
+                const leftMenu = document.querySelector('.left-menu');
+                const rightMenu = document.querySelector('.right-menu');
+                
+                document.body.classList.remove('mobile-menu-open');
+                if (leftMenu) leftMenu.classList.remove('active');
+                if (rightMenu) rightMenu.classList.remove('active');
+            }
         }, 10);
     }
     
@@ -194,39 +234,6 @@ function initFormEffects() {
     });
 }
 
-// Call this after DOM is loaded
-document.addEventListener('DOMContentLoaded', function() {
-    initScrollAnimations();
-    initNavbarEffects();
-    initMobileMenu();
-    initSectionTransitions();
-    initParallaxEffect();
-    initFormEffects();
-    
-    // Set initial active section
-    const initialSection = 'home';
-    showSection(initialSection);
-});
-
-// אנימציית הלוגו בכניסה - להוסיף לפונקציה הקיימת
-document.addEventListener('DOMContentLoaded', function() {
-    // Initialize scrolling animations
-    initScrollAnimations();
-    
-    // Initialize navbar effects
-    initNavbarEffects();
-    
-    // Initialize mobile menu
-    initMobileMenu();
-    
-    // Initialize section transitions
-    initSectionTransitions();
-    
-    // אנימציית הלוגו בכניסה
-    const heroLogo = document.querySelector('.hero-logo');
-    if (heroLogo) {
-        setTimeout(() => {
-            heroLogo.classList.add('animated-logo');
-        }, 500);
-    }
-});
+// Make functions available globally if needed
+window.showSection = showSection;
+window.initMobileMenu = initMobileMenu;

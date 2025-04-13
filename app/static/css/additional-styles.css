@@ -1122,3 +1122,176 @@ section.fade-out {
     }
 }
 
+/* Improved Mobile Menu CSS - Add this to the end of your additional-styles.css file */
+
+/* Mobile Menu Enhancements */
+@media (max-width: 768px) {
+    /* Fixed header on mobile */
+    .navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1000;
+        background-color: rgba(255, 255, 255, 0.95);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    .dark-theme .navbar {
+        background-color: rgba(30, 41, 59, 0.95);
+    }
+    
+    /* Content offset to account for fixed header */
+    body {
+        padding-top: 60px;
+    }
+    
+    /* Mobile menu button enhancements */
+    .mobile-menu-btn {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        width: 30px;
+        height: 20px;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+        z-index: 1001;
+        position: relative;
+    }
+    
+    .mobile-menu-btn span {
+        display: block;
+        width: 100%;
+        height: 2px;
+        background-color: var(--text-color);
+        transition: all 0.3s ease;
+    }
+    
+    /* Animation for mobile menu button */
+    body.mobile-menu-open .mobile-menu-btn span:nth-child(1) {
+        transform: translateY(9px) rotate(45deg);
+    }
+    
+    body.mobile-menu-open .mobile-menu-btn span:nth-child(2) {
+        opacity: 0;
+    }
+    
+    body.mobile-menu-open .mobile-menu-btn span:nth-child(3) {
+        transform: translateY(-9px) rotate(-45deg);
+    }
+    
+    /* Mobile menu positioning */
+    .left-menu, .right-menu {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 80%;
+        max-width: 300px;
+        height: 100vh;
+        background-color: var(--card-bg);
+        flex-direction: column;
+        padding: 5rem 2rem 2rem;
+        z-index: 1000;
+        box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+        transition: right 0.3s ease;
+        overflow-y: auto;
+        align-items: flex-start;
+    }
+    
+    .dark-theme .left-menu, 
+    .dark-theme .right-menu {
+        background-color: #1e293b;
+    }
+    
+    /* Active state for menus */
+    .left-menu.active, 
+    .right-menu.active {
+        right: 0;
+    }
+    
+    /* Mobile menu links styling */
+    .left-menu a, 
+    .right-menu a {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        padding: 1rem;
+        border-bottom: 1px solid var(--border-color);
+    }
+    
+    .left-menu a i, 
+    .right-menu a i {
+        margin-right: 10px;
+        width: 20px;
+        text-align: center;
+    }
+    
+    /* Language selector in mobile menu */
+    .right-menu .language-selector {
+        width: 100%;
+        margin: 1rem 0;
+    }
+    
+    /* Backdrop for mobile menu */
+    .mobile-menu-backdrop {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+    }
+    
+    body.mobile-menu-open .mobile-menu-backdrop {
+        display: block;
+    }
+    
+    /* Prevent scrolling when menu is open */
+    body.mobile-menu-open {
+        overflow: hidden;
+    }
+    
+    /* Extra padding for section content on mobile */
+    section {
+        padding-top: 2rem;
+    }
+    
+    /* RTL support for mobile menu */
+    [dir="rtl"] .left-menu, 
+    [dir="rtl"] .right-menu {
+        right: auto;
+        left: -100%;
+    }
+    
+    [dir="rtl"] .left-menu.active, 
+    [dir="rtl"] .right-menu.active {
+        right: auto;
+        left: 0;
+    }
+    
+    [dir="rtl"] .left-menu a i, 
+    [dir="rtl"] .right-menu a i {
+        margin-right: 0;
+        margin-left: 10px;
+    }
+}
+
+/* Make sure the mobile menu works for tablets too */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .navbar {
+        padding: 0.75rem 1.5rem;
+    }
+    
+    .left-menu, .right-menu {
+        gap: 0.75rem;
+    }
+    
+    .navbar a {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.9rem;
+    }
+}
