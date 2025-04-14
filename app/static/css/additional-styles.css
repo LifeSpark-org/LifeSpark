@@ -1295,3 +1295,72 @@ section.fade-out {
         font-size: 0.9rem;
     }
 }
+
+
+/* Legal Modals Styles */
+
+/* Legal modal specific styles */
+.legal-modal .modal-content {
+    max-width: 800px;
+    width: 90%;
+    max-height: 85vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.legal-modal-body {
+    flex: 1;
+    overflow: hidden;
+    padding: 0 !important;
+}
+
+.legal-modal-body iframe {
+    width: 100%;
+    height: 60vh;
+    border: none;
+}
+
+.modal-footer {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid var(--border-color);
+    text-align: center;
+}
+
+/* Enhanced link styling */
+.terms-link {
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.terms-link:hover {
+    text-decoration: underline;
+    color: var(--primary-dark);
+}
+
+/* Dark theme adjustments */
+.dark-theme .legal-modal .modal-content {
+    background-color: #1e293b;
+}
+
+.dark-theme .modal-footer {
+    border-color: #334155;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .legal-modal-body iframe {
+        height: 50vh;
+    }
+}
+
+@media (max-width: 480px) {
+    .legal-modal .modal-content {
+        width: 95%;
+    }
+    
+    .legal-modal-body iframe {
+        height: 45vh;
+    }
+}

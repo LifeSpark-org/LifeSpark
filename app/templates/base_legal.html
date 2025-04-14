@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}lifeSpark{% endblock %}</title>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='Images/favicon.ico') }}">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/components.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/additional-styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/legal.css') }}">
+    
+    <style>
+        /* Inline styles for legal pages */
+        .legal-document {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+        
+        .legal-document h1 {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        
+        .last-updated {
+            text-align: center;
+            color: var(--text-light);
+            margin-bottom: 40px;
+        }
+        
+        .legal-document section {
+            margin-bottom: 30px;
+        }
+        
+        .legal-document h2 {
+            color: var(--primary-color);
+            margin-top: 40px;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+        
+        .legal-document h3 {
+            margin-top: 25px;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+        
+        .legal-document ul, .legal-document ol {
+            margin-left: 30px;
+            margin-bottom: 20px;
+        }
+        
+        .legal-document li {
+            margin-bottom: 8px;
+        }
+        
+        .legal-document a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+        
+        .legal-document a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .legal-document {
+                padding: 30px 15px;
+            }
+            
+            .legal-document h2 {
+                font-size: 1.3rem;
+            }
+            
+            .legal-document h3 {
+                font-size: 1.1rem;
+            }
+        }
+        
+        /* Print styles */
+        @media print {
+            .legal-document {
+                max-width: 100%;
+                padding: 0;
+            }
+            
+            nav, footer, .back-to-site {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation Bar - Simplified for legal pages -->
+    <nav class="navbar">
+        <div class="logo">
+            <a href="{{ url_for('main.home') }}">
+                <img src="/static/Images/icon.png" alt="lifeSpark Logo" class="main-logo">
+                <span>life<span style="color: var(--secondary-color)">Spark</span></span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        {% block content %}{% endblock %}
+        
+        <div class="back-to-site">
+            <a href="{{ url_for('main.home') }}" class="btn btn-outline">
+                <i class="fas fa-arrow-left"></i> Back to lifeSpark
+            </a>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">
+                <img src="/static/Images/logo.png" alt="lifeSpark Logo">
+                <span>life<span style="color: var(--secondary-color)">Spark</span></span>
+            </div>
+            <div class="footer-links">
+                <a href="{{ url_for('main.terms_of_service') }}">Terms of Service</a>
+                <a href="{{ url_for('main.privacy_policy') }}">Privacy Policy</a>
+            </div>
+            <p>&copy; 2024 lifeSpark. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="/static/js/main.js"></script>
+</body>
+</html>
