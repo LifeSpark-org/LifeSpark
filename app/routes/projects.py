@@ -293,3 +293,64 @@ def reject_project(current_user, project_id):
         'status': 'success',
         'message': 'Project rejected successfully'
     })
+
+# Add this to app/routes/projects.py
+
+@projects_bp.route('/projects/<project_id>/update-donation', methods=['POST'])
+@token_required
+def update_project_donation(current_user, project_id):
+    """Update a project's donation amount after a successful blockchain transaction"""
+    data = request.json
+    
+    if not data or 'amount' not in data:
+        return jsonify({
+            'status': 'error',
+            'message': 'Missing donation amount'
+        }), 400
+    
+    try:
+        # Get donation details
+        amount = float(data.get('amount', 0))
+        tx_hash = data.get('txHash', '')
+        message = data.get('message', '')
+        
+        # Validate amount
+        if amount <= 0:
+            return jsonify({
+                'status': 'error',
+                'message': 'Invalid donation amount'
+            }), 400
+        
+        # Update the project's current amount
+        success = Project.update_donation_amount(mongo, project_id, amount)
+        
+        if not success:
+            return jsonify({
+                'status': 'error',
+                'message': 'Failed to update project donation amount'
+            }), 400
+        
+        # Record the donation in our database
+        donation = {
+            'project_id': project_id,
+            'user_id': str(current_user['_id']),
+            'amount': amount,
+            'tx_hash': tx_hash,
+            'message': message,
+            'created_at': datetime.utcnow()
+        }
+        
+        # Insert donation record
+        mongo.db.donations.insert_one(donation)
+        
+        return jsonify({
+            'status': 'success',
+            'message': 'Project donation updated successfully'
+        })
+        
+    except Exception as e:
+        print(f"Error updating project donation: {str(e)}")
+        return jsonify({
+            'status': 'error',
+            'message': f'Error updating project donation: {str(e)}'
+        }), 500

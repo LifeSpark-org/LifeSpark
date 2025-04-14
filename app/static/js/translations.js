@@ -111,7 +111,15 @@ const translations = {
         "register-button": "Register",
         "register-has-account": "Already have an account?",
         "register-login-link": "Login here",
-        "footer-text": "© 2024 lifeSpark. All rights reserved."
+        "footer-text": "© 2024 lifeSpark. All rights reserved.",
+        "donate-projects-title": "Choose a Project to Support",
+        "donate-projects-desc": "Select a specific project or donate to a general region",
+        "donate-tab-projects": "Projects",
+        "donate-tab-regions": "Regions",
+        "select-project": "Select Project",
+        "donate-selected-project": "Selected Project:",
+        "no-approved-projects": "No approved projects found",
+        "loading-projects": "Loading projects...",
     },
     he: {
         // קיים
@@ -225,6 +233,14 @@ const translations = {
         "register-button": "הירשם",
         "register-has-account": "כבר יש לך חשבון?",
         "register-login-link": "התחבר כאן",
-        "footer-text": "© 2024 lifeSpark. כל הזכויות שמורות."
+        "footer-text": "© 2024 lifeSpark. כל הזכויות שמורות.",
+        "donate-projects-title": "בחר פרויקט לתמיכה",
+        "donate-projects-desc": "בחר פרויקט ספציפי או תרום לאזור כללי",
+        "donate-tab-projects": "פרויקטים",
+        "donate-tab-regions": "אזורים",
+        "select-project": "בחר פרויקט",
+        "donate-selected-project": "פרויקט נבחר:",
+        "no-approved-projects": "לא נמצאו פרויקטים מאושרים",
+        "loading-projects": "טוען פרויקטים..."
     }
 }

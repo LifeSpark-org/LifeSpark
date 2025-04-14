@@ -85,6 +85,9 @@ function displayStatus(message, statusType) {
 }
 
 // פונקציה לביצוע תרומה באמצעות MetaMask
+// Add these functions or modify existing ones in scripts.js
+
+// This modified version of donateToBlockchain supports both region and project donations
 async function donateToBlockchain(region, amount, message = '') {
     try {
         if (typeof window.ethereum === 'undefined') {

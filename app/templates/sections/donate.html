@@ -16,9 +16,9 @@
                 <div class="step-connector"></div>
                 <div class="process-step">
                     <div class="step-icon">
-                        <i class="fas fa-map-marker-alt"></i>
+                        <i class="fas fa-clipboard-list"></i>
                     </div>
-                    <h4 data-translate="donate-step2">Choose Region</h4>
+                    <h4 data-translate="donate-step2">Choose Project</h4>
                 </div>
                 <div class="step-connector"></div>
                 <div class="process-step">
@@ -62,9 +62,42 @@
                 </div>
             </div>
 
-            <form id="donationForm" class="donation-form">
-                <div class="form-group">
-                    <label for="region" data-translate="donate-region">Choose a region:</label>
+            <!-- New Section: Approved Projects Carousel -->
+            <div class="projects-section">
+                <h3 data-translate="donate-projects-title">Choose a Project to Support</h3>
+                <p data-translate="donate-projects-desc">Select a specific project or donate to a general region</p>
+                
+                <div class="donation-tabs">
+                    <button class="donation-tab active" id="projectsTab" onclick="switchDonationTab('projects')">
+                        <i class="fas fa-clipboard-list"></i> <span data-translate="donate-tab-projects">Projects</span>
+                    </button>
+                    <button class="donation-tab" id="regionsTab" onclick="switchDonationTab('regions')">
+                        <i class="fas fa-map-marker-alt"></i> <span data-translate="donate-tab-regions">Regions</span>
+                    </button>
+                </div>
+                
+                <div id="projectsDonationContent" class="donation-tab-content">
+                    <div class="approved-projects-container">
+                        <div class="approved-projects-carousel" id="approvedProjectsCarousel">
+                            <!-- Projects will be loaded here dynamically -->
+                            <div class="loading-placeholder">
+                                <div class="spinner"></div>
+                                <p data-translate="loading-projects">Loading projects...</p>
+                            </div>
+                        </div>
+                        
+                        <div class="carousel-nav">
+                            <button id="prevProject" class="carousel-nav-btn">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <button id="nextProject" class="carousel-nav-btn">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="regionsDonationContent" class="donation-tab-content" style="display: none;">
                     <div class="region-selector">
                         <div class="region-option" onclick="selectRegion('south')">
                             <input type="radio" id="regionSouth" name="region" value="south" checked>
@@ -113,7 +146,9 @@
                         </div>
                     </div>
                 </div>
+            </div>
 
+            <form id="donationForm" class="donation-form">
                 <div class="form-group">
                     <label for="amount" data-translate="donate-amount">Donation Amount (ETH):</label>
                     <div class="amount-input-group">
@@ -133,8 +168,8 @@
                 <div class="donation-summary">
                     <h4 data-translate="donate-summary">Donation Summary</h4>
                     <div class="summary-row">
-                        <span data-translate="donate-selected-region">Selected Region:</span>
-                        <span id="summaryRegion">Southern Israel</span>
+                        <span data-translate="donate-selected-project">Selected Project:</span>
+                        <span id="summaryProject">General - Southern Israel</span>
                     </div>
                     <div class="summary-row">
                         <span data-translate="donate-donation-amount">Donation Amount:</span>
@@ -215,4 +250,3 @@
         </div>
     </div>
 </section>
-
