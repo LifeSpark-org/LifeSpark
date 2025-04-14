@@ -174,7 +174,73 @@ def get_user_projects(current_user):
 @admin_required
 def get_pending_projects(current_user):
     """Get all pending projects for admin review"""
+    print(f"Admin {current_user.get('email')} requested pending projects")
     projects = Project.get_pending_projects(mongo)
+    
+    # Convert ObjectId to string in each project
+    for project in projects:
+        project['_id'] = str(project['_id'])
+        
+    print(f"Returning {len(projects)} pending projects")
+    return jsonify({
+        'status': 'success',
+        'projects': projects
+    })
+
+@projects_bp.route('/admin/projects/<project_id>', methods=['GET'])
+@token_required
+@admin_required
+def get_admin_project(current_user, project_id):
+    """Get detailed project information for admin review"""
+    print(f"Admin {current_user.get('email')} requested project {project_id}")
+    project = Project.get_by_id(mongo, project_id)
+    
+    if not project:
+        return jsonify({
+            'status': 'error',
+            'message': 'Project not found'
+        }), 404
+    
+    # Convert ObjectId to string
+    project['_id'] = str(project['_id'])
+    
+    print(f"Returning project: {project['title']}")
+    return jsonify({
+        'status': 'success',
+        'project': project
+    })
+
+@projects_bp.route('/admin/projects/approved', methods=['GET'])
+@token_required
+@admin_required
+def get_approved_projects(current_user):
+    """Get all approved projects"""
+    print(f"Admin {current_user.get('email')} requested approved projects")
+    projects = list(mongo.db.projects.find({'status': Project.STATUS_APPROVED}).sort('approved_at', -1))
+    
+    # Convert ObjectId to string in each project
+    for project in projects:
+        project['_id'] = str(project['_id'])
+    
+    print(f"Returning {len(projects)} approved projects")
+    return jsonify({
+        'status': 'success',
+        'projects': projects
+    })
+
+@projects_bp.route('/admin/projects/rejected', methods=['GET'])
+@token_required
+@admin_required
+def get_rejected_projects(current_user):
+    """Get all rejected projects"""
+    print(f"Admin {current_user.get('email')} requested rejected projects")
+    projects = list(mongo.db.projects.find({'status': Project.STATUS_REJECTED}).sort('rejected_at', -1))
+    
+    # Convert ObjectId to string in each project
+    for project in projects:
+        project['_id'] = str(project['_id'])
+    
+    print(f"Returning {len(projects)} rejected projects")
     return jsonify({
         'status': 'success',
         'projects': projects
@@ -185,17 +251,20 @@ def get_pending_projects(current_user):
 @admin_required
 def approve_project(current_user, project_id):
     """Approve a pending project"""
+    print(f"Admin {current_user.get('email')} is approving project {project_id}")
     data = request.get_json() or {}
     notes = data.get('notes', '')
     
     success = Project.approve_project(mongo, project_id, str(current_user['_id']), notes)
     
     if not success:
+        print(f"Failed to approve project {project_id}")
         return jsonify({
             'status': 'error',
             'message': 'Failed to approve project. Project may not be pending or does not exist.'
         }), 400
-        
+    
+    print(f"Project {project_id} approved successfully")
     return jsonify({
         'status': 'success',
         'message': 'Project approved successfully'
@@ -206,17 +275,20 @@ def approve_project(current_user, project_id):
 @admin_required
 def reject_project(current_user, project_id):
     """Reject a pending project"""
+    print(f"Admin {current_user.get('email')} is rejecting project {project_id}")
     data = request.get_json() or {}
     notes = data.get('notes', '')
     
     success = Project.reject_project(mongo, project_id, str(current_user['_id']), notes)
     
     if not success:
+        print(f"Failed to reject project {project_id}")
         return jsonify({
             'status': 'error',
             'message': 'Failed to reject project. Project may not be pending or does not exist.'
         }), 400
-        
+    
+    print(f"Project {project_id} rejected successfully")
     return jsonify({
         'status': 'success',
         'message': 'Project rejected successfully'

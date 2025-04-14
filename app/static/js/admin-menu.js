@@ -5,33 +5,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Also check when auth state changes
     document.addEventListener('authStateChanged', checkAdminMenuVisibility);
-    
-    // Add a temporary debug button for testing admin status
-    // Remove in production
-    const header = document.querySelector('.navbar');
-    if (header) {
-        const debugBtn = document.createElement('button');
-        debugBtn.textContent = 'Check Admin';
-        debugBtn.style.position = 'fixed';
-        debugBtn.style.right = '10px';
-        debugBtn.style.bottom = '10px';
-        debugBtn.style.zIndex = '1000';
-        debugBtn.style.padding = '5px 10px';
-        debugBtn.style.background = '#ff9800';
-        debugBtn.style.color = 'white';
-        debugBtn.style.border = 'none';
-        debugBtn.style.borderRadius = '4px';
-        debugBtn.style.cursor = 'pointer';
-        
-        debugBtn.addEventListener('click', async function() {
-            const result = await checkIsAdminUser();
-            alert('Admin status: ' + (result ? 'YES' : 'NO') + '\nCheck console for details');
-            console.log('Admin check result:', result);
-            checkAdminMenuVisibility();
-        });
-        
-        document.body.appendChild(debugBtn);
-    }
 });
 
 // Function to check and update admin menu visibility

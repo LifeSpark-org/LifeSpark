@@ -17,6 +17,20 @@ document.addEventListener('DOMContentLoaded', function() {
         setTimeout(checkAdminAccess, 100);
     }
     
+    // Make sure the approve/reject buttons work properly
+    const approveBtn = document.getElementById('approveProjectBtn');
+    const rejectBtn = document.getElementById('rejectProjectBtn');
+    
+    if (approveBtn) {
+        approveBtn.addEventListener('click', approveProject);
+        console.log("Set up approve button event listener");
+    }
+    
+    if (rejectBtn) {
+        rejectBtn.addEventListener('click', rejectProject);
+        console.log("Set up reject button event listener");
+    }
+    
     // Tab switching functionality
     const adminTabs = document.querySelectorAll('.admin-tab');
     
@@ -76,6 +90,24 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('approveProjectBtn')?.addEventListener('click', approveProject);
     document.getElementById('rejectProjectBtn')?.addEventListener('click', rejectProject);
 });
+
+// Initialize admin projects
+function initAdminProjects() {
+    console.log("Initializing admin projects interface");
+    
+    // Set up event listeners for the approve and reject buttons again
+    // This redundancy helps ensure the buttons always work
+    const approveProjectBtn = document.getElementById('approveProjectBtn');
+    const rejectProjectBtn = document.getElementById('rejectProjectBtn');
+    
+    if (approveProjectBtn) {
+        approveProjectBtn.addEventListener('click', approveProject);
+    }
+    
+    if (rejectProjectBtn) {
+        rejectProjectBtn.addEventListener('click', rejectProject);
+    }
+}
 
 // Check if user has admin access
 function checkAdminAccess() {
@@ -486,6 +518,8 @@ async function loadRejectedProjects() {
                     viewProjectDetails(projectId);
                 });
             });
+            
+            console.log("Loaded rejected projects successfully");
         } else {
             throw new Error(result.message || 'Failed to load rejected projects');
         }
@@ -503,10 +537,14 @@ async function loadRejectedProjects() {
 
 // Open project review modal
 async function openProjectReviewModal(projectId) {
+    console.log("Opening review modal for project:", projectId);
     const reviewModal = document.getElementById('projectReviewModal');
     const reviewContent = document.getElementById('projectReviewContent');
     
-    if (!reviewModal || !reviewContent) return;
+    if (!reviewModal || !reviewContent) {
+        console.error("Review modal or content not found");
+        return;
+    }
     
     // Show loading state
     reviewContent.innerHTML = `
@@ -634,6 +672,21 @@ async function openProjectReviewModal(projectId) {
             `;
             
             reviewContent.innerHTML = reviewHtml;
+            
+            // Make sure approve/reject buttons are properly bound
+            const approveBtn = document.getElementById('approveProjectBtn');
+            const rejectBtn = document.getElementById('rejectProjectBtn');
+            
+            if (approveBtn) {
+                // Re-bind to ensure the event listener works
+                approveBtn.onclick = approveProject;
+            }
+            
+            if (rejectBtn) {
+                // Re-bind to ensure the event listener works
+                rejectBtn.onclick = rejectProject;
+            }
+            
         } else {
             throw new Error(result.message || 'Failed to load project details');
         }
@@ -663,11 +716,17 @@ function viewProjectDetails(projectId) {
 
 // Approve project
 async function approveProject() {
+    console.log("Approve project function called");
     const modal = document.getElementById('projectReviewModal');
     const projectId = modal.getAttribute('data-project-id');
     const notes = document.getElementById('adminNotes').value;
     
-    if (!projectId) return;
+    if (!projectId) {
+        console.error("No project ID found in modal");
+        return;
+    }
+    
+    console.log("Approving project ID:", projectId);
     
     // Disable buttons to prevent double-submit
     const approveBtn = document.getElementById('approveProjectBtn');
@@ -683,6 +742,8 @@ async function approveProject() {
             throw new Error('Authentication required');
         }
         
+        console.log("Sending approval request to server");
+        
         // Send approve request
         const response = await fetch(`/admin/projects/${projectId}/approve`, {
             method: 'POST',
@@ -693,7 +754,9 @@ async function approveProject() {
             body: JSON.stringify({ notes })
         });
         
+        console.log("Server response status:", response.status);
         const result = await response.json();
+        console.log("Server response:", result);
         
         if (response.ok) {
             // Show success notification
@@ -720,11 +783,15 @@ async function approveProject() {
 
 // Reject project
 async function rejectProject() {
+    console.log("Reject project function called");
     const modal = document.getElementById('projectReviewModal');
     const projectId = modal.getAttribute('data-project-id');
     const notes = document.getElementById('adminNotes').value;
     
-    if (!projectId) return;
+    if (!projectId) {
+        console.error("No project ID found in modal");
+        return;
+    }
     
     // Make sure rejection reason is provided
     if (!notes.trim()) {
@@ -747,6 +814,8 @@ async function rejectProject() {
             throw new Error('Authentication required');
         }
         
+        console.log("Sending rejection request to server");
+        
         // Send reject request
         const response = await fetch(`/admin/projects/${projectId}/reject`, {
             method: 'POST',
@@ -757,7 +826,9 @@ async function rejectProject() {
             body: JSON.stringify({ notes })
         });
         
+        console.log("Server response status:", response.status);
         const result = await response.json();
+        console.log("Server response:", result);
         
         if (response.ok) {
             // Show success notification
@@ -828,6 +899,3 @@ function hideModal(modal) {
         }
     }, 300);
 }
-
-// Add this function to the global scope so it can be called from other places
-window.checkAdminAccess = checkAdminAccess;
