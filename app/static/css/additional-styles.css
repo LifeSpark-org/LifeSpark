@@ -1364,3 +1364,90 @@ section.fade-out {
         height: 45vh;
     }
 }
+
+/* Additional CSS for Legal Modals */
+.legal-modal .modal-content {
+    max-width: 800px;
+    width: 90%;
+    max-height: 85vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.legal-modal-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.5rem !important;
+    max-height: 60vh;
+}
+
+.legal-content-scroll {
+    height: 100%;
+}
+
+.legal-modal-body h2 {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    margin-top: 1.5rem;
+    margin-bottom: 0.8rem;
+}
+
+.legal-modal-body h3 {
+    font-size: 1.2rem;
+    margin-top: 1.2rem;
+    margin-bottom: 0.5rem;
+}
+
+.legal-modal-body p {
+    margin-bottom: 1rem;
+    line-height: 1.6;
+}
+
+.legal-modal-body ul, 
+.legal-modal-body ol {
+    margin-left: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.legal-modal-body li {
+    margin-bottom: 0.5rem;
+}
+
+.modal-footer {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid var(--border-color);
+    text-align: center;
+}
+
+.modal-footer .btn {
+    min-width: 120px;
+}
+
+/* Dark theme adjustments */
+.dark-theme .legal-modal .modal-content {
+    background-color: #1e293b;
+}
+
+.dark-theme .legal-modal-body {
+    color: #e2e8f0;
+}
+
+.dark-theme .modal-footer {
+    border-color: #334155;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .legal-modal-body {
+        max-height: 50vh;
+        padding: 1rem !important;
+    }
+    
+    .legal-modal-body h2 {
+        font-size: 1.3rem;
+    }
+    
+    .legal-modal-body h3 {
+        font-size: 1.1rem;
+    }
+}
