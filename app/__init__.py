@@ -23,9 +23,13 @@ def create_app(config_class=Config):
     from .routes.auth import auth_bp
     from .routes.main import main_bp
     from .routes.donations import donations_bp
+    from .routes.projects import projects_bp
+    from .routes.admin import admin_bp
     
     app.register_blueprint(auth_bp)
     app.register_blueprint(main_bp)
     app.register_blueprint(donations_bp)
+    app.register_blueprint(projects_bp)
+    app.register_blueprint(admin_bp)
     
     return app

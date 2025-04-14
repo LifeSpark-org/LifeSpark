@@ -1,0 +1,166 @@
+<section id="submit-project">
+    <div class="submit-project-container">
+        <div class="submit-project-header" data-aos="fade-up">
+            <h2 class="section-title" data-translate="submit-project-title">Submit Project</h2>
+            <p class="section-subtitle" data-translate="submit-project-subtitle">Request Support for Your Community</p>
+        </div>
+        
+        <!-- Auth Check Message - Similar to donation auth check -->
+        <div id="projectAuthCheck" class="auth-message-container" style="display: none;">
+            <div class="auth-message">
+                <h3 data-translate="submit-auth-required">Login Required</h3>
+                <p data-translate="submit-auth-message">You need to log in to submit a project for donation</p>
+                <button type="button" onclick="showSection('login')" class="btn btn-primary">
+                    <i class="fas fa-sign-in-alt"></i> <span data-translate="submit-auth-login">Login Now</span>
+                </button>
+            </div>
+        </div>
+        
+        <div class="submission-info" data-aos="fade-up" data-aos-delay="200">
+            <div class="info-box">
+                <h4 data-translate="submit-info-title">How Project Submission Works</h4>
+                <p data-translate="submit-info-description">
+                    Our project submission process ensures that your request receives the support it needs while 
+                    maintaining transparency and trust for our donors.
+                </p>
+                <ol>
+                    <li data-translate="submit-step1">Complete the project submission form with detailed information</li>
+                    <li data-translate="submit-step2">Upload supporting documentation to verify your project</li>
+                    <li data-translate="submit-step3">Our team reviews your submission (typically within 2-3 business days)</li>
+                    <li data-translate="submit-step4">Once approved, your project appears on our donation platform</li>
+                    <li data-translate="submit-step5">Donors can contribute directly to your project</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="project-form-wrapper" id="projectFormContainer" data-aos="fade-up" data-aos-delay="300">
+            <form id="projectSubmissionForm" class="project-form" enctype="multipart/form-data">
+                <div class="form-section">
+                    <h3 data-translate="project-basic-info">Basic Information</h3>
+                    
+                    <div class="form-group">
+                        <label for="projectTitle" data-translate="project-title">Project Title:*</label>
+                        <input type="text" id="projectTitle" name="title" required>
+                        <small data-translate="project-title-hint">Give your project a clear, descriptive name (max 100 characters)</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="projectRegion" data-translate="project-region">Region:*</label>
+                        <select id="projectRegion" name="region" required>
+                            <option value="" disabled selected data-translate="project-select-region">-- Select Region --</option>
+                            <option value="south" data-translate="donate-region-south">Southern Israel</option>
+                            <option value="north" data-translate="donate-region-north">Northern Israel</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="projectDescription" data-translate="project-description">Project Description:*</label>
+                        <textarea id="projectDescription" name="description" rows="5" required></textarea>
+                        <small data-translate="project-description-hint">Describe your project, its purpose, and how the funds will be used (min 100 characters)</small>
+                    </div>
+                
+                <div class="form-section">
+                    <h3 data-translate="project-funding-info">Funding Information</h3>
+                    
+                    <div class="form-group">
+                        <label for="projectGoalAmount" data-translate="project-goal-amount">Funding Goal (ETH):*</label>
+                        <div class="amount-input-group">
+                            <div class="amount-prefix">ETH</div>
+                            <input type="number" id="projectGoalAmount" name="goal_amount" min="0.1" step="0.1" required>
+                        </div>
+                        <small data-translate="project-goal-hint">Set a realistic funding goal for your project needs</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="projectOrganization" data-translate="project-organization">Organization Name:</label>
+                        <input type="text" id="projectOrganization" name="organization">
+                        <small data-translate="project-organization-hint">If applicable, enter the name of your organization</small>
+                    </div>
+                </div>
+                
+                <div class="form-section">
+                    <h3 data-translate="project-contact-info">Contact Information</h3>
+                    
+                    <div class="form-group">
+                        <label for="projectEmail" data-translate="project-email">Contact Email:*</label>
+                        <input type="email" id="projectEmail" name="contact_email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="projectPhone" data-translate="project-phone">Contact Phone:</label>
+                        <input type="tel" id="projectPhone" name="contact_phone">
+                    </div>
+                </div>
+                
+                <div class="form-section">
+                    <h3 data-translate="project-verification-info">Verification Documentation</h3>
+                    <p data-translate="project-verification-description">
+                        Please upload documents that verify your project's legitimacy and needs. 
+                        This could include official paperwork, cost estimates, photos of the situation, etc.
+                    </p>
+                    
+                    <div class="form-group">
+                        <label for="projectDocuments" data-translate="project-documents">Supporting Documents:</label>
+                        <div class="file-upload-container">
+                            <input type="file" id="projectDocuments" name="proof_documents" multiple 
+                                   accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
+                            <div class="file-upload-button">
+                                <i class="fas fa-upload"></i> <span data-translate="project-upload-files">Choose Files</span>
+                            </div>
+                            <div class="file-names" id="uploadedFileNames"></div>
+                        </div>
+                        <small data-translate="project-documents-hint">
+                            Upload up to 5 files (PDF, DOC, JPG, PNG) - Max size: 5MB per file
+                        </small>
+                    </div>
+                
+                <div class="form-section">
+                    <h3 data-translate="project-terms">Terms & Conditions</h3>
+                    
+                    <div class="form-group">
+                        <div class="terms-checkbox">
+                            <input type="checkbox" id="projectTerms" name="terms" required>
+                            <label for="projectTerms" data-translate="project-terms-agreement">
+                                I confirm that all information provided is accurate and truthful. I understand that false 
+                                information may result in rejection of my project or legal consequences.
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <div class="terms-checkbox">
+                            <input type="checkbox" id="projectUpdates" name="updates" required>
+                            <label for="projectUpdates" data-translate="project-updates-agreement">
+                                I agree to provide regular updates on the project's progress and use of funds if approved.
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="submit-group">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-paper-plane"></i> <span data-translate="project-submit-button">Submit Project</span>
+                    </button>
+                </div>
+            </form>
+            
+            <div id="submissionStatus" class="submission-status" style="display: none;"></div>
+        </div>
+        
+        <div class="submission-guidelines" data-aos="fade-up" data-aos-delay="400">
+            <h3 data-translate="submission-guidelines-title">Project Guidelines</h3>
+            <p data-translate="submission-guidelines-intro">To increase your project's chances of approval, please ensure:</p>
+            <ul>
+                <li data-translate="guideline-1">Your project directly benefits communities affected in Northern or Southern Israel</li>
+                <li data-translate="guideline-2">You provide clear, specific details about how funds will be used</li>
+                <li data-translate="guideline-3">Your funding request is proportional to the project's scope</li>
+                <li data-translate="guideline-4">You include sufficient documentation to verify your project's legitimacy</li>
+                <li data-translate="guideline-5">Contact information is valid and regularly monitored</li>
+            </ul>
+            <p class="guideline-warning" data-translate="guideline-warning">
+                <strong>Note:</strong> Submitting false information will result in immediate rejection and may lead to 
+                permanent exclusion from our platform.
+            </p>
+        </div>
+    </div>
+</section>

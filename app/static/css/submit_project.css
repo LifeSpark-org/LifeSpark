@@ -1,0 +1,365 @@
+/* Project Submission Form Styles */
+.submit-project-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.submission-info {
+    margin: 2rem 0;
+}
+
+.project-form-wrapper {
+    background-color: var(--card-bg);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--box-shadow);
+    padding: 2rem;
+    margin: 2rem 0;
+}
+
+.form-section {
+    margin-bottom: 2.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.form-section:last-child {
+    border-bottom: none;
+}
+
+.form-section h3 {
+    color: var(--primary-color);
+    margin-bottom: 1.5rem;
+    font-size: 1.3rem;
+}
+
+.project-form .form-group {
+    margin-bottom: 1.5rem;
+}
+
+.project-form label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.project-form input[type="text"],
+.project-form input[type="email"],
+.project-form input[type="tel"],
+.project-form input[type="number"],
+.project-form select,
+.project-form textarea {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    background-color: #f9fafb;
+    transition: all 0.3s ease;
+}
+
+.project-form input:focus,
+.project-form select:focus,
+.project-form textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    background-color: #fff;
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+}
+
+.project-form small {
+    display: block;
+    color: var(--text-light);
+    font-size: 0.85rem;
+    margin-top: 0.5rem;
+}
+
+/* File upload styling */
+.file-upload-container {
+    position: relative;
+    margin-top: 0.5rem;
+}
+
+.file-upload-container input[type="file"] {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 2;
+}
+
+.file-upload-button {
+    background-color: var(--primary-light);
+    color: #fff;
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--border-radius);
+    display: inline-block;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.file-upload-button:hover {
+    background-color: var(--primary-color);
+}
+
+.file-names {
+    margin-top: 1rem;
+    padding: 0.5rem;
+    background-color: #f3f4f6;
+    border-radius: var(--border-radius);
+    min-height: 2rem;
+    font-size: 0.9rem;
+}
+
+.file-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.file-item:last-child {
+    border-bottom: none;
+}
+
+.file-item .file-name {
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.file-item .file-size {
+    color: var(--text-light);
+    margin-left: 1rem;
+}
+
+.file-item .file-remove {
+    color: var(--error-color);
+    cursor: pointer;
+    margin-left: 0.5rem;
+}
+
+/* Terms checkboxes */
+.terms-checkbox {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 0.5rem;
+}
+
+.terms-checkbox input[type="checkbox"] {
+    margin-top: 0.3rem;
+    margin-right: 0.5rem;
+    min-width: 16px;
+}
+
+.terms-checkbox label {
+    font-weight: normal;
+    margin-bottom: 0;
+    font-size: 0.95rem;
+}
+
+/* Submit button styling */
+.submit-group {
+    margin-top: 2rem;
+    text-align: center;
+}
+
+.submit-group button {
+    padding: 0.75rem 2.5rem;
+    font-size: 1.1rem;
+}
+
+/* Submission status styling */
+.submission-status {
+    margin-top: 2rem;
+    padding: 1rem;
+    border-radius: var(--border-radius);
+    text-align: center;
+}
+
+.submission-status.success {
+    background-color: rgba(16, 185, 129, 0.1);
+    color: var(--success-color);
+}
+
+.submission-status.error {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: var(--error-color);
+}
+
+.submission-status.pending {
+    background-color: rgba(245, 158, 11, 0.1);
+    color: var(--secondary-color);
+}
+
+/* Guidelines section */
+.submission-guidelines {
+    margin-top: 3rem;
+    padding: 2rem;
+    background-color: var(--card-bg);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+}
+
+.submission-guidelines h3 {
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.submission-guidelines ul {
+    padding-left: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.submission-guidelines li {
+    margin-bottom: 0.75rem;
+}
+
+.guideline-warning {
+    padding: 0.75rem;
+    background-color: rgba(239, 68, 68, 0.1);
+    border-left: 3px solid var(--error-color);
+    border-radius: var(--border-radius);
+}
+
+/* User project list styles */
+.user-projects {
+    margin-top: 2rem;
+}
+
+.project-list {
+    margin-top: 1.5rem;
+}
+
+.project-card {
+    background-color: var(--card-bg);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+}
+
+.project-card-header {
+    padding: 1.25rem;
+    border-bottom: 1px solid var(--border-color);
+    position: relative;
+}
+
+.project-card-title {
+    margin: 0;
+    font-size: 1.2rem;
+}
+
+.project-status {
+    position: absolute;
+    top: 1.25rem;
+    right: 1.25rem;
+    padding: 0.35rem 0.75rem;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.project-status.pending {
+    background-color: rgba(245, 158, 11, 0.1);
+    color: var(--secondary-color);
+}
+
+.project-status.approved {
+    background-color: rgba(16, 185, 129, 0.1);
+    color: var(--success-color);
+}
+
+.project-status.rejected {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: var(--error-color);
+}
+
+.project-card-body {
+    padding: 1.25rem;
+}
+
+.project-detail {
+    display: flex;
+    margin-bottom: 0.75rem;
+}
+
+.project-detail-label {
+    width: 120px;
+    font-weight: 600;
+    color: var(--text-light);
+}
+
+.project-detail-value {
+    flex: 1;
+}
+
+.project-card-footer {
+    padding: 1.25rem;
+    background-color: rgba(0, 0, 0, 0.02);
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.project-date {
+    font-size: 0.9rem;
+    color: var(--text-light);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .project-form-wrapper {
+        padding: 1.5rem;
+    }
+    
+    .project-status {
+        position: static;
+        display: inline-block;
+        margin-top: 0.5rem;
+    }
+    
+    .project-detail {
+        flex-direction: column;
+    }
+    
+    .project-detail-label {
+        width: 100%;
+        margin-bottom: 0.25rem;
+    }
+}
+
+/* Dark theme adjustments */
+.dark-theme .project-form-wrapper,
+.dark-theme .submission-guidelines {
+    background-color: #1e293b;
+}
+
+.dark-theme .project-form input,
+.dark-theme .project-form select,
+.dark-theme .project-form textarea {
+    background-color: #0f172a;
+    color: #e2e8f0;
+    border-color: #334155;
+}
+
+.dark-theme .file-names {
+    background-color: #1e293b;
+}
+
+.dark-theme .guideline-warning {
+    background-color: rgba(239, 68, 68, 0.15);
+}
+
+.dark-theme .project-card {
+    background-color: #1e293b;
+}
+
+.dark-theme .project-card-footer {
+    background-color: rgba(0, 0, 0, 0.1);
+}
