@@ -159,27 +159,44 @@ async function donateToBlockchain(region, amount, message = '') {
 
 // הפונקציות הבאות נשארות כפי שהן
 // Update Navbar dynamically based on session
-window.onload = async () => {
-    try {
-        const response = await fetch('/session'); // Fetch user session data
-        const data = await response.json();
-        const userMenu = document.getElementById('userMenu');
+// window.onload = async () => {
+//     try {
+//         const response = await fetch('/session'); // Fetch user session data
+//         const data = await response.json();
+//         const userMenu = document.getElementById('userMenu');
 
-        if (data.username) {
-            userMenu.innerHTML = `
-                <li>Hi, ${data.username}</li>
-                <li><a href="/logout">Logout</a></li>
-            `;
-        } else {
-            userMenu.innerHTML = `
-                <li><a href="#" onclick="showSection('login')">Login / Register</a></li>
-            `;
-        }
+//         if (data.username) {
+//             userMenu.innerHTML = `
+//                 <li>Hi, ${data.username}</li>
+//                 <li><a href="/logout">Logout</a></li>
+//             `;
+//         } else {
+//             userMenu.innerHTML = `
+//                 <li><a href="#" onclick="showSection('login')">Login / Register</a></li>
+//             `;
+//         }
 
-        showSection("home"); // Default section to display
-    } catch (error) {
-        displayStatus('Error loading session data.', 'error');
+//         showSection("home"); // Default section to display
+//     } catch (error) {
+//         displayStatus('Error loading session data.', 'error');
+//     }
+// };
+window.onload = () => {
+    const token = localStorage.getItem('token');
+    const userMenu = document.getElementById('userMenu');
+
+    if (token) {
+        // כאן תוכלי לשלוף שם משתמש מהטוקן אם את רוצה (פענוח JWT)
+        userMenu.innerHTML = `
+            <li><a href="#" onclick="logout()">Logout</a></li>
+        `;
+    } else {
+        userMenu.innerHTML = `
+            <li><a href="#" onclick="showSection('login')">Login / Register</a></li>
+        `;
     }
+
+    showSection("home");
 };
 
 async function fetchConversionRate(currency) {
