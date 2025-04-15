@@ -104,7 +104,7 @@ async function processDonateToProject(projectId, amount, message = '') {
         
         // Get project information to know which region to donate to
         const token = localStorage.getItem('token');
-        const projectResponse = await fetch(`/admin/projects/${projectId}`, {
+        const projectResponse = await fetch(`/projects/${projectId}`, {
             headers: {
                 'Authorization': `Bearer ${token || ''}`
             }
@@ -226,25 +226,41 @@ function loadApprovedProjects() {
     // Get the token from local storage
     const token = localStorage.getItem('token');
     
-    // Fetch approved projects from the server
-    fetch('/admin/projects/approved', {
+    // Use the public endpoint instead of admin endpoint
+    fetch('/projects', {
         method: 'GET',
         headers: {
-            'Authorization': `Bearer ${token || ''}`
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
         }
     })
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error ${response.status}: ${response.statusText}`);
+        }
+        return response.json();
+    })
     .then(data => {
         if (data.status === 'success' && data.projects && data.projects.length > 0) {
+            // Convert ObjectId strings to string format if they're not already
+            const projects = data.projects.map(project => {
+                if (project._id && typeof project._id === 'object' && project._id.$oid) {
+                    project._id = project._id.$oid;
+                }
+                return project;
+            });
+            
+            console.log("Loaded projects:", projects);
+            
             // Render projects
-            renderProjects(data.projects, projectsCarousel);
+            renderProjects(projects, projectsCarousel);
             
             // Add event listeners to project slides
             setupProjectSelection();
             
             // Select the first project by default
-            if (data.projects.length > 0) {
-                selectProject(data.projects[0]._id, data.projects[0].title, data.projects[0].region);
+            if (projects.length > 0) {
+                selectProject(projects[0]._id, projects[0].title, projects[0].region);
             }
         } else {
             // No projects found
@@ -261,7 +277,7 @@ function loadApprovedProjects() {
         console.error('Error loading projects:', error);
         projectsCarousel.innerHTML = `
             <div class="empty-projects">
-                <p>Error loading projects. Please try again later.</p>
+                <p>Error loading projects: ${error.message}. Please try again later.</p>
             </div>
         `;
         // Default to regions tab on error

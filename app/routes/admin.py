@@ -20,56 +20,11 @@ def check_admin(current_user):
         'is_admin': is_admin
     })
 
-@admin_bp.route('/admin/projects/<project_id>', methods=['GET'])
-@token_required
-@admin_required
-def get_project(current_user, project_id):
-    """Get detailed project information for admin review"""
-    project = Project.get_by_id(mongo, project_id)
-    
-    if not project:
-        return jsonify({
-            'status': 'error',
-            'message': 'Project not found'
-        }), 404
-    
-    return jsonify({
-        'status': 'success',
-        'project': project
-    })
+# Removed duplicate routes that are already in projects.py
+# No need for these routes in admin.py since they are defined in projects.py:
+# - /admin/projects/<project_id>
+# - /admin/projects/pending
+# - /admin/projects/approved
+# - /admin/projects/rejected
 
-@admin_bp.route('/admin/projects/pending', methods=['GET'])
-@token_required
-@admin_required
-def get_pending_projects(current_user):
-    """Get all pending projects for admin review"""
-    projects = Project.get_pending_projects(mongo)
-    
-    return jsonify({
-        'status': 'success',
-        'projects': projects
-    })
-
-@admin_bp.route('/admin/projects/approved', methods=['GET'])
-@token_required
-@admin_required
-def get_approved_projects(current_user):
-    """Get all approved projects"""
-    projects = mongo.db.projects.find({'status': Project.STATUS_APPROVED}).sort('approved_at', -1)
-    
-    return jsonify({
-        'status': 'success',
-        'projects': list(projects)
-    })
-
-@admin_bp.route('/admin/projects/rejected', methods=['GET'])
-@token_required
-@admin_required
-def get_rejected_projects(current_user):
-    """Get all rejected projects"""
-    projects = mongo.db.projects.find({'status': Project.STATUS_REJECTED}).sort('rejected_at', -1)
-    
-    return jsonify({
-        'status': 'success',
-        'projects': list(projects)
-    })
+# If needed, can add admin-specific routes here that don't overlap with projects.py

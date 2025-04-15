@@ -57,6 +57,11 @@ def save_uploaded_file(file):
 def get_projects():
     """Get all approved projects for public display"""
     projects = Project.get_approved_projects(mongo)
+    
+    # Convert ObjectId to string in each project for JSON serialization
+    for project in projects:
+        project['_id'] = str(project['_id'])
+    
     return jsonify({
         'status': 'success',
         'projects': projects
@@ -68,6 +73,9 @@ def get_project(project_id):
     project = Project.get_by_id(mongo, project_id)
     if not project:
         return jsonify({'status': 'error', 'message': 'Project not found'}), 404
+    
+    # Convert ObjectId to string
+    project['_id'] = str(project['_id'])
         
     return jsonify({
         'status': 'success',
@@ -163,6 +171,11 @@ def submit_project(current_user):
 def get_user_projects(current_user):
     """Get all projects submitted by the current user"""
     projects = Project.get_user_projects(mongo, str(current_user['_id']))
+    
+    # Convert ObjectId to string in each project
+    for project in projects:
+        project['_id'] = str(project['_id'])
+    
     return jsonify({
         'status': 'success',
         'projects': projects
@@ -213,8 +226,8 @@ def get_admin_project(current_user, project_id):
 @projects_bp.route('/admin/projects/approved', methods=['GET'])
 @token_required
 @admin_required
-def get_approved_projects(current_user):
-    """Get all approved projects"""
+def get_admin_approved_projects(current_user):
+    """Get all approved projects for admin view"""
     print(f"Admin {current_user.get('email')} requested approved projects")
     projects = list(mongo.db.projects.find({'status': Project.STATUS_APPROVED}).sort('approved_at', -1))
     
