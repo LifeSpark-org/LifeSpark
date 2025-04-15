@@ -1,5 +1,7 @@
 from flask import Blueprint, render_template, jsonify
 from .. import mongo
+from ..models.project import Project
+
 
 main_bp = Blueprint('main', __name__)
 
@@ -22,6 +24,20 @@ def contact():
 def map():
     """Render the map page"""
     return render_template('sections/map.html')
+
+@main_bp.route('/projects/approved', methods=['GET'])
+def get_public_approved_projects():
+    """Return approved projects for public view"""
+    approved_projects = Project.get_approved_projects(mongo)
+
+    for project in approved_projects:
+        project['_id'] = str(project['_id'])
+
+    return jsonify({
+        'status': 'success',
+        'projects': approved_projects
+    })
+
 
 @main_bp.errorhandler(404)
 def page_not_found(e):

@@ -224,8 +224,6 @@ def get_admin_project(current_user, project_id):
     })
 
 @projects_bp.route('/admin/projects/approved', methods=['GET'])
-@token_required
-@admin_required
 def get_admin_approved_projects(current_user):
     """Get all approved projects for admin view"""
     print(f"Admin {current_user.get('email')} requested approved projects")

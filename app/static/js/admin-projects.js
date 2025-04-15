@@ -316,11 +316,8 @@ async function loadApprovedProjects() {
         }
         
         // Fetch approved projects
-        const response = await fetch('/admin/projects/approved', {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
+        const response = await fetch('/projects/approved', {
+            method: 'GET'
         });
         
         const result = await response.json();

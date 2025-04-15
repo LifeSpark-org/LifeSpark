@@ -4,6 +4,7 @@ from flask_mail import Mail
 from .config import Config
 import os
 
+
 mongo = PyMongo()
 mail = Mail()
 
@@ -31,5 +32,5 @@ def create_app(config_class=Config):
     app.register_blueprint(donations_bp)
     app.register_blueprint(projects_bp)
     app.register_blueprint(admin_bp)
-    
+
     return app
