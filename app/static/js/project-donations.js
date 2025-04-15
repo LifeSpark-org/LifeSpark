@@ -74,19 +74,13 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-    
-    // Check if we're on the donate section, and if so, load projects
-    if (document.getElementById('donate').classList.contains('active')) {
+    //לבדוק
+// Always load projects when DOM is ready – safe and universal
+    setTimeout(() => {
         loadApprovedProjects();
-    }
-    
-    // Add event listener to load projects when navigating to the donate section
-    document.body.addEventListener('click', function(e) {
-        if (e.target.matches('[onclick*="showSection(\'donate\'"]') || 
-            e.target.closest('[onclick*="showSection(\'donate\'"]')) {
-            setTimeout(loadApprovedProjects, 100);
-        }
-    });
+    }, 300);
+
+        
 });
 
 // Function to process donation to a project
@@ -227,7 +221,7 @@ function loadApprovedProjects() {
     const token = localStorage.getItem('token');
     
     // Use the public endpoint instead of admin endpoint
-    fetch('/projects', {
+    fetch('/projects/approved', {
         method: 'GET',
         headers: {
             'Accept': 'application/json',
@@ -249,7 +243,7 @@ function loadApprovedProjects() {
                 }
                 return project;
             });
-            
+
             console.log("Loaded projects:", projects);
             
             // Render projects
@@ -287,23 +281,28 @@ function loadApprovedProjects() {
 
 // Function to render projects in the carousel
 function renderProjects(projects, container) {
-    // Clear loading indicator
+    print("hi");
+    console.log("🔧 Rendering projects:", projects);
     container.innerHTML = '';
-    
-    // Add projects to carousel
+
     projects.forEach(project => {
-        const progress = project.current_amount ? Math.min(100, Math.round((project.current_amount / project.goal_amount) * 100)) : 0;
+        // הגנה: אם אין יעד או שהערך שגוי
+        let progress = 0;
+        if (project.goal_amount && project.goal_amount > 0 && project.current_amount) {
+            progress = Math.min(100, Math.round((project.current_amount / project.goal_amount) * 100));
+        }
+
         const regionClass = project.region === 'south' ? 'south' : 'north';
-        const regionText = project.region === 'south' ? 
-            (translations[currentLanguage]?.['donate-region-south'] || 'Southern Israel') : 
-            (translations[currentLanguage]?.['donate-region-north'] || 'Northern Israel');
-        
+        const regionText = project.region === 'south'
+            ? (translations?.[currentLanguage]?.['donate-region-south'] || 'Southern Israel')
+            : (translations?.[currentLanguage]?.['donate-region-north'] || 'Northern Israel');
+
         const projectSlide = document.createElement('div');
         projectSlide.className = 'project-slide';
         projectSlide.dataset.projectId = project._id;
         projectSlide.dataset.projectTitle = project.title;
         projectSlide.dataset.projectRegion = project.region;
-        
+
         projectSlide.innerHTML = `
             <input type="radio" name="project" id="project-${project._id}" value="${project._id}">
             <label for="project-${project._id}" class="approved-project-card">
@@ -328,9 +327,17 @@ function renderProjects(projects, container) {
                 </div>
             </label>
         `;
-        
+
         container.appendChild(projectSlide);
     });
+
+    if (projects.length === 0) {
+        container.innerHTML = `
+            <div class="empty-projects">
+                <p>No projects available at this time.</p>
+            </div>
+        `;
+    }
 }
 
 // Set up project selection
