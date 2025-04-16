@@ -1,0 +1,174 @@
+/* project-detail-styles.css */
+/* סגנונות CSS למודל פרטי פרויקט */
+
+/* סגנונות בסיסיים למודל */
+.project-detail-modal .modal-content {
+    max-width: 900px;
+    width: 90%;
+    height: 80vh;
+    max-height: 700px;
+    display: flex;
+    flex-direction: column;
+}
+
+.project-detail-modal .modal-body {
+    padding: 0;
+    overflow: hidden;
+    display: flex;
+    flex: 1;
+}
+
+.project-detail-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+/* אזור תוכן הפרויקט */
+.project-detail-content {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+/* סרגל צד לטופס התרומה */
+.project-detail-sidebar {
+    width: 320px;
+    background-color: var(--card-bg);
+    border-left: 1px solid var(--border-color);
+    padding: 20px;
+    overflow-y: auto;
+}
+
+/* תגית האזור */
+.project-detail-badge {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.project-detail-badge.south {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+}
+
+.project-detail-badge.north {
+    background-color: rgba(59, 130, 246, 0.1);
+    color: #3b82f6;
+}
+
+/* מקטעי מידע על הפרויקט */
+.project-detail-description {
+    margin-bottom: 2rem;
+}
+
+.project-detail-description h4,
+.project-detail-progress h4,
+.project-detail-contact h4 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.8rem;
+    color: var(--primary-color);
+}
+
+.project-detail-progress {
+    margin-bottom: 2rem;
+}
+
+/* טופס התרומה */
+.project-donation-form {
+    padding-bottom: 1rem;
+}
+
+.project-donation-form h4 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 1.2rem;
+    color: var(--primary-color);
+}
+
+.wallet-connection-required {
+    text-align: center;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    background-color: rgba(79, 70, 229, 0.1);
+    border-radius: var(--border-radius);
+}
+
+.donation-quick-amounts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.8rem;
+    margin-bottom: 1rem;
+}
+
+.quick-amount-btn {
+    padding: 0.5rem 0.8rem;
+    border-radius: 50px;
+    background-color: rgba(79, 70, 229, 0.1);
+    color: var(--primary-color);
+    font-size: 0.9rem;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.quick-amount-btn:hover {
+    background-color: rgba(79, 70, 229, 0.2);
+}
+
+.quick-amount-btn.active {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+/* כפתור התרומה */
+.project-donation-form .donate-button {
+    width: 100%;
+    margin-top: 1.5rem;
+    padding: 0.8rem;
+}
+
+/* תמיכה בדארק מוד */
+.dark-theme .project-detail-sidebar {
+    background-color: #1e293b;
+    border-color: #334155;
+}
+
+.dark-theme .wallet-connection-required {
+    background-color: rgba(79, 70, 229, 0.2);
+}
+
+.dark-theme .quick-amount-btn {
+    background-color: rgba(79, 70, 229, 0.2);
+}
+
+/* תמיכה ב-RTL */
+[dir="rtl"] .project-detail-sidebar {
+    border-left: none;
+    border-right: 1px solid var(--border-color);
+}
+
+/* התאמות תצוגה למסכים קטנים */
+@media (max-width: 768px) {
+    .project-detail-container {
+        flex-direction: column;
+    }
+    
+    .project-detail-sidebar {
+        width: 100%;
+        border-left: none;
+        border-top: 1px solid var(--border-color);
+    }
+    
+    [dir="rtl"] .project-detail-sidebar {
+        border-right: none;
+        border-top: 1px solid var(--border-color);
+    }
+}
