@@ -164,7 +164,15 @@ function showSection(sectionId) {
                 if (leftMenu) leftMenu.classList.remove('active');
                 if (rightMenu) rightMenu.classList.remove('active');
             }
+            
+            // Dispatch event that section was changed - this is the new addition
+            document.dispatchEvent(new CustomEvent('sectionChanged', {
+                detail: { sectionId: sectionId }
+            }));
+            
         }, 10);
+    } else {
+        console.error("Section not found:", sectionId);
     }
     
     // Update active state in navigation

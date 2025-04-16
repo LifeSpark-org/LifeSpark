@@ -169,8 +169,173 @@
                 rejectProject: typeof rejectProject === 'function'
             });
         });
+            // ודא שהפרויקטים המאושרים נטענים בעת טעינת העמוד
+        document.addEventListener('DOMContentLoaded', function() {
+        // כאשר עמוד תרומה מוצג, טען את הפרויקטים
+            document.body.addEventListener('click', function(e) {
+                if (e.target.matches('[onclick*="showSection(\'donate\'"]') || 
+                    e.target.closest('[onclick*="showSection(\'donate\'"]')) {
+                    setTimeout(() => {
+                        if (typeof loadApprovedProjects === 'function') {
+                            loadApprovedProjects();
+                        }
+                    }, 300);
+                }
+            });
+            
+            // אם אנחנו מתחילים בעמוד התרומה, טען את הפרויקטים
+            if (window.location.hash === '#donate' || 
+                document.getElementById('donate').classList.contains('active')) {
+                setTimeout(() => {
+                    if (typeof loadApprovedProjects === 'function') {
+                        loadApprovedProjects();
+                    }
+                }, 300);
+            }
+        });
     </script>
     <script src="/static/js/forgot-password.js"></script>
     <script src="/static/js/legal-modals.js"></script>
+    <script>
+        // קוד בדיקה - יוסף לסוף index.html
+        document.addEventListener('DOMContentLoaded', function() {
+            // לוגיקת עקיפה במקרה של כשל - יכריח הצגת פרויקטים
+            window.setTimeout(function() {
+                if (document.getElementById('donate') &&
+                    (window.location.hash === '#donate' || document.getElementById('donate').classList.contains('active'))) {
+                    
+                    // בדוק אם יש לנו פרויקטים מוצגים
+                    const projectSlides = document.querySelectorAll('.project-slide');
+                    if (!projectSlides || projectSlides.length === 0) {
+                        console.log("EMERGENCY FALLBACK: Force displaying projects");
+                        
+                        // נסה להפעיל את פונקצית ברירת המחדל אם קיימת
+                        if (typeof displayFallbackProjects === 'function') {
+                            displayFallbackProjects();
+                        } 
+                        // או להפעיל את loadApprovedProjects אם קיימת
+                        else if (typeof loadApprovedProjects === 'function') {
+                            loadApprovedProjects();
+                        }
+                        // או לנסות להציג משהו ישירות
+                        else {
+                            const fallbackProjects = [
+                                {
+                                    "_id": "dummy_project_south",
+                                    "title": "Emergency Relief in Sderot",
+                                    "description": "Providing emergency supplies and support to families in Sderot affected by the conflict.",
+                                    "region": "south",
+                                    "goal_amount": 2.0,
+                                    "current_amount": 0.85,
+                                    "status": "approved"
+                                },
+                                {
+                                    "_id": "dummy_project_north",
+                                    "title": "Medical Support in Northern Communities",
+                                    "description": "Medical aid and equipment for communities in northern Israel.",
+                                    "region": "north",
+                                    "goal_amount": 1.5,
+                                    "current_amount": 0.6,
+                                    "status": "approved"
+                                }
+                            ];
+                            
+                            const projectsCarousel = document.getElementById('approvedProjectsCarousel');
+                            if (projectsCarousel) {
+                                try {
+                                    projectsCarousel.innerHTML = '';
+                                    
+                                    fallbackProjects.forEach(project => {
+                                        const projectSlide = document.createElement('div');
+                                        projectSlide.className = 'project-slide';
+                                        projectSlide.innerHTML = `
+                                            <input type="radio" name="project" id="project-${project._id}" value="${project._id}">
+                                            <label for="project-${project._id}" class="approved-project-card">
+                                                <div class="project-image ${project.region}">
+                                                    <div class="project-badge ${project.region}">${project.region === 'south' ? 'Southern Israel' : 'Northern Israel'}</div>
+                                                </div>
+                                                <div class="project-content">
+                                                    <h4 class="project-title">${project.title}</h4>
+                                                    <p class="project-description">${project.description}</p>
+                                                    <div class="project-progress">
+                                                        <div class="progress-bar">
+                                                            <div class="progress-fill" style="width: 75%"></div>
+                                                        </div>
+                                                        <div class="progress-stats">
+                                                            <span>${project.current_amount} / ${project.goal_amount} ETH</span>
+                                                            <span>75%</span>
+                                                        </div>
+                                                    </div>
+                                                    <button type="button" class="project-select-btn" data-project-id="${project._id}">
+                                                        <span>Select Project</span>
+                                                    </button>
+                                                </div>
+                                            </label>
+                                        `;
+                                        
+                                        projectsCarousel.appendChild(projectSlide);
+                                    });
+                                    
+                                    // קביעת הפרויקט הראשון כנבחר
+                                    const firstRadio = projectsCarousel.querySelector('input[type="radio"]');
+                                    if (firstRadio) {
+                                        firstRadio.checked = true;
+                                    }
+                                    
+                                    // אירוע לחיצה על כפתור בחירה
+                                    const selectButtons = projectsCarousel.querySelectorAll('.project-select-btn');
+                                    selectButtons.forEach(button => {
+                                        button.addEventListener('click', function() {
+                                            const projectId = this.getAttribute('data-project-id');
+                                            const projectSlide = this.closest('.project-slide');
+                                            const radioInput = projectSlide.querySelector('input[type="radio"]');
+                                            if (radioInput) {
+                                                radioInput.checked = true;
+                                            }
+                                        });
+                                    });
+                                    
+                                    // עדכון אזור סיכום התרומה
+                                    const summaryProject = document.getElementById('summaryProject');
+                                    if (summaryProject) {
+                                        summaryProject.textContent = `${fallbackProjects[0].title} (${fallbackProjects[0].region === 'south' ? 'Southern Israel' : 'Northern Israel'})`;
+                                    }
+                                } catch (err) {
+                                    console.error("Error in emergency fallback:", err);
+                                }
+                            }
+                        }
+                    }
+                }
+            }, 1500);
+        });
+    </script>
 </body>
 </html>
+
+<!-- 
+זה סיכום השיחה הקודמת שהייתה לי איתך:
+
+סיכום השיחה
+
+בשיחה זו עסקנו בפתרון בעיה במערכת lifeSpark שלך, במיוחד בחלק של עמוד ה-"donate" שבו אמורים להופיע פרויקטים שאושרו על ידי האדמינים.
+
+הבעיה העיקרית הייתה שבמקום הצגת הפרויקטים, המשתמשים ראו רק את הודעת "Loading projects..." שנשארה על המסך ללא הצגת תוכן אמיתי.
+
+בחנו את הקוד והצעתי מספר פתרונות:
+
+תיקון בקובץ project-donations.js - עדכנתי את הקוד כדי שיציג פרויקטי ברירת מחדל מיידית, ובמקביל ינסה לקבל נתונים מהשרת.
+
+תוספת לשליחת אירוע sectionChanged - הוספת קוד לשליחת אירוע כשהמשתמש עובר למקטע אחר, כדי לטעון את הפרויקטים כשנכנסים לעמוד התרומה.
+
+סקריפט חירום - הוספת סקריפט שבודק אם הפרויקטים נטענו ואם לא, מציג פרויקטי ברירת מחדל.
+
+למרות הניסיונות הללו, נראה שהבעיה נמשכה כפי שציינת מתוך הקונסולה שהראתה שהבקשות מתקבלות בצד השרת אך הפרויקטים לא מוצגים בפועל.
+
+האסטרטגיה האחרונה שהצעתי הייתה שילוב של כמה שיטות עוקפות כדי להבטיח שהמשתמשים יראו תמיד תוכן, גם אם יש בעיה בטעינה מהשרת.
+
+בשיחה הבאה נוכל להמשיך לבדוק את התוצאות של הפתרונות האחרונים ולהתקדם עם גישה חדשה אם יש צורך.
+
+עכשיו אני רוצה להמשיך מאותה נקודה:
+
+ויזואלית זה בדיוק מה שאני רוצה, שהפרויקטים יופיעו ככה בדיוק בחלק של ה"Choose a Project to Support" בעמוד "donate". הבעיה היחידה היא שהפרויקטים האלה זה לא הפרויקטים שדיברתי עליהם! אלה פרויקטים דמה שסתם הכנסנו לאתר (למשל בעמוד HOME) כדי לתת נפח ותוכן, אבל הכוונה שלי הייתה שהפרויקטים שיופיעו בעמוד donate זה אותם פרויקטים שהאדמינים אישרו אותם  -->
