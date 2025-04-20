@@ -1451,3 +1451,88 @@ section.fade-out {
         font-size: 1.1rem;
     }
 }
+
+/* Google Translate Widget Styling */
+.google-translate-container {
+    display: inline-block;
+    margin-right: 10px;
+    position: relative;
+}
+
+#google_translate_element {
+    display: inline-block;
+}
+
+#google_translate_element .goog-te-gadget {
+    font-family: 'Inter', sans-serif !important;
+    font-size: 0.9rem !important;
+}
+
+#google_translate_element .goog-te-gadget-simple {
+    background-color: transparent !important;
+    border: 1px solid var(--border-color) !important;
+    padding: 6px 8px !important;
+    border-radius: var(--border-radius) !important;
+    font-size: 0.9rem !important;
+    line-height: 1.5 !important;
+    color: var(--text-color) !important;
+    margin: 0 !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+}
+
+#google_translate_element .goog-te-gadget-simple:hover {
+    border-color: var(--primary-color) !important;
+}
+
+.dark-theme #google_translate_element .goog-te-gadget-simple {
+    background-color: #1e293b !important;
+    border-color: #334155 !important;
+    color: #e2e8f0 !important;
+}
+
+/* Hide Google branding and unnecessary elements */
+.goog-te-gadget-icon {
+    display: none !important;
+}
+
+.goog-te-banner-frame {
+    display: none !important;
+}
+
+.goog-te-menu-value span:first-child {
+    display: inline !important;
+}
+
+.goog-te-menu-value span:not(:first-child) {
+    display: none !important;
+}
+
+/* Fix top spacing when Google Translate Bar appears */
+body {
+    top: 0 !important;
+}
+
+/* Fix for mobile view */
+@media (max-width: 768px) {
+    .google-translate-container {
+        display: block;
+        margin: 10px 0;
+        width: 100%;
+    }
+    
+    #google_translate_element {
+        display: block;
+        width: 100%;
+    }
+    
+    #google_translate_element .goog-te-gadget {
+        width: 100%;
+    }
+    
+    /* RTL support for mobile */
+    [dir="rtl"] .google-translate-container {
+        margin-right: 0;
+        margin-left: 10px;
+    }
+}

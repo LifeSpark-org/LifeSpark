@@ -6,6 +6,17 @@
     <title>{% block title %}lifeSpark{% endblock %}</title>
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='Images/favicon.ico') }}">
     
+    <!-- Google Translate -->
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'en',
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+            }, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,6 +32,45 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/legal.css') }}">
     
     <style>
+        /* Google Translate Widget Styling */
+        .google-translate-container {
+            display: inline-block;
+            margin-left: 10px;
+            position: relative;
+        }
+        
+        #google_translate_element {
+            display: inline-block;
+        }
+        
+        #google_translate_element .goog-te-gadget {
+            font-family: 'Inter', sans-serif !important;
+            font-size: 0.9rem !important;
+        }
+        
+        #google_translate_element .goog-te-gadget-simple {
+            background-color: transparent !important;
+            border: 1px solid var(--border-color) !important;
+            padding: 6px 8px !important;
+            border-radius: var(--border-radius) !important;
+            font-size: 0.9rem !important;
+            line-height: 1.5 !important;
+            color: var(--text-color) !important;
+            margin: 0 !important;
+            cursor: pointer !important;
+            transition: all 0.3s ease !important;
+        }
+        
+        #google_translate_element .goog-te-gadget-simple:hover {
+            border-color: var(--primary-color) !important;
+        }
+        
+        .dark-theme #google_translate_element .goog-te-gadget-simple {
+            background-color: #1e293b !important;
+            border-color: #334155 !important;
+            color: #e2e8f0 !important;
+        }
+        
         /* Inline styles for legal pages */
         .legal-document {
             max-width: 900px;
@@ -113,6 +163,10 @@
                 <span>life<span style="color: var(--secondary-color)">Spark</span></span>
             </a>
         </div>
+        
+        <div class="google-translate-container">
+            <div id="google_translate_element"></div>
+        </div>
     </nav>
 
     <!-- Main Content -->
@@ -143,5 +197,35 @@
 
     <!-- Scripts -->
     <script src="/static/js/main.js"></script>
-</body>
-</html>
+    <script>
+        // Style Google Translate Widget after it loads
+        function styleGoogleTranslate() {
+            // Hide Google translate top bar if it appears
+            const translateBar = document.getElementById(':1.container');
+            if (translateBar) {
+                translateBar.style.display = 'none';
+            }
+            
+            // Remove any top margin added by Google Translate
+            document.body.style.top = '0px !important';
+        }
+        
+        // Wait for Google Translate to load
+        const translateObserver = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.type === 'childList' && document.querySelector('.goog-te-menu-frame')) {
+                    console.log('Google Translate widget loaded');
+                    styleGoogleTranslate();
+                    translateObserver.disconnect();
+                }
+            });
+        });
+        
+        // Start observing
+        document.addEventListener('DOMContentLoaded', function() {
+            translateObserver.observe(document.body, {
+                childList: true,
+                subtree: true
+            });
+        });
+    </script>

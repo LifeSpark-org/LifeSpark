@@ -514,7 +514,119 @@ function preloadImages() {
         img.src = src;
     });
 }
+// Google Translate Integration
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize Google Translate Widget
+    initGoogleTranslate();
+    
+    // Coordinate Google Translate with our custom language selector
+    coordinateTranslationSystems();
+});
 
+// Initialize Google Translate functionality
+function initGoogleTranslate() {
+    // The main initialization happens through the googleTranslateElementInit function
+    // which is called by the Google Translate script
+    
+    // Add event listener to detect when Google Translate finishes loading
+    const translateObserver = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+            if (mutation.type === 'childList' && document.querySelector('.goog-te-menu-frame')) {
+                console.log('Google Translate widget loaded');
+                
+                // Apply custom styling to Google Translate elements
+                styleGoogleTranslate();
+                
+                // Stop observing once loaded
+                translateObserver.disconnect();
+            }
+        });
+    });
+    
+    // Start observing
+    translateObserver.observe(document.body, {
+        childList: true,
+        subtree: true
+    });
+}
+
+// Apply additional styling to Google Translate elements that are loaded dynamically
+function styleGoogleTranslate() {
+    // Hide Google translate top bar if it appears
+    const translateBar = document.getElementById(':1.container');
+    if (translateBar) {
+        translateBar.style.display = 'none';
+    }
+    
+    // Remove any top margin added by Google Translate
+    document.body.style.top = '0px !important';
+    
+    // Apply dark theme styling if in dark mode
+    if (document.documentElement.classList.contains('dark-theme')) {
+        const translateElements = document.querySelectorAll('.goog-te-gadget-simple');
+        translateElements.forEach(element => {
+            element.style.backgroundColor = '#1e293b';
+            element.style.borderColor = '#334155';
+            element.style.color = '#e2e8f0';
+        });
+    }
+}
+
+// Coordinate our native language selector with Google Translate
+function coordinateTranslationSystems() {
+    const languageSelector = document.getElementById('languageSelector');
+    
+    if (languageSelector) {
+        // Listen for changes to our custom language selector
+        languageSelector.addEventListener('change', function(e) {
+            // When user changes our language selector, handle Google Translate visibility
+            const googleTranslateContainer = document.querySelector('.google-translate-container');
+            
+            if (e.target.value !== 'en') {
+                // Hide Google Translate when using our built-in translations
+                if (googleTranslateContainer) {
+                    googleTranslateContainer.style.display = 'none';
+                }
+                
+                // Reset Google Translate to English if it was active
+                const googleFrame = document.querySelector('.goog-te-menu-frame');
+                if (googleFrame) {
+                    // This attempts to reset Google Translate
+                    const translateElement = google.translate.TranslateElement.getInstance();
+                    if (translateElement) {
+                        translateElement.restore();
+                    }
+                }
+            } else {
+                // Show Google Translate when in English mode
+                if (googleTranslateContainer) {
+                    googleTranslateContainer.style.display = 'inline-block';
+                }
+            }
+        });
+        
+        // Initially check language state
+        if (languageSelector.value !== 'en') {
+            const googleTranslateContainer = document.querySelector('.google-translate-container');
+            if (googleTranslateContainer) {
+                googleTranslateContainer.style.display = 'none';
+            }
+        }
+    }
+    
+    // Watch for theme changes to update Google Translate styling
+    const themeObserver = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+            if (mutation.attributeName === 'class' && 
+                mutation.target === document.documentElement) {
+                styleGoogleTranslate();
+            }
+        });
+    });
+    
+    // Start observing theme changes
+    themeObserver.observe(document.documentElement, { attributes: true });
+}
 // Export for global access
 window.showSection = showSection;
 window.initializeMobileMenu = initializeMobileMenu;

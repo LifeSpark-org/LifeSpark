@@ -6,6 +6,17 @@
     <title>lifeSpark</title>
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='Images/favicon.ico') }}">
     
+    <!-- Google Translate -->
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'en',
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+            }, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -32,6 +43,66 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/projects-donation.css') }}">
     <!-- AOS Animation Library -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+    
+    <!-- Google Translate Widget Custom Styles -->
+    <style>
+        /* Custom styling for Google Translate Widget */
+        .google-translate-container {
+            display: inline-block;
+            margin-right: 10px;
+            position: relative;
+        }
+        
+        #google_translate_element {
+            display: inline-block;
+        }
+        
+        #google_translate_element .goog-te-gadget {
+            font-family: 'Inter', sans-serif !important;
+            font-size: 0.9rem !important;
+        }
+        
+        #google_translate_element .goog-te-gadget-simple {
+            background-color: transparent !important;
+            border: 1px solid var(--border-color) !important;
+            padding: 6px 8px !important;
+            border-radius: var(--border-radius) !important;
+            font-size: 0.9rem !important;
+            line-height: 1.5 !important;
+            color: var(--text-color) !important;
+            margin: 0 !important;
+            cursor: pointer !important;
+            transition: all 0.3s ease !important;
+        }
+        
+        #google_translate_element .goog-te-gadget-simple:hover {
+            border-color: var(--primary-color) !important;
+        }
+        
+        .dark-theme #google_translate_element .goog-te-gadget-simple {
+            background-color: #1e293b !important;
+            border-color: #334155 !important;
+            color: #e2e8f0 !important;
+        }
+        
+        /* Fix for mobile view */
+        @media (max-width: 768px) {
+            .google-translate-container {
+                display: block;
+                margin: 10px 0;
+                width: 100%;
+            }
+            
+            #google_translate_element {
+                display: block;
+                width: 100%;
+            }
+            
+            #google_translate_element .goog-te-gadget {
+                width: 100%;
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -62,6 +133,9 @@
             <li id="adminMenuLink" style="display: none;"><a href="#" onclick="showSection('admin-projects')" data-translate="nav-admin"><i class="fas fa-users-cog"></i> Admin</a></li>
         </ul>
         <ul class="right-menu">
+            <li class="google-translate-container">
+                <div id="google_translate_element"></div>
+            </li>
             <li>
                 <select id="languageSelector" class="language-selector">
                     <option value="en">English</option>
@@ -193,5 +267,41 @@
         });
     </script>
     <script src="/static/js/legal-modals.js"></script>
+    
+    <!-- Google Translate Integration Helper -->
+    <script>
+        // Function to handle interactions between our custom language selector and Google Translate
+        document.addEventListener('DOMContentLoaded', function() {
+            const languageSelector = document.getElementById('languageSelector');
+            
+            if (languageSelector) {
+                // Listen for changes to our custom language selector
+                languageSelector.addEventListener('change', function(e) {
+                    // When user changes our language selector, we'll hide Google Translate
+                    // to avoid confusion with multiple translation systems
+                    const googleTranslateContainer = document.querySelector('.google-translate-container');
+                    if (e.target.value !== 'en') {
+                        // Hide Google Translate when using our built-in translations
+                        if (googleTranslateContainer) {
+                            googleTranslateContainer.style.display = 'none';
+                        }
+                    } else {
+                        // Show Google Translate when in English mode
+                        if (googleTranslateContainer) {
+                            googleTranslateContainer.style.display = 'inline-block';
+                        }
+                    }
+                });
+                
+                // Initially check language state
+                if (languageSelector.value !== 'en') {
+                    const googleTranslateContainer = document.querySelector('.google-translate-container');
+                    if (googleTranslateContainer) {
+                        googleTranslateContainer.style.display = 'none';
+                    }
+                }
+            }
+        });
+    </script>
 </body>
 </html>
