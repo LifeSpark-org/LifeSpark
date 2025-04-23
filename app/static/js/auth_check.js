@@ -53,7 +53,7 @@ const originalLoginSuccess = function(userData) {
     localStorage.setItem('token', userData.token);
     localStorage.setItem('userData', JSON.stringify(userData));
     updateAuthMenu(userData);
-    showNotification('success', 'Login successful!');
+    // showNotification('success', 'Login successful!');
     
     // Dispatch auth state changed event
     document.dispatchEvent(new CustomEvent('authStateChanged'));
