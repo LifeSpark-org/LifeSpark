@@ -20,22 +20,21 @@ function updateAuthMenu(userData = null) {
     
     if (userData) {
         // Display for logged-in user
-        const greeting = translations[currentLanguage]?.['hello-user'] || 'Hello, {name}';
-        const formattedGreeting = greeting.replace('{name}', userData.name);
+        const greeting = `Hello, ${userData.name}`;
         
         authMenu.innerHTML = `
-            <li class="user-greeting">${formattedGreeting}</li>
-            <li><button onclick="logout()" class="logout-button"><i class="fas fa-sign-out-alt"></i> <span data-translate="logout">Logout</span></button></li>
+            <li class="user-greeting">${greeting}</li>
+            <li><button onclick="logout()" class="logout-button"><i class="fas fa-sign-out-alt"></i> Logout</button></li>
         `;
     } else {
         // Display for non-logged-in user
         authMenu.innerHTML = `
-            <li><a href="#" onclick="showSection('login')" data-translate="login-register"><i class="fas fa-user"></i> Login / Register</a></li>
+            <li><a href="#" onclick="showSection('login')"><i class="fas fa-user"></i> Login / Register</a></li>
         `;
     }
     
-    // Update translations after menu change
-    updateContent();
+    // הסרת הקריאה לעדכון תרגומים - אין צורך בה יותר
+    // updateContent();
 }
 
 // Logout function

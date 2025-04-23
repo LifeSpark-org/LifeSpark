@@ -1,5 +1,4 @@
 // Global variables
-let currentLanguage = 'en';
 let pageLoaded = false;
 let themeMode = localStorage.getItem('themeMode') || 'light';
 
@@ -11,23 +10,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize UI components
     initializeTheme();
     initializeSections();
-    initializeLanguageSelector();
     initializeBackToTop();
     initializeRegionSelection();
     
     // Initialize mobile menu - IMPORTANT: Call this function explicitly
     initializeMobileMenu();
-    
-    // Load saved language preference if exists
-    const savedLanguage = localStorage.getItem('preferredLanguage');
-    if (savedLanguage) {
-        currentLanguage = savedLanguage;
-        document.getElementById('languageSelector').value = savedLanguage;
-        updateLanguageDirection(savedLanguage);
-    }
+
     
     // Initialize first content update
-    updateContent();
     
     // Hide loading screen after everything is initialized
     setTimeout(() => {
@@ -163,128 +153,6 @@ function initializeSections() {
             homeSection.classList.add('active');
         }, 10);
     }
-}
-
-// Initialize language selector
-function initializeLanguageSelector() {
-    const languageSelector = document.getElementById('languageSelector');
-    if (!languageSelector) return;
-
-    languageSelector.addEventListener('change', (event) => {
-        const newLanguage = event.target.value;
-        
-        // Only update if language is actually changed
-        if (newLanguage !== currentLanguage) {
-            // Show mini-loading indicator
-            showLanguageChangeLoading();
-            
-            // Update language with slight delay to show loading effect
-            setTimeout(() => {
-                currentLanguage = newLanguage;
-                localStorage.setItem('preferredLanguage', currentLanguage);
-                updateLanguageDirection(currentLanguage);
-                updateContent();
-                
-                // Hide mini-loading
-                hideLanguageChangeLoading();
-            }, 500);
-        }
-    });
-}
-
-// Show language change loading indicator
-function showLanguageChangeLoading() {
-    let languageLoading = document.getElementById('languageLoading');
-    
-    if (!languageLoading) {
-        languageLoading = document.createElement('div');
-        languageLoading.id = 'languageLoading';
-        languageLoading.className = 'language-loading';
-        languageLoading.innerHTML = `
-            <div class="spinner-mini"></div>
-            <span>Changing language...</span>
-        `;
-        
-        document.body.appendChild(languageLoading);
-    }
-    
-    languageLoading.style.display = 'flex';
-    setTimeout(() => {
-        languageLoading.style.opacity = '1';
-    }, 10);
-}
-
-// Hide language change loading indicator
-function hideLanguageChangeLoading() {
-    const languageLoading = document.getElementById('languageLoading');
-    
-    if (languageLoading) {
-        languageLoading.style.opacity = '0';
-        
-        setTimeout(() => {
-            languageLoading.style.display = 'none';
-            
-            // Optional: remove from DOM
-            if (languageLoading.parentNode) {
-                languageLoading.parentNode.removeChild(languageLoading);
-            }
-        }, 300);
-    }
-}
-
-// Update language direction
-function updateLanguageDirection(language) {
-    document.documentElement.lang = language;
-    
-    // RTL languages: Hebrew and Arabic
-    if (language === 'he' || language === 'ar') {
-        document.documentElement.dir = 'rtl';
-        document.documentElement.classList.add('rtl');
-    } else {
-        document.documentElement.dir = 'ltr';
-        document.documentElement.classList.remove('rtl');
-    }
-}
-
-// Update content based on selected language
-function updateContent() {
-    if (!translations[currentLanguage]) {
-        console.error(`Translations not found for language: ${currentLanguage}`);
-        return;
-    }
-    
-    const elements = document.querySelectorAll('[data-translate]');
-    elements.forEach(element => {
-        const key = element.getAttribute('data-translate');
-        if (translations[currentLanguage] && translations[currentLanguage][key]) {
-            if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
-                if (element.getAttribute('placeholder')) {
-                    element.placeholder = translations[currentLanguage][key];
-                }
-            } else {
-                // Special handling for elements with icons
-                if (element.innerHTML.includes('<i class="fa')) {
-                    // Extract icon HTML
-                    const iconMatch = element.innerHTML.match(/<i class="[^"]*"><\/i>/);
-                    const iconHtml = iconMatch ? iconMatch[0] : '';
-                    
-                    // Replace text but keep icon
-                    if (iconHtml) {
-                        element.innerHTML = iconHtml + ' ' + translations[currentLanguage][key];
-                    } else {
-                        element.textContent = translations[currentLanguage][key];
-                    }
-                } else {
-                    element.textContent = translations[currentLanguage][key];
-                }
-            }
-        }
-    });
-
-    // Dispatch event for other components that might need to update
-    document.dispatchEvent(new CustomEvent('languageChanged', {
-        detail: { language: currentLanguage }
-    }));
 }
 
 // Initialize "Back to Top" button
