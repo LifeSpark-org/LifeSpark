@@ -188,7 +188,7 @@ async function loadPendingProjects() {
     pendingList.innerHTML = `
         <div class="loading-placeholder">
             <div class="spinner"></div>
-            <p data-translate="loading-projects">Loading projects...</p>
+            <p>Loading projects...</p>
         </div>
     `;
     
@@ -222,7 +222,7 @@ async function loadPendingProjects() {
                 pendingList.innerHTML = `
                     <div class="empty-list">
                         <i class="fas fa-inbox"></i>
-                        <p data-translate="no-pending-projects">No pending projects to review</p>
+                        <p>No pending projects to review</p>
                     </div>
                 `;
                 return;
@@ -235,8 +235,7 @@ async function loadPendingProjects() {
                 const formattedDate = new Date(project.created_at).toLocaleDateString();
                 const regionClass = project.region === 'south' ? 'south' : 'north';
                 const regionText = project.region === 'south' ? 
-                    (translations[currentLanguage]?.['donate-region-south'] || 'Southern Israel') : 
-                    (translations[currentLanguage]?.['donate-region-north'] || 'Northern Israel');
+                    'Southern Israel' : 'Northern Israel';
                 
                 projectsHtml += `
                     <div class="admin-project-item" data-project-id="${project._id}">
@@ -244,7 +243,7 @@ async function loadPendingProjects() {
                             <div>
                                 <h4 class="project-item-title">${project.title}</h4>
                                 <div class="project-item-meta">
-                                    ${translations[currentLanguage]?.['submitted-on'] || 'Submitted on'}: ${formattedDate}
+                                    Submitted on: ${formattedDate}
                                 </div>
                             </div>
                             <span class="project-item-region ${regionClass}">${regionText}</span>
@@ -257,12 +256,12 @@ async function loadPendingProjects() {
                         <div class="project-item-footer">
                             <div class="project-item-funding">
                                 <span class="project-item-goal">${project.goal_amount} ETH</span>
-                                <span data-translate="funding-goal">funding goal</span>
+                                <span>funding goal</span>
                             </div>
                             
                             <div class="project-item-actions">
                                 <button class="btn btn-sm btn-primary review-project-btn" data-project-id="${project._id}">
-                                    <i class="fas fa-search"></i> <span data-translate="review">Review</span>
+                                    <i class="fas fa-search"></i> Review
                                 </button>
                             </div>
                         </div>
@@ -304,7 +303,7 @@ async function loadApprovedProjects() {
     approvedList.innerHTML = `
         <div class="loading-placeholder">
             <div class="spinner"></div>
-            <p data-translate="loading-projects">Loading projects...</p>
+            <p>Loading projects...</p>
         </div>
     `;
     
@@ -330,7 +329,7 @@ async function loadApprovedProjects() {
                 approvedList.innerHTML = `
                     <div class="empty-list">
                         <i class="fas fa-check-circle"></i>
-                        <p data-translate="no-approved-projects">No approved projects</p>
+                        <p>No approved projects</p>
                     </div>
                 `;
                 return;
@@ -340,11 +339,10 @@ async function loadApprovedProjects() {
             let projectsHtml = '';
             
             projects.forEach(project => {
-                const formattedDate = new Date(project.approved_at).toLocaleDateString();
+                const formattedDate = new Date(project.approved_at || project.created_at).toLocaleDateString();
                 const regionClass = project.region === 'south' ? 'south' : 'north';
                 const regionText = project.region === 'south' ? 
-                    (translations[currentLanguage]?.['donate-region-south'] || 'Southern Israel') : 
-                    (translations[currentLanguage]?.['donate-region-north'] || 'Northern Israel');
+                    'Southern Israel' : 'Northern Israel';
                 
                 const progressPercent = Math.min(100, Math.round((project.current_amount / project.goal_amount) * 100));
                 
@@ -354,7 +352,7 @@ async function loadApprovedProjects() {
                             <div>
                                 <h4 class="project-item-title">${project.title}</h4>
                                 <div class="project-item-meta">
-                                    ${translations[currentLanguage]?.['approved-on'] || 'Approved on'}: ${formattedDate}
+                                    Approved on: ${formattedDate}
                                 </div>
                             </div>
                             <span class="project-item-region ${regionClass}">${regionText}</span>
@@ -369,7 +367,7 @@ async function loadApprovedProjects() {
                                 <div class="progress-fill" style="width: ${progressPercent}%"></div>
                             </div>
                             <div class="progress-stats">
-                                <span>${project.current_amount} / ${project.goal_amount} ETH</span>
+                                <span>${project.current_amount || 0} / ${project.goal_amount} ETH</span>
                                 <span>${progressPercent}%</span>
                             </div>
                         </div>
@@ -377,12 +375,12 @@ async function loadApprovedProjects() {
                         <div class="project-item-footer">
                             <div class="project-item-funding">
                                 <span class="project-item-goal">${project.goal_amount} ETH</span>
-                                <span data-translate="funding-goal">funding goal</span>
+                                <span>funding goal</span>
                             </div>
                             
                             <div class="project-item-actions">
                                 <button class="btn btn-sm btn-primary view-project-btn" data-project-id="${project._id}">
-                                    <i class="fas fa-eye"></i> <span data-translate="view-details">View Details</span>
+                                    <i class="fas fa-eye"></i> View Details
                                 </button>
                             </div>
                         </div>
@@ -424,7 +422,7 @@ async function loadRejectedProjects() {
     rejectedList.innerHTML = `
         <div class="loading-placeholder">
             <div class="spinner"></div>
-            <p data-translate="loading-projects">Loading projects...</p>
+            <p>Loading projects...</p>
         </div>
     `;
     
@@ -453,7 +451,7 @@ async function loadRejectedProjects() {
                 rejectedList.innerHTML = `
                     <div class="empty-list">
                         <i class="fas fa-times-circle"></i>
-                        <p data-translate="no-rejected-projects">No rejected projects</p>
+                        <p>No rejected projects</p>
                     </div>
                 `;
                 return;
@@ -463,11 +461,10 @@ async function loadRejectedProjects() {
             let projectsHtml = '';
             
             projects.forEach(project => {
-                const formattedDate = new Date(project.rejected_at).toLocaleDateString();
+                const formattedDate = new Date(project.rejected_at || project.created_at).toLocaleDateString();
                 const regionClass = project.region === 'south' ? 'south' : 'north';
                 const regionText = project.region === 'south' ? 
-                    (translations[currentLanguage]?.['donate-region-south'] || 'Southern Israel') : 
-                    (translations[currentLanguage]?.['donate-region-north'] || 'Northern Israel');
+                    'Southern Israel' : 'Northern Israel';
                 
                 projectsHtml += `
                     <div class="admin-project-item" data-project-id="${project._id}">
@@ -475,7 +472,7 @@ async function loadRejectedProjects() {
                             <div>
                                 <h4 class="project-item-title">${project.title}</h4>
                                 <div class="project-item-meta">
-                                    ${translations[currentLanguage]?.['rejected-on'] || 'Rejected on'}: ${formattedDate}
+                                    Rejected on: ${formattedDate}
                                 </div>
                             </div>
                             <span class="project-item-region ${regionClass}">${regionText}</span>
@@ -486,19 +483,19 @@ async function loadRejectedProjects() {
                         </div>
                         
                         <div class="rejection-notes">
-                            <strong data-translate="rejection-reason">Rejection Reason:</strong>
+                            <strong>Rejection Reason:</strong>
                             <p>${project.status_notes || 'No reason provided'}</p>
                         </div>
                         
                         <div class="project-item-footer">
                             <div class="project-item-funding">
                                 <span class="project-item-goal">${project.goal_amount} ETH</span>
-                                <span data-translate="funding-goal">funding goal</span>
+                                <span>funding goal</span>
                             </div>
                             
                             <div class="project-item-actions">
                                 <button class="btn btn-sm btn-primary view-project-btn" data-project-id="${project._id}">
-                                    <i class="fas fa-eye"></i> <span data-translate="view-details">View Details</span>
+                                    <i class="fas fa-eye"></i> View Details
                                 </button>
                             </div>
                         </div>
@@ -547,7 +544,7 @@ async function openProjectReviewModal(projectId) {
     reviewContent.innerHTML = `
         <div class="loading-placeholder">
             <div class="spinner"></div>
-            <p data-translate="loading-project">Loading project details...</p>
+            <p>Loading project details...</p>
         </div>
     `;
     
@@ -585,8 +582,7 @@ async function openProjectReviewModal(projectId) {
             const submittedDate = new Date(project.created_at).toLocaleDateString();
             
             const regionText = project.region === 'south' ? 
-                (translations[currentLanguage]?.['donate-region-south'] || 'Southern Israel') : 
-                (translations[currentLanguage]?.['donate-region-north'] || 'Northern Israel');
+                'Southern Israel' : 'Northern Israel';
             
             // Build documents list
             let documentsHtml = '';
@@ -617,7 +613,7 @@ async function openProjectReviewModal(projectId) {
                     `;
                 });
             } else {
-                documentsHtml = '<p data-translate="no-documents">No supporting documents provided</p>';
+                documentsHtml = '<p>No supporting documents provided</p>';
             }
             
             // Build review content
@@ -626,7 +622,7 @@ async function openProjectReviewModal(projectId) {
                     <div>
                         <h3 class="project-review-title">${project.title}</h3>
                         <div class="project-review-meta">
-                            ${translations[currentLanguage]?.['submitted-on'] || 'Submitted on'}: ${submittedDate}
+                            Submitted on: ${submittedDate}
                             <span class="project-review-region">${regionText}</span>
                         </div>
                     </div>
@@ -636,12 +632,12 @@ async function openProjectReviewModal(projectId) {
                 </div>
                 
                 <div class="project-review-section">
-                    <h4 data-translate="project-description">Project Description</h4>
+                    <h4>Project Description</h4>
                     <p>${project.description}</p>
                 </div>
                 
                 <div class="project-review-section">
-                    <h4 data-translate="project-contact-info">Contact Information</h4>
+                    <h4>Contact Information</h4>
                     <div class="project-review-contact">
                         <div class="contact-item">
                             <i class="fas fa-envelope"></i>
@@ -661,7 +657,7 @@ async function openProjectReviewModal(projectId) {
                 </div>
                 
                 <div class="project-review-section">
-                    <h4 data-translate="supporting-documents">Supporting Documents</h4>
+                    <h4>Supporting Documents</h4>
                     <div class="documents-list">
                         ${documentsHtml}
                     </div>
