@@ -15,6 +15,17 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
+// פונקציית עזר לניקוי שדות הטופס
+function clearResetPasswordFields(modalElement) {
+    const resetCode = modalElement.querySelector('#resetCode');
+    const newPassword = modalElement.querySelector('#newPassword');
+    const confirmNewPassword = modalElement.querySelector('#confirmNewPassword');
+    
+    if (resetCode) resetCode.value = '';
+    if (newPassword) newPassword.value = '';
+    if (confirmNewPassword) confirmNewPassword.value = '';
+}
+
 // פונקציה ליצירת מודל שכחתי סיסמה
 function createForgotPasswordModal() {
     const modal = document.createElement('div');
@@ -51,7 +62,7 @@ function createForgotPasswordModal() {
                         <div class="form-group">
                             <label for="resetCode" data-translate="reset-code">קוד איפוס:</label>
                             <div class="input-with-icon">
-                                <input type="text" id="resetCode" required>
+                                <input type="text" id="resetCode" required autocomplete="new-password">
                                 <i class="fas fa-key input-icon"></i>
                             </div>
                         </div>
@@ -59,7 +70,7 @@ function createForgotPasswordModal() {
                         <div class="form-group">
                             <label for="newPassword" data-translate="new-password">סיסמה חדשה:</label>
                             <div class="input-with-icon password-input-container">
-                                <input type="password" id="newPassword" required>
+                                <input type="password" id="newPassword" required autocomplete="new-password">
                                 <i class="fas fa-eye password-toggle" onclick="togglePasswordVisibility('newPassword')"></i>
                             </div>
                             <div class="password-strength">
@@ -76,7 +87,7 @@ function createForgotPasswordModal() {
                         <div class="form-group">
                             <label for="confirmNewPassword" data-translate="confirm-new-password">אימות סיסמה חדשה:</label>
                             <div class="input-with-icon password-input-container">
-                                <input type="password" id="confirmNewPassword" required>
+                                <input type="password" id="confirmNewPassword" required autocomplete="new-password">
                                 <i class="fas fa-eye password-toggle" onclick="togglePasswordVisibility('confirmNewPassword')"></i>
                             </div>
                             <div class="password-error" id="newPasswordMatchError" style="display: none; color: red;">
@@ -92,6 +103,11 @@ function createForgotPasswordModal() {
             </div>
         </div>
     `;
+    
+    // נקה את השדות מיד לאחר יצירת המודל
+    setTimeout(() => {
+        clearResetPasswordFields(modal);
+    }, 10);
     
     // הוספת מאזינים לאירועים
     setTimeout(() => {
@@ -129,8 +145,12 @@ function createForgotPasswordModal() {
                 const result = await response.json();
                 
                 if (response.ok) {
-                    // מעבר לשלב 2
+                    // מעבר לשלב 2 - ניקוי השדות של שלב 2 לפני הצגה
                     document.getElementById('forgotPasswordStep1').style.display = 'none';
+                    
+                    // נקה את השדות לפני המעבר לשלב 2
+                    clearResetPasswordFields(modal);
+                    
                     document.getElementById('forgotPasswordStep2').style.display = 'block';
                     // שמירת האימייל לשלב הבא
                     document.getElementById('resetPasswordForm').dataset.email = email;
@@ -195,7 +215,14 @@ function createForgotPasswordModal() {
                         loginEmailInput.value = email;
                     }
                 } else {
-                    showNotification('error', result.error || 'שגיאה באיפוס סיסמה');
+                    if (result.error && result.error.includes('same as current')) {
+                        showNotification('error', 'הסיסמה החדשה חייבת להיות שונה מהסיסמה הנוכחית');
+                        document.getElementById('newPassword').value = '';
+                        document.getElementById('confirmNewPassword').value = '';
+                        document.getElementById('newPassword').focus();
+                    } else {
+                        showNotification('error', result.error || 'שגיאה באיפוס סיסמה');
+                    }
                 }
             } catch (error) {
                 showNotification('error', 'אירעה שגיאה בתהליך עדכון הסיסמה');
@@ -302,3 +329,32 @@ function createForgotPasswordModal() {
     
     return modal;
 }
+
+// שכתוב הפונקציה showModal בכדי לנקות את השדות של המודל
+// אם הפונקציה הזו מוגדרת במקום אחר, יש להוסיף את הקוד הבא בתוכה
+const originalShowModal = window.showModal;
+window.showModal = function(modal) {
+    // בדיקה אם זה מודל איפוס סיסמה
+    if (modal && modal.id === 'forgotPasswordModal') {
+        // ניקוי שדות
+        clearResetPasswordFields(modal);
+    }
+    
+    // קריאה לפונקציה המקורית אם קיימת
+    if (typeof originalShowModal === 'function') {
+        return originalShowModal(modal);
+    } else {
+        // אחרת, יישום בסיסי של הצגת מודל
+        document.body.style.overflow = 'hidden';
+        modal.style.display = 'flex';
+        
+        // אנימציה
+        setTimeout(() => {
+            modal.style.opacity = '1';
+            const modalContent = modal.querySelector('.modal-content');
+            if (modalContent) {
+                modalContent.style.transform = 'translateY(0)';
+            }
+        }, 10);
+    }
+};
