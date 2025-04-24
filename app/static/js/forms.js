@@ -406,104 +406,108 @@ function initializeFormSubmissions() {
     const contactForm = document.getElementById('contactForm');
     const loginEmailInput = document.getElementById('loginEmail');
     
-    // Registration form
-    registerForm?.addEventListener('submit', async (event) => {
-        event.preventDefault();
-        
-        // בדיקת התאמה בין הסיסמאות
-        const password = document.getElementById('registerPassword').value;
-        const passwordConfirm = document.getElementById('registerPasswordConfirm').value;
-        const passwordMatchError = document.getElementById('passwordMatchError');
-        
-        if (password !== passwordConfirm) {
-            passwordMatchError.style.display = 'block';
-            document.getElementById('registerPasswordConfirm').focus();
-            return;
-        } else {
-            passwordMatchError.style.display = 'none';
-        }
-        
-        // Validate CAPTCHA input
-        if (!validateCaptcha('register')) {
-            return;
-        }
-        
-        showFormLoading(registerForm);
-        
-        const formData = {
-            name: document.getElementById('registerName').value,
-            email: document.getElementById('registerEmail').value,
-            password: document.getElementById('registerPassword').value,
-            captcha: document.getElementById('registerCaptcha').value
-        };
+ // Registration form handler
+registerForm?.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    
+    // בדיקת התאמה בין הסיסמאות
+    const password = document.getElementById('registerPassword').value;
+    const passwordConfirm = document.getElementById('registerPasswordConfirm').value;
+    const passwordMatchError = document.getElementById('passwordMatchError');
+    
+    if (password !== passwordConfirm) {
+        passwordMatchError.style.display = 'block';
+        document.getElementById('registerPasswordConfirm').focus();
+        return;
+    } else {
+        passwordMatchError.style.display = 'none';
+    }
+    
+    // Validate CAPTCHA input
+    if (!validateCaptcha('register')) {
+        return;
+    }
+    
+    showFormLoading(registerForm);
+    
+    // קבלת סוג המשתמש מהטופס (דונור או מבקש תרומה)
+    const userType = document.querySelector('input[name="userType"]:checked').value;
+    
+    const formData = {
+        name: document.getElementById('registerName').value,
+        email: document.getElementById('registerEmail').value,
+        password: document.getElementById('registerPassword').value,
+        user_type: userType,  // הוספת סוג המשתמש לנתונים הנשלחים
+        captcha: document.getElementById('registerCaptcha').value
+    };
 
-        try {
-            const response = await fetch('/register', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData)
-            });
-            const result = await response.json();
+    try {
+        const response = await fetch('/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(formData)
+        });
+        const result = await response.json();
 
-            if (response.ok) {
-                const verificationModal = createVerificationModal(formData.email);
-                document.body.appendChild(verificationModal);
-                showModal(verificationModal);
+        if (response.ok) {
+            const verificationModal = createVerificationModal(formData.email);
+            document.body.appendChild(verificationModal);
+            showModal(verificationModal);
+            
+            // Add event listener for verification code submission
+            const verifyForm = verificationModal.querySelector('#verificationForm');
+            verifyForm?.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const codeInput = verificationModal.querySelector('#verificationCode');
                 
-                // Add event listener for verification code submission
-                const verifyForm = verificationModal.querySelector('#verificationForm');
-                verifyForm?.addEventListener('submit', async (e) => {
-                    e.preventDefault();
-                    const codeInput = verificationModal.querySelector('#verificationCode');
+                if (codeInput) {
+                    const code = codeInput.value;
                     
-                    if (codeInput) {
-                        const code = codeInput.value;
+                    const verifyResponse = await fetch('/verify-code', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            email: formData.email,
+                            code: code
+                        })
+                    });
+                    const verifyResult = await verifyResponse.json();
+                    
+                    if (verifyResponse.ok) {
+                        hideModal(verificationModal);
+                        showNotification('success', 'Registration successful!');
                         
-                        const verifyResponse = await fetch('/verify-code', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({
-                                email: formData.email,
-                                code: code
-                            })
-                        });
-                        const verifyResult = await verifyResponse.json();
-                        
-                        if (verifyResponse.ok) {
-                            hideModal(verificationModal);
-                            showNotification('success', 'Registration successful!');
-                            
-                            // Switch to login section with the email pre-filled
-                            const registerSection = document.getElementById('registerSection');
-                            const loginSection = document.getElementById('loginSection');
-                            if (registerSection && loginSection && loginEmailInput) {
-                                registerSection.style.display = 'none';
-                                loginSection.style.display = 'block';
-                                loginEmailInput.value = formData.email;
-                                // Load fresh CAPTCHA for login
-                                loadCaptcha('login');
-                            }
-                        } else {
-                            showNotification('error', verifyResult.error || 'Invalid verification code');
+                        // Switch to login section with the email pre-filled
+                        const registerSection = document.getElementById('registerSection');
+                        const loginSection = document.getElementById('loginSection');
+                        if (registerSection && loginSection && loginEmailInput) {
+                            registerSection.style.display = 'none';
+                            loginSection.style.display = 'block';
+                            loginEmailInput.value = formData.email;
+                            // Load fresh CAPTCHA for login
+                            loadCaptcha('login');
                         }
+                    } else {
+                        showNotification('error', verifyResult.error || 'Invalid verification code');
                     }
-                });
-            } else {
-                // If CAPTCHA verification failed, load a new one
-                if (result.error && result.error.includes('CAPTCHA')) {
-                    loadCaptcha('register');
-                    document.getElementById('registerCaptchaError').style.display = 'block';
-                } else {
-                    showNotification('error', result.error || 'Registration failed');
                 }
+            });
+        } else {
+            // If CAPTCHA verification failed, load a new one
+            if (result.error && result.error.includes('CAPTCHA')) {
+                loadCaptcha('register');
+                document.getElementById('registerCaptchaError').style.display = 'block';
+            } else {
+                showNotification('error', result.error || 'Registration failed');
             }
-        } catch (error) {
-            showNotification('error', 'An error occurred during registration');
-            loadCaptcha('register');
         }
-        
-        hideFormLoading(registerForm);
-    });
+    } catch (error) {
+        showNotification('error', 'An error occurred during registration');
+        loadCaptcha('register');
+    }
+    
+    hideFormLoading(registerForm);
+});
 
     // Login form handler
     loginForm?.addEventListener('submit', async (event) => {

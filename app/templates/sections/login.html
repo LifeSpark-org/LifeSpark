@@ -111,6 +111,21 @@
                     </div>
                 </div>
                 
+                <!-- חדש: בחירת סוג משתמש -->
+                <div class="form-group">
+                    <label data-translate="register-user-type">User Type:</label>
+                    <div class="user-type-options">
+                        <div class="user-type-option">
+                            <input type="radio" id="userTypeDonor" name="userType" value="donor" checked>
+                            <label for="userTypeDonor" data-translate="register-user-type-donor">Donor - I want to donate</label>
+                        </div>
+                        <div class="user-type-option">
+                            <input type="radio" id="userTypeRequester" name="userType" value="requester">
+                            <label for="userTypeRequester" data-translate="register-user-type-requester">Requester - I need funding for a project</label>
+                        </div>
+                    </div>
+                </div>
+                
                 <div class="form-group">
                     <div class="terms-checkbox">
                         <input type="checkbox" id="acceptTerms" required>
