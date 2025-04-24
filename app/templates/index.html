@@ -182,6 +182,7 @@
     <script src="/static/js/map.js"></script>
     <script src="/static/js/auth_check.js"></script>
     <script src="/static/js/project-submission.js"></script>
+    <!-- <script src="/static/js/project-detail-modal.js"></script> -->
     <script src="/static/js/project-donations.js"></script>
     
     <!-- Load admin scripts properly -->
@@ -200,61 +201,104 @@
             once: true
         });
         
-        // Ensure mobile menu is initialized properly
+        // טיפול בבעיית הכפתורים שלא עובדים מיד בטעינה
         document.addEventListener('DOMContentLoaded', function() {
-            if (typeof initializeMobileMenu === 'function') {
-                console.log("Calling initializeMobileMenu from script tag");
-                initializeMobileMenu();
+            // משתנה שיאפשר לנו לעקוב אחר אתחול המודאל ולמנוע אתחול כפול
+            window.projectModalInitialized = false;
+
+            // בדיקה ואתחול של הפונקציות החיוניות
+            const waitForScriptsToLoad = function() {
+                console.log("בודק אם כל הסקריפטים הנטענים זמינים...");
                 
-                // Also check if we need to refresh mobile menu
-                window.addEventListener('resize', function() {
-                    if (window.innerWidth <= 768) {
-                        initializeMobileMenu();
+                // בדיקה אם כל הפונקציות החיוניות קיימות
+                const allFunctionsExist = typeof initProjectDetailModal === 'function';
+                
+                if (allFunctionsExist) {
+                    console.log("כל הפונקציות זמינות, מאתחל אותן כעת.");
+                    
+                    // אתחול פונקציות מהפרויקט - אם לא אותחל קודם
+                    if (typeof initProjectDetailModal === 'function' && !window.projectModalInitialized) {
+                        initProjectDetailModal();
+                        window.projectModalInitialized = true;
                     }
-                });
-            } else if (typeof initMobileMenu === 'function') {
-                console.log("Calling initMobileMenu from script tag");
-                initMobileMenu();
-                
-                // Also check if we need to refresh mobile menu
-                window.addEventListener('resize', function() {
-                    if (window.innerWidth <= 768) {
+                    
+                    // אתחול תפריט נייד
+                    if (typeof initializeMobileMenu === 'function') {
+                        initializeMobileMenu();
+                    } else if (typeof initMobileMenu === 'function') {
                         initMobileMenu();
                     }
-                });
-            } else {
-                console.error("Mobile menu initialization function not found");
+                    
+                    return true;
+                }
+                
+                return false;
+            };
+            
+            // נסה להפעיל את הפונקציות מיד
+            if (!waitForScriptsToLoad()) {
+                // אם הפונקציות לא זמינות, נסה שוב כל 200 מילישניות
+                let attempts = 0;
+                const maxAttempts = 50; // 10 שניות מקסימום
+                
+                const checkInterval = setInterval(function() {
+                    attempts++;
+                    
+                    if (waitForScriptsToLoad() || attempts >= maxAttempts) {
+                        clearInterval(checkInterval);
+                        console.log("פונקציות אותחלו אחרי", attempts * 200, "מילישניות");
+                        
+                        // אם הגענו למספר הניסיונות המקסימלי, ננסה להפעיל שוב
+                        if (attempts >= maxAttempts) {
+                            console.warn("זמן ההמתנה למקסימום ניסיונות הסתיים. מנסה להפעיל בכל זאת.");
+                            if (typeof initProjectDetailModal === 'function' && !window.projectModalInitialized) {
+                                try {
+                                    initProjectDetailModal();
+                                    window.projectModalInitialized = true;
+                                } catch (err) {
+                                    console.error("שגיאה באתחול מודאל פרטי פרויקט:", err);
+                                }
+                            }
+                        }
+                    }
+                }, 200);
             }
             
-            // Add a test for admin project functions
-            console.log("Admin functions available:", {
-                checkAdminAccess: typeof checkAdminAccess === 'function',
-                loadPendingProjects: typeof loadPendingProjects === 'function',
-                approveProject: typeof approveProject === 'function',
-                rejectProject: typeof rejectProject === 'function'
-            });
-
-
+            // הוספת מאזין אירועים לכפתורי התרומה - עם בדיקה למניעת אתחול כפול
             document.body.addEventListener('click', function(e) {
                 if (e.target.matches('[onclick*="showSection(\'donate\'"]') || 
                     e.target.closest('[onclick*="showSection(\'donate\'"]')) {
-                    setTimeout(() => {
-                        if (typeof initProjectDetailModal === 'function') {
+                    // בדיקה אם המודאל כבר אותחל
+                    if (!window.projectModalInitialized && typeof initProjectDetailModal === 'function') {
+                        try {
+                            console.log("מאתחל מודאל פרטי פרויקט בעקבות לחיצה על תפריט התרומה");
                             initProjectDetailModal();
+                            window.projectModalInitialized = true;
+                        } catch (err) {
+                            console.error("שגיאה באתחול מודאל פרטי פרויקט בעת לחיצה על תפריט:", err);
                         }
-                    }, 300);
+                    }
                 }
             });
             
-            // אם אנחנו מתחילים בעמוד התרומה, אתחל את מערכת פרטי הפרויקט
+            // אם אנחנו מתחילים בעמוד התרומה, וודא שהמודאל מאותחל
             if (window.location.hash === '#donate' || 
                 document.getElementById('donate').classList.contains('active')) {
-                setTimeout(() => {
-                    if (typeof initProjectDetailModal === 'function') {
+                if (!window.projectModalInitialized && typeof initProjectDetailModal === 'function') {
+                    try {
+                        console.log("מאתחל מודאל פרטי פרויקט בטעינה ישירה לעמוד התרומה");
                         initProjectDetailModal();
+                        window.projectModalInitialized = true;
+                    } catch (err) {
+                        console.error("שגיאה באתחול מודאל פרטי פרויקט בטעינה ישירה:", err);
                     }
-                }, 300);
+                }
             }
+            
+            // הגדרת טיפול בשגיאות לאבחון
+            window.addEventListener('error', function(e) {
+                console.error("שגיאת JavaScript:", e.message, "בקובץ:", e.filename, "שורה:", e.lineno);
+            });
         });
     </script>
     <script src="/static/js/legal-modals.js"></script>
@@ -309,9 +353,15 @@
     })();
     </script>
     <script src="/static/js/forgot-password.js"></script>
-    <script src="/static/js/project-detail-modal.js"></script>
     
     
     <script src="/static/js/project-selection-integration.js"></script>
+
+    <!-- בדיקה לזיהוי שגיאות -->
+    <script>
+    window.addEventListener('error', function(e) {
+        console.error('שגיאת JavaScript:', e.message, 'בקובץ:', e.filename, 'שורה:', e.lineno);
+    });
+    </script>
 </body>
 </html>
