@@ -8,7 +8,12 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function initProjectDetailModal() {
+    if (window.projectModalInitialized) {
+        console.log("מודאל פרטי פרויקט כבר אותחל, מדלג על אתחול נוסף");
+        return;
+    }
     console.log("מאתחל מערכת תצוגת פרטי פרויקט");
+    window.projectModalInitialized = true;
     
     // יוצר את המודל אם הוא לא קיים
     let projectDetailModal = document.getElementById('projectDetailModal');
@@ -579,18 +584,20 @@ async function processDonationToProject(project, amount, message) {
             `התרומה בוצעה בהצלחה! ${txHash ? `Transaction: ${txHash.substring(0, 10)}...` : ''}`
         );
         
-        // מסתיר את המודל לאחר הצלחה
-        setTimeout(() => {
+        const hideModalAndReload = function() {
             const modal = document.getElementById('projectDetailModal');
             if (modal) {
                 hideModal(modal);
             }
             
-            // רענון הפרויקטים כדי להציג את הסכום המעודכן
+            // בודק אם נתמכת פונקציית הטעינה מחדש של הפרויקטים
             if (typeof manuallyLoadProjects === 'function') {
-                setTimeout(manuallyLoadProjects, 1000);
+                manuallyLoadProjects();
             }
-        }, 2000);
+        };
+        
+        // קובע רק setTimeout אחד
+        setTimeout(hideModalAndReload, 2000);
         
     } catch (error) {
         console.error('שגיאה בביצוע התרומה:', error);
