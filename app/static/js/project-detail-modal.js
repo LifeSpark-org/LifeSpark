@@ -332,9 +332,7 @@ function showProjectDetails(project) {
     const detailsContainer = modal.querySelector('#projectDetailInfo');
     if (detailsContainer) {
         // מחלץ את שם האזור לפי השפה הנוכחית
-        const regionText = project.region === 'south' ? 
-            (translations[currentLanguage]?.['donate-region-south'] || 'אזור הדרום') : 
-            (translations[currentLanguage]?.['donate-region-north'] || 'אזור הצפון');
+        const regionText = project.region === 'south' ? 'אזור הדרום' : 'אזור הצפון';
         
         // עדכון תוכן המידע על הפרויקט
         detailsContainer.innerHTML = `
@@ -343,12 +341,12 @@ function showProjectDetails(project) {
             </div>
             
             <div class="project-detail-description">
-                <h4>${translations[currentLanguage]?.['project-description'] || 'תיאור הפרויקט'}</h4>
+                <h4>תיאור הפרויקט</h4>
                 <p>${project.description}</p>
             </div>
             
             <div class="project-detail-progress">
-                <h4>${translations[currentLanguage]?.['project-progress'] || 'התקדמות המימון'}</h4>
+                <h4>התקדמות המימון</h4>
                 <div class="progress-bar">
                     <div class="progress-fill" style="width: ${project.progressPercent}%"></div>
                 </div>
@@ -378,20 +376,20 @@ function setupProjectDonationForm(container, project) {
     // מגדיר את תוכן טופס התרומה
     container.innerHTML = `
         <div class="project-donation-form">
-            <h4>${translations[currentLanguage]?.['donate-to-project'] || 'תרומה לפרויקט זה'}</h4>
+            <h4>תרומה לפרויקט זה</h4>
             
             ${!isWalletConnected ? `
                 <div class="wallet-connection-required">
-                    <p>${translations[currentLanguage]?.['wallet-required'] || 'עליך לחבר ארנק כדי לתרום'}</p>
+                    <p>עליך לחבר ארנק כדי לתרום</p>
                     <button id="projectConnectWalletBtn" class="btn btn-primary">
                         <i class="fas fa-link"></i> 
-                        <span>${translations[currentLanguage]?.['donate-connect-wallet'] || 'חבר ארנק'}</span>
+                        <span>חבר ארנק</span>
                     </button>
                 </div>
             ` : `
                 <form id="projectDonationSubmitForm">
                     <div class="form-group">
-                        <label for="projectDonationAmount">${translations[currentLanguage]?.['donate-amount'] || 'סכום התרומה (ETH)'}:</label>
+                        <label for="projectDonationAmount">סכום התרומה (ETH):</label>
                         <div class="amount-input-group">
                             <div class="amount-prefix">ETH</div>
                             <input type="number" id="projectDonationAmount" min="0.01" step="0.01" value="0.1" required>
@@ -407,33 +405,32 @@ function setupProjectDonationForm(container, project) {
                     </div>
                     
                     <div class="form-group">
-                        <label for="projectDonationMessage">${translations[currentLanguage]?.['donate-message'] || 'הודעה (אופציונלי)'}:</label>
-                        <textarea id="projectDonationMessage" rows="3" placeholder="${translations[currentLanguage]?.['donate-message-placeholder'] || 'הודעת תמיכה אישית...'}"></textarea>
-                        <small>${translations[currentLanguage]?.['donate-message-note'] || 'הודעה זו תישמר בבלוקצ\'יין'}</small>
+                        <label for="projectDonationMessage">הודעה (אופציונלי):</label>
+                        <textarea id="projectDonationMessage" rows="3" placeholder="הודעת תמיכה אישית..."></textarea>
+                        <small>הודעה זו תישמר בבלוקצ'יין</small>
                     </div>
                     
                     <div class="donation-summary">
-                        <h4>${translations[currentLanguage]?.['donate-summary'] || 'סיכום התרומה'}</h4>
+                        <h4>סיכום התרומה</h4>
                         <div class="summary-row">
-                            <span>${translations[currentLanguage]?.['donate-selected-project'] || 'פרויקט נבחר'}:</span>
+                            <span>פרויקט נבחר:</span>
                             <span id="summaryProjectTitle">${project.title}</span>
                         </div>
                         <div class="summary-row">
-                            <span>${translations[currentLanguage]?.['donate-donation-amount'] || 'סכום התרומה'}:</span>
+                            <span>סכום התרומה:</span>
                             <span id="summaryProjectAmount">0.1 ETH</span>
                         </div>
                         <div class="summary-row">
-                            <span>${translations[currentLanguage]?.['donate-gas-fee'] || 'עמלת גז משוערת'}:</span>
+                            <span>עמלת גז משוערת:</span>
                             <span>~ 0.001 ETH</span>
                         </div>
                         <div class="summary-row total">
-                            <span>${translations[currentLanguage]?.['donate-total'] || 'סה"כ'}:</span>
+                            <span>סה"כ:</span>
                             <span id="summaryProjectTotal">0.101 ETH</span>
                         </div>
-                    </div>
                     
                     <button type="submit" class="donate-button btn-primary btn-block">
-                        <i class="fas fa-heart"></i> ${translations[currentLanguage]?.['donate-button'] || 'תרום עכשיו'}
+                        <i class="fas fa-heart"></i> תרום עכשיו
                     </button>
                 </form>
             `}
@@ -534,7 +531,7 @@ function updateDonationSummary(amountInput, summaryAmount, summaryTotal) {
 async function processDonationToProject(project, amount, message) {
     try {
         // מציג הודעת עיבוד
-        showNotification('info', translations[currentLanguage]?.['processing-donation'] || 'מעבד את התרומה שלך...');
+        showNotification('info', 'מעבד את התרומה שלך...');
         
         // מציג חיווי טעינה בכפתור
         const submitButton = document.querySelector('#projectDonationSubmitForm button[type="submit"]');
@@ -579,7 +576,7 @@ async function processDonationToProject(project, amount, message) {
         
         // מציג הודעת הצלחה
         showNotification('success', 
-            `${translations[currentLanguage]?.['donation-success'] || 'התרומה בוצעה בהצלחה!'} ${txHash ? `Transaction: ${txHash.substring(0, 10)}...` : ''}`
+            `התרומה בוצעה בהצלחה! ${txHash ? `Transaction: ${txHash.substring(0, 10)}...` : ''}`
         );
         
         // מסתיר את המודל לאחר הצלחה
@@ -603,7 +600,10 @@ async function processDonationToProject(project, amount, message) {
         const submitButton = document.querySelector('#projectDonationSubmitForm button[type="submit"]');
         if (submitButton) {
             submitButton.disabled = false;
-            submitButton.innerHTML = `<i class="fas fa-heart"></i> ${translations[currentLanguage]?.['donate-button'] || 'תרום עכשיו'}`;
+            submitButton.innerHTML = `<i class="fas fa-heart"></i> תרום עכשיו`;
         }
     }
 }
+
+
+window.showProjectDetails = showProjectDetails;
