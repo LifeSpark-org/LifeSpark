@@ -59,6 +59,20 @@
                         <small data-translate="project-description-hint">Describe your project, its purpose, and how the funds will be used (min 100 characters)</small>
                     </div>
                 
+                    <div class="form-group">
+                        <label for="projectImage" data-translate="project-image">Project Image:</label>
+                        <div class="file-upload-container">
+                            <input type="file" id="projectImage" name="project_image" 
+                                   accept=".jpg,.jpeg,.png">
+                            <div class="file-upload-button">
+                                <i class="fas fa-upload"></i> <span data-translate="project-image-upload">Choose Image</span>
+                            </div>
+                            <div id="projectImagePreview" class="image-preview"></div>
+                        </div>
+                        <small data-translate="project-image-hint">
+                            Upload an image to represent your project (JPG, PNG) - Max size: 2MB
+                        </small>
+                    </div>
                 <div class="form-section">
                     <h3 data-translate="project-funding-info">Funding Information</h3>
                     

@@ -20,20 +20,21 @@ class Project:
             'region': project_data.get('region'),
             'goal_amount': float(project_data.get('goal_amount', 0)),
             'current_amount': 0.0,
-            'user_id': project_data.get('user_id'),  # ID of user who submitted
+            'user_id': project_data.get('user_id'),
             'contact_email': project_data.get('contact_email'),
             'contact_phone': project_data.get('contact_phone'),
             'organization': project_data.get('organization', ''),
-            'proof_documents': project_data.get('proof_documents', []),  # URLs or IDs of uploaded documents
+            'proof_documents': project_data.get('proof_documents', []),
+            'project_image': project_data.get('project_image', ''),  # הוספת שדה תמונת פרויקט
             'status': cls.STATUS_PENDING,
-            'status_notes': '',  # Admin notes on approval/rejection
+            'status_notes': '',
             'created_at': datetime.utcnow(),
             'updated_at': datetime.utcnow(),
             'approved_at': None,
             'rejected_at': None,
-            'admin_id': None  # ID of admin who approved/rejected
+            'admin_id': None
         }
-        
+    
         result = mongo.db.projects.insert_one(project)
         project['_id'] = result.inserted_id
         return project
