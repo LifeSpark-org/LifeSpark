@@ -14,26 +14,30 @@ projects_bp = Blueprint('projects', __name__)
 # Allowed file extensions for proof documents
 ALLOWED_EXTENSIONS = {'pdf', 'png', 'jpg', 'jpeg', 'doc', 'docx'}
 
-def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+def allowed_file(filename, image=False):
+    """Check if file has an allowed extension"""
+    if image:
+        # רשימת סוגי קבצי תמונה מותרים
+        ALLOWED_IMAGE_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+        return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_IMAGE_EXTENSIONS
+    else:
+        # רשימת סוגי קבצים מותרים למסמכים
+        ALLOWED_EXTENSIONS = {'pdf', 'png', 'jpg', 'jpeg', 'doc', 'docx'}
+        return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-def save_uploaded_file(file):
+
+def save_uploaded_file(file, folder='documents'):
     """Save an uploaded file and return its path"""
     if not file or not file.filename:
         print("No valid file received")
         return None
-        
-    if not allowed_file(file.filename):
-        print(f"File type not allowed: {file.filename}")
-        return None
-        
-    # Create unique filename
+    
+    # יצירת שם קובץ ייחודי
     filename = secure_filename(file.filename)
     unique_filename = f"{uuid.uuid4()}_{filename}"
     
-    # Make sure upload directory exists
-    upload_dir = os.path.join(current_app.root_path, 'static', 'uploads', 'documents')
+    # וידוא שתיקיית ההעלאה קיימת
+    upload_dir = os.path.join(current_app.root_path, 'static', 'uploads', folder)
     try:
         os.makedirs(upload_dir, exist_ok=True)
         print(f"Upload directory confirmed: {upload_dir}")
@@ -41,7 +45,7 @@ def save_uploaded_file(file):
         print(f"Error creating upload directory: {e}")
         return None
     
-    # Save the file
+    # שמירת הקובץ
     filepath = os.path.join(upload_dir, unique_filename)
     try:
         file.save(filepath)
@@ -50,8 +54,9 @@ def save_uploaded_file(file):
         print(f"Error saving file: {e}")
         return None
     
-    # Return URL path to file
-    return f"/static/uploads/documents/{unique_filename}"
+    # החזרת נתיב הקובץ היחסי
+    return f"/static/uploads/{folder}/{unique_filename}"
+
 
 @projects_bp.route('/projects', methods=['GET'])
 def get_projects():
@@ -99,12 +104,48 @@ def submit_project(current_user):
         data = request.form.to_dict()
         print("Form data received:", data)
     
-    # Empty documents list for now
+    # Initialize empty lists for documents and project image
     proof_documents = []
+    project_image = None
+    
+    # טיפול בקבצים מועלים
+    if request.files:
+        print("Files detected in request")
+        
+        # טיפול במסמכים תומכים
+        if 'proof_documents' in request.files:
+            files = request.files.getlist('proof_documents')
+            print(f"Found {len(files)} proof documents")
+            
+            for file in files:
+                if file and file.filename:
+                    if allowed_file(file.filename):
+                        filename = save_uploaded_file(file)
+                        if filename:
+                            proof_documents.append(filename)
+                            print(f"Added document: {filename}")
+                    else:
+                        print(f"File type not allowed: {file.filename}")
+        
+        # טיפול בתמונת פרויקט
+        if 'project_image' in request.files:
+            image_file = request.files['project_image']
+            print(f"Found project image: {image_file.filename if image_file.filename else 'No filename'}")
+            
+            if image_file and image_file.filename:
+                if allowed_file(image_file.filename, image=True):
+                    image_filename = save_uploaded_file(image_file, folder='images')
+                    if image_filename:
+                        project_image = image_filename
+                        print(f"Added project image: {image_filename}")
+                else:
+                    print(f"Image type not allowed: {image_file.filename}")
     
     # Print all received data for debugging
     print("All data:")
     print(data)
+    print(f"Proof documents: {proof_documents}")
+    print(f"Project image: {project_image}")
     
     # Validate required fields
     required_fields = ['title', 'description', 'region', 'goal_amount', 'contact_email']
@@ -145,6 +186,7 @@ def submit_project(current_user):
         'contact_phone': data.get('contact_phone', ''),
         'organization': data.get('organization', ''),
         'proof_documents': proof_documents,
+        'project_image': project_image,  # הוספת תמונת הפרויקט
         'user_id': str(current_user['_id'])
     }
     
@@ -165,7 +207,9 @@ def submit_project(current_user):
             'status': 'error',
             'message': error_msg
         }), 500
-    
+
+
+
 @projects_bp.route('/user/projects', methods=['GET'])
 @token_required
 def get_user_projects(current_user):

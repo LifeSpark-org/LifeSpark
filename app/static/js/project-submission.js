@@ -107,6 +107,42 @@ function initProjectSubmission() {
     
     if (!projectForm) return;
     
+    // תצוגה מקדימה של תמונת הפרויקט
+    const projectImage = document.getElementById('projectImage');
+    const imagePreview = document.getElementById('projectImagePreview');
+
+    if (projectImage && imagePreview) {
+        projectImage.addEventListener('change', function() {
+            // נקה את התצוגה המקדימה הקודמת
+            imagePreview.innerHTML = '';
+            
+            if (this.files.length > 0) {
+                const file = this.files[0];
+                
+                // בדוק גודל קובץ (מקסימום 2MB)
+                if (file.size > 2 * 1024 * 1024) {
+                    showNotification('error', 'Image too large. Maximum size is 2MB.');
+                    this.value = '';
+                    return;
+                }
+                
+                // תצוגה מקדימה של התמונה
+                const img = document.createElement('img');
+                img.file = file;
+                imagePreview.appendChild(img);
+                
+                const reader = new FileReader();
+                reader.onload = (function(aImg) { 
+                    return function(e) { 
+                        aImg.src = e.target.result; 
+                    }; 
+                })(img);
+                
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+    
     projectForm.addEventListener('submit', async function(e) {
         e.preventDefault();
         
@@ -167,21 +203,34 @@ function initProjectSubmission() {
         showFormLoading(projectForm);
         
         try {
-            // Take non-empty values from form fields
+            // יצירת FormData לטיפול בקבצים
+            const formData = new FormData();
+            
+            // הוסף את כל שדות הטופס הרגילים
+            formData.append('title', title);
+            formData.append('description', description);
+            formData.append('region', region);
+            formData.append('goal_amount', goalAmount);
+            formData.append('contact_email', contactEmail);
+            
+            // הוסף שדות אופציונליים
             const contactPhone = document.getElementById('projectPhone')?.value || '';
             const organization = document.getElementById('projectOrganization')?.value || '';
+            formData.append('contact_phone', contactPhone);
+            formData.append('organization', organization);
             
-            // Create URL encoded form data string
-            const formParams = new URLSearchParams();
-            formParams.append('title', title);
-            formParams.append('description', description); 
-            formParams.append('region', region);
-            formParams.append('goal_amount', goalAmount);
-            formParams.append('contact_email', contactEmail);
-            formParams.append('contact_phone', contactPhone);
-            formParams.append('organization', organization);
+            // הוסף את תמונת הפרויקט אם קיימת
+            if (projectImage && projectImage.files.length > 0) {
+                formData.append('project_image', projectImage.files[0]);
+            }
             
-            console.log("Form params being submitted:", formParams.toString());
+            // הוסף מסמכים תומכים אם קיימים
+            const projectDocuments = document.getElementById('projectDocuments');
+            if (projectDocuments && projectDocuments.files.length > 0) {
+                for (let i = 0; i < projectDocuments.files.length; i++) {
+                    formData.append('proof_documents', projectDocuments.files[i]);
+                }
+            }
             
             // Get token from localStorage
             const token = localStorage.getItem('token');
@@ -190,14 +239,14 @@ function initProjectSubmission() {
                 throw new Error('Authentication required');
             }
             
-            // Submit project using URL encoded format
+            // Submit project using FormData
             const response = await fetch('/submit-project', {
                 method: 'POST',
                 headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/x-www-form-urlencoded'
+                    'Authorization': `Bearer ${token}`
+                    // אין להגדיר Content-Type כאן כי FormData יגדיר אותו אוטומטית
                 },
-                body: formParams
+                body: formData
             });
             const result = await response.json();
             
@@ -209,8 +258,8 @@ function initProjectSubmission() {
                     submissionStatus.className = 'submission-status success';
                     submissionStatus.innerHTML = `
                         <i class="fas fa-check-circle"></i>
-                        <h4>${translations[currentLanguage]?.['project-submit-success'] || 'Project Submitted Successfully'}</h4>
-                        <p>${translations[currentLanguage]?.['project-submit-review'] || 'Your project has been submitted and is pending review.'}</p>
+                        <h4>Project Submitted Successfully</h4>
+                        <p>Your project has been submitted and is pending review.</p>
                     `;
                     submissionStatus.style.display = 'block';
                 }
@@ -218,6 +267,11 @@ function initProjectSubmission() {
                 // Clear form
                 projectForm.reset();
                 document.getElementById('uploadedFileNames').innerHTML = '';
+                
+                // נקה את תצוגת התמונה המקדימה
+                if (imagePreview) {
+                    imagePreview.innerHTML = '';
+                }
                 
                 // Scroll to status message
                 submissionStatus.scrollIntoView({ behavior: 'smooth' });

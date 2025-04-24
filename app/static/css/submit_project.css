@@ -363,3 +363,16 @@
 .dark-theme .project-card-footer {
     background-color: rgba(0, 0, 0, 0.1);
 }
+
+.image-preview {
+    margin-top: 1rem;
+    max-width: 100%;
+    min-height: 50px;
+}
+
+.image-preview img {
+    max-width: 200px;
+    max-height: 150px;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--border-color);
+}
