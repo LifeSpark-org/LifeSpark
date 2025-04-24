@@ -49,11 +49,15 @@ def register():
     # Reset session captcha after verification
     session.pop('captcha_text', None)
     
-    if not all(k in data for k in ['name', 'email', 'password']):
+    if not all(k in data for k in ['name', 'email', 'password', 'user_type']):
         return jsonify({'error': 'Missing required fields'}), 400
         
     if mongo.db.users.find_one({'email': data['email']}):
         return jsonify({'error': 'Email already registered'}), 409
+    
+    # Validate user_type
+    if data['user_type'] not in ['donor', 'requester']:
+        return jsonify({'error': 'Invalid user type'}), 400
     
     verification_code = generate_verification_code()
     expiration_time = datetime.utcnow() + timedelta(minutes=10)
@@ -62,6 +66,7 @@ def register():
         'name': data['name'],
         'email': data['email'],
         'password': generate_password_hash(data['password']),
+        'user_type': data['user_type'],  # זהו השדה החדש
         'verification_code': verification_code,
         'code_expiration': expiration_time,
         'created_at': datetime.utcnow()
@@ -101,6 +106,7 @@ def verify_code():
             'name': pending_user['name'],
             'email': pending_user['email'],
             'password': pending_user['password'],
+            'user_type': pending_user['user_type'],  # העברת סוג המשתמש
             'email_verified': True,
             'created_at': pending_user['created_at']
         }
@@ -146,7 +152,8 @@ def login():
         return jsonify({
             'message': 'Login successful!',
             'token': token,
-            'name': user['name']
+            'name': user['name'],
+            'user_type': user.get('user_type', 'donor')  # הוספת סוג המשתמש לתשובה
         }), 200
         
     return jsonify({'error': 'Invalid email or password'}), 401
@@ -157,7 +164,8 @@ def check_auth(current_user):
     """Check token validity and return user details"""
     return jsonify({
         'name': current_user['name'],
-        'email': current_user['email']
+        'email': current_user['email'],
+        'user_type': current_user.get('user_type', 'donor')  # הוספת סוג המשתמש לתשובה
     })
 
 # פונקציונליות איפוס סיסמה
