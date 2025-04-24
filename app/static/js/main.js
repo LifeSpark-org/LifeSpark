@@ -317,7 +317,14 @@ function showSection(sectionId) {
                     mobileMenuBtn.setAttribute('aria-expanded', 'false');
                 }
             }
-            
+            // If this is the donate section, initialize project details modal
+            if (sectionId === 'donate') {
+                if (typeof initProjectDetailModal === 'function') {
+                    setTimeout(() => {
+                        initProjectDetailModal();
+                    }, 300);
+                }
+            }
             // Animate child elements with staggered delay
             const animateItems = targetSection.querySelectorAll('.animate-on-scroll');
             animateItems.forEach((item, index) => {

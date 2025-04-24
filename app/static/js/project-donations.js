@@ -313,7 +313,13 @@ function setupProjectSelection() {
     projectSlides.forEach((slide, index) => {
         console.log(`📌 מגדיר אירועי בחירה לפרויקט ${index + 1}`);
         
-        slide.addEventListener('click', function() {
+        slide.addEventListener('click', function(e) {
+            // מונע התנגשות עם מאזיני אירועים אחרים
+            if (e.target.classList.contains('project-select-btn') || 
+                e.target.closest('.project-select-btn')) {
+                return; // נאפשר לכפתור לטפל באירוע בעצמו
+            }
+            
             console.log(`👆 לחיצה על שקופית פרויקט`, this.dataset);
             const projectId = this.dataset.projectId;
             const projectTitle = this.dataset.projectTitle;
@@ -322,22 +328,96 @@ function setupProjectSelection() {
             selectProject(projectId, projectTitle, projectRegion);
         });
         
-        // Also add event listener to the button inside
+        // חשוב מאוד: הוסף מאזין אירוע לכפתור בחירה
         const selectBtn = slide.querySelector('.project-select-btn');
         if (selectBtn) {
-            selectBtn.addEventListener('click', function(e) {
+            // הסר מאזיני אירועים קודמים אם יש
+            const newBtn = selectBtn.cloneNode(true);
+            if (selectBtn.parentNode) {
+                selectBtn.parentNode.replaceChild(newBtn, selectBtn);
+            }
+            
+            // הוסף מאזין חדש
+            newBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation(); // מנע בועה למעלה
+                
                 console.log(`👆 לחיצה על כפתור בחירת פרויקט`);
-                e.stopPropagation(); // Prevent bubbling to the slide
                 const projectId = this.getAttribute('data-project-id');
                 const projectSlide = this.closest('.project-slide');
+                
+                if (!projectSlide) {
+                    console.error("לא נמצאה שקופית פרויקט", this);
+                    return;
+                }
+                
                 const projectTitle = projectSlide.dataset.projectTitle;
                 const projectRegion = projectSlide.dataset.projectRegion;
                 
-                selectProject(projectId, projectTitle, projectRegion);
+                console.log("נתוני פרויקט:", {
+                    id: projectId,
+                    title: projectTitle,
+                    region: projectRegion
+                });
+                
+                // קריאה לפונקציה להצגת פרטי הפרויקט
+                if (typeof showProjectDetails === 'function') {
+                    // נסה להשיג מידע נוסף על הפרויקט
+                    fetchProjectDetails(projectId)
+                        .then(project => {
+                            if (project) {
+                                showProjectDetails(project);
+                            } else {
+                                // אם לא הצלחנו להשיג מידע מלא, נשתמש במה שיש
+                                showProjectDetails({
+                                    id: projectId,
+                                    title: projectTitle,
+                                    description: projectSlide.querySelector('.project-description')?.textContent || '',
+                                    region: projectRegion,
+                                    // מידע נוסף שקיים בשקופית
+                                    progressPercent: parseInt(projectSlide.querySelector('.progress-fill')?.style.width || '0'),
+                                    goalAmount: parseFloat(projectSlide.querySelector('.progress-stats')?.textContent.match(/\d+(\.\d+)?/g)?.[1] || 0),
+                                    currentAmount: parseFloat(projectSlide.querySelector('.progress-stats')?.textContent.match(/\d+(\.\d+)?/g)?.[0] || 0)
+                                });
+                            }
+                        });
+                } else {
+                    console.error("פונקציית showProjectDetails לא קיימת!");
+                    // נסה פתרון חלופי
+                    if (typeof initProjectDetailModal === 'function' && typeof window.showProjectDetails === 'function') {
+                        initProjectDetailModal();
+                        window.showProjectDetails({
+                            id: projectId,
+                            title: projectTitle,
+                            description: projectSlide.querySelector('.project-description')?.textContent || '',
+                            region: projectRegion
+                        });
+                    } else {
+                        console.error("לא נמצאו פונקציות חלופיות להצגת פרטי פרויקט");
+                    }
+                }
             });
         }
     });
 }
+
+// פונקציה חדשה לקבלת פרטי פרויקט מהשרת
+async function fetchProjectDetails(projectId) {
+    try {
+        const response = await fetch(`/projects/${projectId}`);
+        if (response.ok) {
+            const data = await response.json();
+            if (data.status === 'success' && data.project) {
+                return data.project;
+            }
+        }
+        return null;
+    } catch (error) {
+        console.error("שגיאה בקבלת פרטי פרויקט:", error);
+        return null;
+    }
+}
+
 
 // Function to select a project
 function selectProject(projectId, projectTitle, projectRegion) {
