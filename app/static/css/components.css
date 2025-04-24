@@ -353,7 +353,17 @@ footer {
     body.mobile-menu-open {
         overflow: hidden;
     }
+    html, body {
+        height: 100%;
+    }
     
+    body.mobile-menu-open {
+        height: 100vh;
+        overflow: hidden;
+        position: relative;
+    }
+    
+
     /* Mobile menu button animation */
     .mobile-menu-open .mobile-menu-btn span:nth-child(1) {
         transform: translateY(9px) rotate(45deg);

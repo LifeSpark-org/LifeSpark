@@ -214,28 +214,31 @@ function initializeRegionSelection() {
     });
 }
 
-// Enhanced mobile menu function
+// Enhanced mobile menu function with safe listener binding
 function initializeMobileMenu() {
     console.log("Initializing mobile menu...");
     const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
     const leftMenu = document.querySelector('.left-menu');
     const rightMenu = document.querySelector('.right-menu');
-    
+
     if (mobileMenuBtn && leftMenu && rightMenu) {
         console.log("Mobile menu elements found");
-        
+
+        // Clone the button to remove all previous listeners
+        const cleanBtn = mobileMenuBtn.cloneNode(true);
+        mobileMenuBtn.parentNode.replaceChild(cleanBtn, mobileMenuBtn);
+
         // Toggle mobile menu on button click
-        mobileMenuBtn.addEventListener('click', function() {
+        cleanBtn.addEventListener('click', function () {
             console.log("Mobile menu button clicked");
             document.body.classList.toggle('mobile-menu-open');
             leftMenu.classList.toggle('active');
             rightMenu.classList.toggle('active');
-            
-            // Accessibility
+
             const expanded = leftMenu.classList.contains('active');
-            mobileMenuBtn.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+            cleanBtn.setAttribute('aria-expanded', expanded ? 'true' : 'false');
         });
-        
+
         // Create backdrop element if it doesn't exist
         let backdrop = document.querySelector('.mobile-menu-backdrop');
         if (!backdrop) {
@@ -243,33 +246,34 @@ function initializeMobileMenu() {
             backdrop.className = 'mobile-menu-backdrop';
             document.body.appendChild(backdrop);
         }
-        
+
         // Close menu when clicking on backdrop
-        backdrop.addEventListener('click', function() {
+        backdrop.addEventListener('click', function () {
             document.body.classList.remove('mobile-menu-open');
             leftMenu.classList.remove('active');
             rightMenu.classList.remove('active');
-            mobileMenuBtn.setAttribute('aria-expanded', 'false');
+            cleanBtn.setAttribute('aria-expanded', 'false');
         });
-        
+
         // Close menu when clicking on links
         const menuLinks = document.querySelectorAll('.left-menu a, .right-menu a');
         menuLinks.forEach(link => {
-            link.addEventListener('click', function() {
+            link.addEventListener('click', function () {
                 document.body.classList.remove('mobile-menu-open');
                 leftMenu.classList.remove('active');
                 rightMenu.classList.remove('active');
-                mobileMenuBtn.setAttribute('aria-expanded', 'false');
+                cleanBtn.setAttribute('aria-expanded', 'false');
             });
         });
     } else {
-        console.error("Mobile menu elements not found:", 
+        console.error("Mobile menu elements not found:",
             mobileMenuBtn ? "Button OK" : "Button missing",
             leftMenu ? "Left menu OK" : "Left menu missing",
             rightMenu ? "Right menu OK" : "Right menu missing"
         );
     }
 }
+
 
 // Enhanced section navigation with smoother transitions
 function showSection(sectionId) {
