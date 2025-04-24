@@ -391,3 +391,65 @@
         width: 100%;
     }
 }
+
+/* תיקון למיקום המודל */
+#projectReviewModal {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#projectReviewModal .modal-content {
+    margin: auto;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+/* וידוא שהמודל לא יחסום את הכפתור לסגירה */
+#projectReviewModal .modal-header {
+    position: sticky;
+    top: 0;
+    background-color: var(--card-bg);
+    z-index: 10;
+}
+
+#projectReviewModal .modal-body {
+    max-height: calc(90vh - 130px);
+    overflow-y: auto;
+}
+
+/* סגנון לתמונת הפרויקט במודל סקירה */
+.project-review-image {
+    margin-bottom: 1.5rem;
+    text-align: center;
+    max-height: 300px;
+    overflow: hidden;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+}
+
+.project-review-image img {
+    max-width: 100%;
+    max-height: 300px;
+    object-fit: contain;
+}
+
+.project-review-image.placeholder {
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f8fafc;
+    color: var(--text-light);
+}
+
+.project-review-image.placeholder i {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    opacity: 0.3;
+}
+
+.dark-theme .project-review-image.placeholder {
+    background-color: #1e293b;
+}
+

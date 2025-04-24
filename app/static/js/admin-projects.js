@@ -585,8 +585,25 @@ async function openProjectReviewModal(projectId) {
                 'Southern Israel' : 'Northern Israel';
             
             // Build documents list
+            let projectImageHtml = '';
+            if (project.project_image) {
+                projectImageHtml = `
+                    <div class="project-review-image">
+                        <img src="${project.project_image}" alt="${project.title}" />
+                    </div>
+                `;
+            } else {
+                // תמונת ברירת מחדל אם אין תמונת פרויקט
+                projectImageHtml = `
+                    <div class="project-review-image placeholder">
+                        <div class="image-placeholder">
+                            <i class="fas fa-image"></i>
+                            <p>No project image available</p>
+                        </div>
+                    </div>
+                `;
+            }
             let documentsHtml = '';
-            
             if (project.proof_documents && project.proof_documents.length > 0) {
                 project.proof_documents.forEach(doc => {
                     // Get file extension
@@ -630,7 +647,7 @@ async function openProjectReviewModal(projectId) {
                         ${project.goal_amount} ETH
                     </div>
                 </div>
-                
+                ${projectImageHtml}
                 <div class="project-review-section">
                     <h4>Project Description</h4>
                     <p>${project.description}</p>
@@ -707,7 +724,7 @@ function viewProjectDetails(projectId) {
     }
 }
 
-// Approve project
+// תיקון לפונקציית approveProject בקובץ app/static/js/admin-projects.js
 async function approveProject() {
     console.log("Approve project function called");
     const modal = document.getElementById('projectReviewModal');
@@ -762,6 +779,7 @@ async function approveProject() {
             loadPendingProjects();
             loadApprovedProjects();
         } else {
+            // הודעת שגיאה רק אם התשובה שלילית
             throw new Error(result.message || 'Failed to approve project');
         }
     } catch (error) {
@@ -849,10 +867,19 @@ async function rejectProject() {
 // Show modal
 function showModal(modal) {
     if (!modal) return;
-    
-    document.body.style.overflow = 'hidden';
     modal.style.display = 'flex';
-    
+    // document.body.style.overflow = 'hidden';
+    const modalContent = modal.querySelector('.modal-content');
+    if (modalContent) {
+        // אפס את הסגנון הקודם כדי לקבל מיקום חדש
+        modalContent.style.transform = 'none';
+        modalContent.style.top = 'auto';
+        modalContent.style.left = 'auto';
+        
+        // קבע את המודל כששניהם "flex" ועם יישור למרכז האופקי והאנכי
+        modal.style.justifyContent = 'center';
+        modal.style.alignItems = 'center';
+    }
     // Animate entrance
     setTimeout(() => {
         modal.style.opacity = '1';

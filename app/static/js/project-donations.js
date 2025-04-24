@@ -213,7 +213,6 @@ function showNoProjectsMessage() {
     switchDonationTab('regions');
 }
 
-// פונקציה להצגת פרויקטים בקרוסלה
 function renderProjects(projects, container) {
     console.log("🎨 מציג פרויקטים בקרוסלה, מספר פרויקטים:", projects.length);
     
@@ -241,6 +240,16 @@ function renderProjects(projects, container) {
             // טקסט אזור - using direct text
             const regionText = project.region === 'south' ? 'Southern Israel' : 'Northern Israel';
 
+            // הכנת סגנון התמונה
+            let projectImageStyle = '';
+            if (project.project_image) {
+                // אם יש תמונת פרויקט, השתמש בה כרקע
+                projectImageStyle = `background-image: url('${project.project_image}'); background-size: cover; background-position: center;`;
+            } else {
+                // אחרת השתמש בתמונת ברירת המחדל לפי האזור
+                projectImageStyle = `background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('/static/images/${regionClass}-project.jpg');`;
+            }
+
             // בניית אלמנט הפרויקט
             const projectSlide = document.createElement('div');
             projectSlide.className = 'project-slide';
@@ -251,7 +260,7 @@ function renderProjects(projects, container) {
             projectSlide.innerHTML = `
                 <input type="radio" name="project" id="project-${project._id}" value="${project._id}">
                 <label for="project-${project._id}" class="approved-project-card">
-                    <div class="project-image ${regionClass}">
+                    <div class="project-image" style="${projectImageStyle}">
                         <div class="project-badge ${regionClass}">${regionText}</div>
                     </div>
                     <div class="project-content">
@@ -294,7 +303,6 @@ function renderProjects(projects, container) {
         `;
     }
 }
-
 // Set up project selection
 function setupProjectSelection() {
     console.log("🔄 מגדיר בחירת פרויקטים");
