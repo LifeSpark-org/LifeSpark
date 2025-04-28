@@ -174,29 +174,3 @@ function refreshMap() {
     }
 }
 
-
-// הוספת כפתור רענון למפה
-function addRefreshButton(map) {
-    // יצירת אלמנט כפתור פשוט
-    const refreshButton = L.control({position: 'topright'});
-    
-    refreshButton.onAdd = function() {
-        const button = L.DomUtil.create('div', 'map-refresh-button');
-        button.innerHTML = '<button title="רענן מפה"><i class="fas fa-sync-alt"></i></button>';
-        button.onclick = function() {
-            map.invalidateSize();
-            setTimeout(function() {
-                map.invalidateSize();
-            }, 100);
-            console.log("המפה רועננה ידנית");
-        };
-        return button;
-    };
-    
-    refreshButton.addTo(map);
-}
-
-// קריאה לפונקציה עם אובייקט המפה
-if (mapInstance) {
-    addRefreshButton(mapInstance);
-}
