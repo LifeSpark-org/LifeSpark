@@ -214,65 +214,30 @@ function initializeRegionSelection() {
     });
 }
 
-// Enhanced mobile menu function with safe listener binding
+
 function initializeMobileMenu() {
-    console.log("Initializing mobile menu...");
-    const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
-    const leftMenu = document.querySelector('.left-menu');
-    const rightMenu = document.querySelector('.right-menu');
+    const menuBtn = document.querySelector('.mobile-menu-btn');
+    const navMenus = document.querySelector('.nav-menus'); 
 
-    if (mobileMenuBtn && leftMenu && rightMenu) {
-        console.log("Mobile menu elements found");
-
-        // Clone the button to remove all previous listeners
-        const cleanBtn = mobileMenuBtn.cloneNode(true);
-        mobileMenuBtn.parentNode.replaceChild(cleanBtn, mobileMenuBtn);
-
-        // Toggle mobile menu on button click
-        cleanBtn.addEventListener('click', function () {
-            console.log("Mobile menu button clicked");
-            document.body.classList.toggle('mobile-menu-open');
-            leftMenu.classList.toggle('active');
-            rightMenu.classList.toggle('active');
-
-            const expanded = leftMenu.classList.contains('active');
-            cleanBtn.setAttribute('aria-expanded', expanded ? 'true' : 'false');
-        });
-
-        // Create backdrop element if it doesn't exist
-        let backdrop = document.querySelector('.mobile-menu-backdrop');
-        if (!backdrop) {
-            backdrop = document.createElement('div');
-            backdrop.className = 'mobile-menu-backdrop';
-            document.body.appendChild(backdrop);
-        }
-
-        // Close menu when clicking on backdrop
-        backdrop.addEventListener('click', function () {
-            document.body.classList.remove('mobile-menu-open');
-            leftMenu.classList.remove('active');
-            rightMenu.classList.remove('active');
-            cleanBtn.setAttribute('aria-expanded', 'false');
-        });
-
-        // Close menu when clicking on links
-        const menuLinks = document.querySelectorAll('.left-menu a, .right-menu a');
-        menuLinks.forEach(link => {
-            link.addEventListener('click', function () {
-                document.body.classList.remove('mobile-menu-open');
-                leftMenu.classList.remove('active');
-                rightMenu.classList.remove('active');
-                cleanBtn.setAttribute('aria-expanded', 'false');
-            });
-        });
-    } else {
-        console.error("Mobile menu elements not found:",
-            mobileMenuBtn ? "Button OK" : "Button missing",
-            leftMenu ? "Left menu OK" : "Left menu missing",
-            rightMenu ? "Right menu OK" : "Right menu missing"
-        );
+    if (!menuBtn || !navMenus) {
+        console.error('❌ לא נמצא כפתור או תפריט:', { menuBtn, navMenus });
+        return;
     }
+
+    console.log('📦 תפריט וכפתור אותרו');
+
+    menuBtn.addEventListener('click', () => {
+        const wasExpanded = navMenus.classList.contains('active');
+        console.log('🍔 נלחץ כפתור המבורגר');
+        navMenus.classList.toggle('active');
+        menuBtn.setAttribute('aria-expanded', !wasExpanded);
+    });
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    initializeMobileMenu();
+});
+
 
 
 // Enhanced section navigation with smoother transitions
@@ -303,20 +268,6 @@ function showSection(sectionId) {
                 behavior: 'smooth'
             });
             
-            // On mobile, close the menu if open
-            if (window.innerWidth <= 768) {
-                const leftMenu = document.querySelector('.left-menu');
-                const rightMenu = document.querySelector('.right-menu');
-                
-                document.body.classList.remove('mobile-menu-open');
-                if (leftMenu) leftMenu.classList.remove('active');
-                if (rightMenu) rightMenu.classList.remove('active');
-                
-                const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
-                if (mobileMenuBtn) {
-                    mobileMenuBtn.setAttribute('aria-expanded', 'false');
-                }
-            }
             // If this is the donate section, initialize project details modal
             if (sectionId === 'donate') {
                 if (typeof initProjectDetailModal === 'function') {

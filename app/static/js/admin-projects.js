@@ -864,10 +864,13 @@ async function rejectProject() {
     }
 }
 
+
 // Show modal
 function showModal(modal) {
     if (!modal) return;
     modal.style.display = 'flex';
+    modal.style.justifyContent = 'center';
+    modal.style.alignItems = 'center';
     // document.body.style.overflow = 'hidden';
     const modalContent = modal.querySelector('.modal-content');
     if (modalContent) {
@@ -875,19 +878,13 @@ function showModal(modal) {
         modalContent.style.transform = 'none';
         modalContent.style.top = 'auto';
         modalContent.style.left = 'auto';
-        
-        // קבע את המודל כששניהם "flex" ועם יישור למרכז האופקי והאנכי
-        modal.style.justifyContent = 'center';
-        modal.style.alignItems = 'center';
     }
-    // Animate entrance
-    setTimeout(() => {
+    requestAnimationFrame(() => {
         modal.style.opacity = '1';
-        const modalContent = modal.querySelector('.modal-content');
         if (modalContent) {
             modalContent.style.transform = 'translateY(0)';
         }
-    }, 10);
+    });
 }
 
 // Hide modal
@@ -902,7 +899,7 @@ function hideModal(modal) {
     modal.style.opacity = '0';
     
     // Remove after animation completes
-    setTimeout(() => {
+    const handleTransitionEnd = function() {
         modal.style.display = 'none';
         document.body.style.overflow = '';
         
@@ -917,5 +914,14 @@ function hideModal(modal) {
         if (adminDecision) {
             adminDecision.style.display = 'block';
         }
-    }, 300);
+        modal.removeEventListener('transitionend', handleTransitionEnd);
+    };
+    modal.addEventListener('transitionend', handleTransitionEnd);
+    
+    // גיבוי במקרה שאירוע ה-transitionend לא נורה
+    setTimeout(() => {
+        if (modal.style.display !== 'none') {
+            handleTransitionEnd();
+        }
+    }, 350); // זמן מעט ארוך יותר מהאנימציה המקורית
 }

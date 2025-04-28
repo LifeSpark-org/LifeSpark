@@ -1108,7 +1108,7 @@ section.fade-out {
 }
 
 /* התאמות למסכים קטנים */
-@media (max-width: 768px) {
+/* @media (max-width: 768px) {
     .hero-logo {
         max-width: 150px;
     }
@@ -1120,13 +1120,12 @@ section.fade-out {
     .footer-logo img {
         height: 40px;
     }
-}
+} */
 
 /* Improved Mobile Menu CSS - Add this to the end of your additional-styles.css file */
 
 /* Mobile Menu Enhancements */
-@media (max-width: 768px) {
-    /* Fixed header on mobile */
+/* @media (max-width: 768px) {
     .navbar {
         position: fixed;
         top: 0;
@@ -1141,12 +1140,10 @@ section.fade-out {
         background-color: rgba(30, 41, 59, 0.95);
     }
     
-    /* Content offset to account for fixed header */
     body {
         padding-top: 60px;
     }
     
-    /* Mobile menu button enhancements */
     .mobile-menu-btn {
         display: flex;
         flex-direction: column;
@@ -1169,7 +1166,6 @@ section.fade-out {
         transition: all 0.3s ease;
     }
     
-    /* Animation for mobile menu button */
     body.mobile-menu-open .mobile-menu-btn span:nth-child(1) {
         transform: translateY(9px) rotate(45deg);
     }
@@ -1182,7 +1178,6 @@ section.fade-out {
         transform: translateY(-9px) rotate(-45deg);
     }
     
-    /* Mobile menu positioning */
     .left-menu, .right-menu {
         position: fixed;
         top: 0;
@@ -1205,13 +1200,10 @@ section.fade-out {
         background-color: #1e293b;
     }
     
-    /* Active state for menus */
-    .left-menu.active, 
     .right-menu.active {
         right: 0;
     }
     
-    /* Mobile menu links styling */
     .left-menu a, 
     .right-menu a {
         display: flex;
@@ -1228,13 +1220,11 @@ section.fade-out {
         text-align: center;
     }
     
-    /* Language selector in mobile menu */
     .right-menu .language-selector {
         width: 100%;
         margin: 1rem 0;
     }
     
-    /* Backdrop for mobile menu */
     .mobile-menu-backdrop {
         display: none;
         position: fixed;
@@ -1250,17 +1240,14 @@ section.fade-out {
         display: block;
     }
     
-    /* Prevent scrolling when menu is open */
     body.mobile-menu-open {
         overflow: hidden;
     }
     
-    /* Extra padding for section content on mobile */
     section {
         padding-top: 2rem;
     }
     
-    /* RTL support for mobile menu */
     [dir="rtl"] .left-menu, 
     [dir="rtl"] .right-menu {
         right: auto;
@@ -1278,10 +1265,10 @@ section.fade-out {
         margin-right: 0;
         margin-left: 10px;
     }
-}
+} 
 
 /* Make sure the mobile menu works for tablets too */
-@media (min-width: 769px) and (max-width: 1024px) {
+/* @media (min-width: 769px) and (max-width: 1024px) {
     .navbar {
         padding: 0.75rem 1.5rem;
     }
@@ -1294,12 +1281,9 @@ section.fade-out {
         padding: 0.5rem 0.75rem;
         font-size: 0.9rem;
     }
-}
+} */
 
 
-/* Legal Modals Styles */
-
-/* Legal modal specific styles */
 .legal-modal .modal-content {
     max-width: 800px;
     width: 90%;
@@ -1514,7 +1498,7 @@ body {
 }
 
 /* Fix for mobile view */
-@media (max-width: 768px) {
+/* @media (max-width: 768px) {
     .google-translate-container {
         display: block;
         margin: 10px 0;
@@ -1530,9 +1514,8 @@ body {
         width: 100%;
     }
     
-    /* RTL support for mobile */
     [dir="rtl"] .google-translate-container {
         margin-right: 0;
         margin-left: 10px;
     }
-}
+} */

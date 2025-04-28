@@ -155,16 +155,6 @@ function showSection(sectionId) {
                 behavior: 'smooth'
             });
             
-            // On mobile, close the menu if open
-            if (window.innerWidth <= 768) {
-                const leftMenu = document.querySelector('.left-menu');
-                const rightMenu = document.querySelector('.right-menu');
-                
-                document.body.classList.remove('mobile-menu-open');
-                if (leftMenu) leftMenu.classList.remove('active');
-                if (rightMenu) rightMenu.classList.remove('active');
-            }
-            
             // Dispatch event that section was changed - this is the new addition
             document.dispatchEvent(new CustomEvent('sectionChanged', {
                 detail: { sectionId: sectionId }
