@@ -19,12 +19,3 @@ def check_admin(current_user):
     return jsonify({
         'is_admin': is_admin
     })
-
-# Removed duplicate routes that are already in projects.py
-# No need for these routes in admin.py since they are defined in projects.py:
-# - /admin/projects/<project_id>
-# - /admin/projects/pending
-# - /admin/projects/approved
-# - /admin/projects/rejected
-
-# If needed, can add admin-specific routes here that don't overlap with projects.py
