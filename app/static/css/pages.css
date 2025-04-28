@@ -561,7 +561,7 @@
     text-align: center;
 }
 
-.donation-info {
+/* .donation-info {
     margin-top: 2.5rem;
 }
 
@@ -593,7 +593,7 @@
     left: 0;
     color: var(--primary-color);
     font-weight: bold;
-}
+} */
 
 .donation-message {
     margin-top: 1.5rem;

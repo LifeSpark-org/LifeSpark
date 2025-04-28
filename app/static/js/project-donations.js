@@ -33,24 +33,6 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error("❌ כפתורי ניווט קרוסלה חסרים", {prevBtn, nextBtn});
     }
     
-    // Add event listener for tab switching
-    const projectsTab = document.getElementById('projectsTab');
-    const regionsTab = document.getElementById('regionsTab');
-    
-    if (projectsTab && regionsTab) {
-        console.log("✅ נמצאו כרטיסיות, מוסיף מאזיני אירועים");
-        projectsTab.addEventListener('click', function() {
-            console.log("👆 לחיצה על כרטיסיית פרויקטים");
-            switchDonationTab('projects');
-        });
-        
-        regionsTab.addEventListener('click', function() {
-            console.log("👆 לחיצה על כרטיסיית אזורים");
-            switchDonationTab('regions');
-        });
-    } else {
-        console.error("❌ כרטיסיות חסרות", {projectsTab, regionsTab});
-    }
     
     // טעינה ראשונית של פרויקטים
     console.log("⏳ מתחיל טעינת פרויקטים עם השהייה קצרה...");
@@ -209,8 +191,8 @@ function showNoProjectsMessage() {
         </div>
     `;
     
-    // מעבר לכרטיסיית האזורים
-    switchDonationTab('regions');
+    // הסרנו את המעבר לכרטיסיית האזורים כיוון שהיא אינה קיימת עוד
+    console.log("ℹ️ לא ניתן לעבור לכרטיסיית אזורים - היא לא קיימת");
 }
 
 function renderProjects(projects, container) {
@@ -473,50 +455,6 @@ function scrollCarousel(direction) {
             left: currentScroll + scrollAmount,
             behavior: 'smooth'
         });
-    }
-}
-
-// Function to switch between projects and regions tabs
-function switchDonationTab(tabType) {
-    console.log(`🔄 החלפת כרטיסייה לסוג: ${tabType}`);
-    const projectsTab = document.getElementById('projectsTab');
-    const regionsTab = document.getElementById('regionsTab');
-    const projectsContent = document.getElementById('projectsDonationContent');
-    const regionsContent = document.getElementById('regionsDonationContent');
-    
-    if (!projectsTab || !regionsTab || !projectsContent || !regionsContent) {
-        console.error("❌ אחד או יותר מאלמנטי הכרטיסיות חסרים");
-        return;
-    }
-    
-    if (tabType === 'projects') {
-        // Show projects tab
-        projectsTab.classList.add('active');
-        regionsTab.classList.remove('active');
-        projectsContent.style.display = 'block';
-        regionsContent.style.display = 'none';
-        donationType = 'projects';
-        
-        // If there's a selected project, update summary
-        if (selectedProjectId) {
-            const selectedSlide = document.querySelector(`.project-slide[data-project-id="${selectedProjectId}"]`);
-            if (selectedSlide) {
-                updateDonationSummaryWithProject(
-                    selectedSlide.dataset.projectTitle,
-                    selectedSlide.dataset.projectRegion
-                );
-            }
-        }
-    } else {
-        // Show regions tab
-        regionsTab.classList.add('active');
-        projectsTab.classList.remove('active');
-        regionsContent.style.display = 'block';
-        projectsContent.style.display = 'none';
-        donationType = 'regions';
-        
-        // Update summary with selected region
-        updateDonationSummary();
     }
 }
 
