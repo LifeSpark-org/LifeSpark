@@ -7,9 +7,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize navbar effects
     initNavbarEffects();
     
-    // // Initialize mobile menu
-    // initMobileMenu();
-    
     // Initialize section transitions
     initSectionTransitions();
     
@@ -60,51 +57,6 @@ function initNavbarEffects() {
     }
 }
 
-// // Handle mobile menu interactions
-// function initMobileMenu() {
-//     console.log("initMobileMenu called from animations.js");
-//     const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
-//     const leftMenu = document.querySelector('.left-menu');
-//     const rightMenu = document.querySelector('.right-menu');
-    
-//     if (mobileMenuBtn && leftMenu && rightMenu) {
-//         console.log("Found mobile menu elements in animations.js");
-        
-//         // Toggle mobile menu on button click
-//         mobileMenuBtn.addEventListener('click', function() {
-//             console.log("Mobile menu button clicked in animations.js");
-//             document.body.classList.toggle('mobile-menu-open');
-//             leftMenu.classList.toggle('active');
-//             rightMenu.classList.toggle('active');
-//         });
-        
-//         // Close menu when clicking on menu items
-//         const menuLinks = document.querySelectorAll('.left-menu a, .right-menu a');
-//         menuLinks.forEach(link => {
-//             link.addEventListener('click', () => {
-//                 document.body.classList.remove('mobile-menu-open');
-//                 leftMenu.classList.remove('active');
-//                 rightMenu.classList.remove('active');
-//             });
-//         });
-        
-//         // Close menu when clicking on backdrop
-//         const backdrop = document.querySelector('.mobile-menu-backdrop');
-//         if (backdrop) {
-//             backdrop.addEventListener('click', () => {
-//                 document.body.classList.remove('mobile-menu-open');
-//                 leftMenu.classList.remove('active');
-//                 rightMenu.classList.remove('active');
-//             });
-//         }
-//     } else {
-//         console.warn("Mobile menu elements not found in animations.js", 
-//             mobileMenuBtn ? "Button OK" : "Button missing",
-//             leftMenu ? "Left menu OK" : "Left menu missing",
-//             rightMenu ? "Right menu OK" : "Right menu missing"
-//         );
-//     }
-// }
 
 // Smooth section transitions
 function initSectionTransitions() {
@@ -234,4 +186,3 @@ function initFormEffects() {
 
 // Make functions available globally if needed
 window.showSection = showSection;
-// window.initMobileMenu = initMobileMenu;
