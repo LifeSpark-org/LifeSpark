@@ -82,8 +82,4 @@ class Config:
         "stateMutability": "view",
         "type": "function"
     }
-<<<<<<< HEAD
 ]
-=======
-]
->>>>>>> 5b0e7750108ac32ad00b79a147417f1ade60b949
