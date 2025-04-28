@@ -8,6 +8,8 @@ from werkzeug.utils import secure_filename
 from .. import mongo
 from ..utils.decorators import token_required, admin_required
 from ..models.project import Project
+from ..services.email_service import send_donation_confirmation_email, send_donation_notification_email
+
 
 projects_bp = Blueprint('projects', __name__)
 
@@ -376,6 +378,16 @@ def update_project_donation(current_user, project_id):
                 'message': 'Invalid donation amount'
             }), 400
         
+        
+        # Get project details for email notifications
+        project = Project.get_by_id(mongo, project_id)
+        if not project:
+            return jsonify({
+                'status': 'error',
+                'message': 'Project not found'
+            }), 404
+        
+        
         # Update the project's current amount
         success = Project.update_donation_amount(mongo, project_id, amount)
         
@@ -398,6 +410,32 @@ def update_project_donation(current_user, project_id):
         # Insert donation record
         mongo.db.donations.insert_one(donation)
         
+        # Send confirmation emails
+        try:
+            # Email to donor
+            donor_email = current_user.get('email')
+            if donor_email:
+                send_donation_confirmation_email(
+                    donor_email, 
+                    project['title'], 
+                    amount, 
+                    tx_hash
+                )
+            
+            # Email to project owner
+            project_email = project.get('contact_email')
+            if project_email:
+                send_donation_notification_email(
+                    project_email, 
+                    project['title'], 
+                    amount, 
+                    tx_hash
+                )
+        except Exception as email_error:
+            print(f"Error sending donation emails: {str(email_error)}")
+            # Continue even if email sending fails
+
+
         return jsonify({
             'status': 'success',
             'message': 'Project donation updated successfully'
@@ -409,3 +447,5 @@ def update_project_donation(current_user, project_id):
             'status': 'error',
             'message': f'Error updating project donation: {str(e)}'
         }), 500
+    
+
