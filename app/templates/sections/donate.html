@@ -67,16 +67,8 @@
                 <h3 data-translate="donate-projects-title">Choose a Project to Support</h3>
                 <p data-translate="donate-projects-desc">Select a specific project or donate to a general region</p>
                 
-                <div class="donation-tabs">
-                    <button class="donation-tab active" id="projectsTab" onclick="switchDonationTab('projects')">
-                        <i class="fas fa-clipboard-list"></i> <span data-translate="donate-tab-projects">Projects</span>
-                    </button>
-                    <button class="donation-tab" id="regionsTab" onclick="switchDonationTab('regions')">
-                        <i class="fas fa-map-marker-alt"></i> <span data-translate="donate-tab-regions">Regions</span>
-                    </button>
-                </div>
                 
-                <div id="projectsDonationContent" class="donation-tab-content">
+                <div id="projectsDonationContent">
                     <div class="approved-projects-container">
                         <div class="approved-projects-carousel" id="approvedProjectsCarousel">
                             <!-- Projects will be loaded here dynamically -->
@@ -96,108 +88,9 @@
                         </div>
                     </div>
                 </div>
-                
-                <div id="regionsDonationContent" class="donation-tab-content" style="display: none;">
-                    <div class="region-selector">
-                        <div class="region-option" onclick="selectRegion('south')">
-                            <input type="radio" id="regionSouth" name="region" value="south" checked>
-                            <label for="regionSouth">
-                                <div class="region-card">
-                                    <div class="region-img south"></div>
-                                    <div class="region-info">
-                                        <h4 data-translate="donate-region-south">Southern Israel</h4>
-                                        <p data-translate="donate-region-south-desc">Supporting communities in the south affected by conflict.</p>
-                                        <div class="region-stats">
-                                            <div class="region-stat">
-                                                <span class="stat-value">15</span>
-                                                <span class="stat-label" data-translate="donate-communities">Communities</span>
-                                            </div>
-                                            <div class="region-stat">
-                                                <span class="stat-value">3.2 ETH</span>
-                                                <span class="stat-label" data-translate="donate-raised">Raised</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </label>
-                        </div>
-                        
-                        <div class="region-option" onclick="selectRegion('north')">
-                            <input type="radio" id="regionNorth" name="region" value="north">
-                            <label for="regionNorth">
-                                <div class="region-card">
-                                    <div class="region-img north"></div>
-                                    <div class="region-info">
-                                        <h4 data-translate="donate-region-north">Northern Israel</h4>
-                                        <p data-translate="donate-region-north-desc">Helping northern communities rebuild infrastructure.</p>
-                                        <div class="region-stats">
-                                            <div class="region-stat">
-                                                <span class="stat-value">12</span>
-                                                <span class="stat-label" data-translate="donate-communities">Communities</span>
-                                            </div>
-                                            <div class="region-stat">
-                                                <span class="stat-value">2.8 ETH</span>
-                                                <span class="stat-label" data-translate="donate-raised">Raised</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </label>
-                        </div>
-                    </div>
-                </div>
             </div>
 
-            <form id="donationForm" class="donation-form">
-                <div class="form-group">
-                    <label for="amount" data-translate="donate-amount">Donation Amount (ETH):</label>
-                    <div class="amount-input-group">
-                        <div class="amount-prefix">ETH</div>
-                        <input type="number" id="amount" min="0.01" step="0.01" required placeholder="0.1">
-                    </div>
-                    
-                    <div class="amount-suggestions">
-                        <button type="button" class="amount-suggestion" data-value="0.01">0.01</button>
-                        <button type="button" class="amount-suggestion" data-value="0.05">0.05</button>
-                        <button type="button" class="amount-suggestion" data-value="0.1">0.1</button>
-                        <button type="button" class="amount-suggestion" data-value="0.5">0.5</button>
-                        <button type="button" class="amount-suggestion" data-value="1">1.0</button>
-                    </div>
-                </div>
 
-                <div class="donation-summary">
-                    <h4 data-translate="donate-summary">Donation Summary</h4>
-                    <div class="summary-row">
-                        <span data-translate="donate-selected-project">Selected Project:</span>
-                        <span id="summaryProject">General - Southern Israel</span>
-                    </div>
-                    <div class="summary-row">
-                        <span data-translate="donate-donation-amount">Donation Amount:</span>
-                        <span id="summaryAmount">0 ETH</span>
-                    </div>
-                    <div class="summary-row">
-                        <span data-translate="donate-gas-fee">Estimated Gas Fee:</span>
-                        <span id="summaryGasFee">~ 0.001 ETH</span>
-                    </div>
-                    <div class="summary-row total">
-                        <span data-translate="donate-total">Total:</span>
-                        <span id="summaryTotal">0 ETH</span>
-                    </div>
-                </div>
-
-                <div class="form-group donation-message">
-                    <label for="message" data-translate="donate-message">Optional Message (will be stored on blockchain):</label>
-                    <textarea id="message" rows="3" placeholder="Your message of support (optional)"></textarea>
-                    <small data-translate="donate-message-note">Note: This message will be publicly visible on the blockchain.</small>
-                </div>
-
-                <div class="form-group submit-group">
-                    <button type="submit" class="donate-button" data-translate="donate-button">
-                        <i class="fas fa-heart"></i> Donate Now
-                    </button>
-                </div>
-            </form>
-        </div>
         
         <div id="statusMessage" class="donation-status"></div>
         
