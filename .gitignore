@@ -24,7 +24,7 @@ var/
 venv/
 ENV/
 .env
-config.py
+app/config.py
 
 # Node
 node_modules/
