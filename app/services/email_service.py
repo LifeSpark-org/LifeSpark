@@ -36,3 +36,35 @@ This code will expire in 10 minutes.
 If you did not request a password reset, please ignore this email and ensure your account is secure.
 '''
     mail.send(msg)
+
+
+
+def send_donation_confirmation_email(donor_email, project_title, amount, tx_hash):
+    """Send email confirming a successful donation"""
+    msg = Message(
+        'Thank you for your donation on lifeSpark',
+        recipients=[donor_email]
+    )
+    msg.body = f'''Thank you for your donation to {project_title}!
+    
+Amount: {amount} ETH
+Transaction Hash: {tx_hash}
+
+Your generosity helps support communities in need through the lifeSpark platform.
+'''
+    mail.send(msg)
+
+def send_donation_notification_email(project_email, project_title, amount, tx_hash):
+    """Notify project owner about a received donation"""
+    msg = Message(
+        'Your project received a donation on lifeSpark',
+        recipients=[project_email]
+    )
+    msg.body = f'''Good news! Your project "{project_title}" has received a donation!
+    
+Amount: {amount} ETH
+Transaction Hash: {tx_hash}
+
+This donation will help support your project's goals.
+'''
+    mail.send(msg)
