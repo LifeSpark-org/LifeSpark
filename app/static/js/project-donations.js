@@ -384,15 +384,27 @@ function setupProjectSelection() {
 }
 
 // פונקציה חדשה לקבלת פרטי פרויקט מהשרת
+// פונקציה לקבלת פרטי פרויקט מהשרת
 async function fetchProjectDetails(projectId) {
     try {
+        console.log("מנסה לקבל פרטי פרויקט מהשרת:", projectId);
         const response = await fetch(`/projects/${projectId}`);
         if (response.ok) {
             const data = await response.json();
+            console.log("פרטי פרויקט שהתקבלו:", data);
+            
             if (data.status === 'success' && data.project) {
+                // וודא שיש שדה ethereum_address, אפילו אם הוא ריק
+                if (!data.project.ethereum_address) {
+                    data.project.ethereum_address = '';
+                    console.warn("הפרויקט חסר כתובת ארנק:", data.project);
+                }
+                
                 return data.project;
             }
         }
+        
+        console.warn("לא הצלחנו לקבל פרטי פרויקט מהשרת", response);
         return null;
     } catch (error) {
         console.error("שגיאה בקבלת פרטי פרויקט:", error);
@@ -458,30 +470,33 @@ function scrollCarousel(direction) {
     }
 }
 
-// Update donation summary with project information
+// עדכון סיכום תרומה עם פרויקט
 function updateDonationSummaryWithProject(projectTitle, projectRegion) {
     console.log(`📝 עדכון סיכום תרומה עם פרויקט: ${projectTitle}, אזור: ${projectRegion}`);
     const summaryProject = document.getElementById('summaryProject');
-    const amountInput = document.getElementById('amount');
     const summaryAmount = document.getElementById('summaryAmount');
     const summaryGasFee = document.getElementById('summaryGasFee');
     const summaryTotal = document.getElementById('summaryTotal');
+    const amountInput = document.getElementById('amount');
     
-    if (!summaryProject || !summaryAmount || !summaryTotal) {
-        console.error("❌ אלמנטי סיכום חסרים");
+    // אם אחד מהאלמנטים חסר, יצא מהפונקציה ללא שגיאות
+    if (!summaryProject || !summaryAmount || !summaryTotal || !amountInput) {
+        console.warn("אחד או יותר מאלמנטי הסיכום חסרים", {
+            summaryProject, summaryAmount, summaryGasFee, summaryTotal, amountInput
+        });
         return;
     }
     
-    const amount = parseFloat(amountInput?.value) || 0;
-    const gasFee = 0.001; // Estimated gas fee in ETH
+    const amount = parseFloat(amountInput.value) || 0;
+    const gasFee = 0.001; // עמלת גז משוערת באת'ר
     const total = amount + gasFee;
     
-    // Display project name and region in summary
+    // הצגת שם הפרויקט והאזור בסיכום
     const regionText = projectRegion === 'south' ? 'Southern Israel' : 'Northern Israel';
     
     summaryProject.textContent = `${projectTitle} (${regionText})`;
     
-    // Update amount values
+    // עדכון ערכי הסכומים
     summaryAmount.textContent = `${amount.toFixed(4)} ETH`;
     if (summaryGasFee) summaryGasFee.textContent = `~ ${gasFee.toFixed(4)} ETH`;
     summaryTotal.textContent = `${total.toFixed(4)} ETH`;

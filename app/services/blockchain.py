@@ -69,3 +69,39 @@ def check_balance_and_donate(region, amount):
 
 def donate_to_region(region, amount):
     return blockchain_service.donate_to_region(region, amount)
+
+def register_project(self, project_id, beneficiary, goal_amount, region):
+    """רושם פרויקט חדש בחוזה החכם"""
+    if not self.sender_address:
+        raise ValueError("שגיאה: כתובת השולח לא הוגדרה")
+        
+    # וודא שהכתובת היא מחרוזת תקינה
+    if not Web3.is_address(beneficiary):
+        raise ValueError(f"כתובת ארנק לא תקינה: {beneficiary}")
+    
+    nonce = self.web3.eth.get_transaction_count(self.sender_address)
+    
+    # המרת סכום היעד ל-wei
+    goal_amount_wei = self.web3.to_wei(goal_amount, 'ether')
+    
+    # קריאה לפונקציית registerProject בחוזה
+    transaction = self.contract.functions.registerProject(
+        project_id,
+        beneficiary,
+        goal_amount_wei,
+        region
+    ).build_transaction({
+        'chainId': Config.CHAIN_ID,
+        'gas': 200000,
+        'gasPrice': self.web3.to_wei('50', 'gwei'),
+        'nonce': nonce,
+        'from': self.sender_address
+    })
+    
+    # הערה: ב-production יש צורך בחתימה של המפתח הפרטי
+    # החזרת העסקה כדי שהלקוח יוכל לחתום עליה
+    return transaction
+
+# הוספת פונקציה עוטפת
+def register_project(project_id, beneficiary, goal_amount, region):
+    return blockchain_service.register_project(project_id, beneficiary, goal_amount, region)

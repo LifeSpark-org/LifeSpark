@@ -143,11 +143,11 @@ def submit_project(current_user):
                 else:
                     print(f"Image type not allowed: {image_file.filename}")
     
-    # Print all received data for debugging
-    print("All data:")
-    print(data)
-    print(f"Proof documents: {proof_documents}")
-    print(f"Project image: {project_image}")
+    # # Print all received data for debugging
+    # print("All data:")
+    # print(data)
+    # print(f"Proof documents: {proof_documents}")
+    # print(f"Project image: {project_image}")
     
     # Validate required fields
     required_fields = ['title', 'description', 'region', 'goal_amount', 'contact_email']
@@ -187,6 +187,7 @@ def submit_project(current_user):
         'contact_email': data.get('contact_email', ''),
         'contact_phone': data.get('contact_phone', ''),
         'organization': data.get('organization', ''),
+        'ethereum_address': data.get('ethereum_address', ''),  # הוספת כתובת הארנק
         'proof_documents': proof_documents,
         'project_image': project_image,  # הוספת תמונת הפרויקט
         'user_id': str(current_user['_id'])
@@ -320,7 +321,32 @@ def approve_project(current_user, project_id):
             'status': 'error',
             'message': 'Failed to approve project. Project may not be pending or does not exist.'
         }), 400
-    
+        # קוד חדש - נסה לרשום את הפרויקט בחוזה החכם
+    try:
+        # קבל את פרטי הפרויקט
+        project = Project.get_by_id(mongo, project_id)
+        
+        if project and project.get('ethereum_address'):
+            # כאן יש להוסיף קוד שירשום את הפרויקט בחוזה החכם
+            # לדוגמה: שימוש ב-web3.py לקריאה לפונקציית registerProject
+            from ..services.blockchain import blockchain_service
+            
+            # הוסף פונקציה חדשה בשירות ה-blockchain
+            blockchain_service.register_project(
+                project_id=str(project['_id']),
+                beneficiary=project['ethereum_address'],
+                goal_amount=float(project['goal_amount']),
+                region=project['region']
+            )
+            
+            print(f"Project {project_id} registered in smart contract")
+        else:
+            print(f"Project {project_id} does not have an Ethereum address, skipping contract registration")
+    except Exception as e:
+        # אם יש שגיאה ברישום הפרויקט בחוזה, נרשום אותה אבל נמשיך
+        print(f"Error registering project in smart contract: {str(e)}")
+
+        
     print(f"Project {project_id} approved successfully")
     return jsonify({
         'status': 'success',
