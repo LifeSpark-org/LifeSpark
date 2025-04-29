@@ -58,27 +58,6 @@
     font-size: 1rem;
 }
 
-/* Language Loading Indicator */
-.language-loading {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    background-color: var(--card-bg);
-    border-radius: var(--border-radius);
-    box-shadow: var(--box-shadow);
-    padding: 0.75rem 1rem;
-    display: flex;
-    align-items: center;
-    z-index: 9000;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.language-loading span {
-    color: var(--text-color);
-    font-size: 0.9rem;
-}
-
 /* Theme Toggle Button */
 .theme-toggle {
     position: fixed;
@@ -781,17 +760,6 @@ section.fade-out {
 
 .dark-theme .auth-form-container {
     background-color: #1e293b;
-}
-
-.dark-theme .language-selector {
-    background-color: #1e293b;
-    color: #e2e8f0;
-    border-color: #334155;
-}
-
-.dark-theme .language-selector option {
-    background-color: #1e293b;
-    color: #e2e8f0;
 }
 
 .dark-theme .region-card,

@@ -248,26 +248,6 @@ section, .section {
     color: var(--text-light);
 }
 
-/* Language Selector */
-.language-selector {
-    padding: 0.5rem 1rem;
-    border: 1px solid var(--border-color);
-    border-radius: var(--border-radius);
-    background-color: white;
-    color: var(--text-color);
-    cursor: pointer;
-    font-size: 0.9rem;
-    transition: all 0.3s;
-}
-
-.language-selector:hover {
-    border-color: var(--primary-color);
-}
-
-.language-selector option {
-    padding: 0.5rem;
-}
-
 /* Buttons */
 .donate-button {
     background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
