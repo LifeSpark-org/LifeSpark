@@ -695,40 +695,6 @@
     text-align: center;
 }
 
-/* .donation-info {
-    margin-top: 2.5rem;
-}
-
-.info-box {
-    background: #f8fafc;
-    padding: 2rem;
-    border-radius: var(--border-radius);
-    border-left: 4px solid var(--primary-color);
-}
-
-.info-box h4 {
-    color: var(--primary-color);
-    margin-bottom: 1rem;
-}
-
-.info-box ul {
-    list-style-type: none;
-}
-
-.info-box ul li {
-    margin-bottom: 0.5rem;
-    position: relative;
-    padding-left: 1.5rem;
-}
-
-.info-box ul li::before {
-    content: '✓';
-    position: absolute;
-    left: 0;
-    color: var(--primary-color);
-    font-weight: bold;
-} */
-
 .donation-message {
     margin-top: 1.5rem;
 }
@@ -1347,11 +1313,6 @@
 [dir="rtl"] input,
 [dir="rtl"] textarea {
     text-align: right;
-}
-
-[dir="rtl"] .language-selector {
-    margin-right: 0;
-    margin-left: 1rem;
 }
 
 [dir="rtl"] .info-box {
