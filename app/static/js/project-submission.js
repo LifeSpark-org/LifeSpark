@@ -218,7 +218,8 @@ function initProjectSubmission() {
             const organization = document.getElementById('projectOrganization')?.value || '';
             formData.append('contact_phone', contactPhone);
             formData.append('organization', organization);
-            
+            // לאחר הוספת שדות אחרים ל-formData
+            formData.append('ethereum_address', document.getElementById('ethereumAddress')?.value || '');
             // הוסף את תמונת הפרויקט אם קיימת
             if (projectImage && projectImage.files.length > 0) {
                 formData.append('project_image', projectImage.files[0]);

@@ -26,6 +26,7 @@ class Project:
             'organization': project_data.get('organization', ''),
             'proof_documents': project_data.get('proof_documents', []),
             'project_image': project_data.get('project_image', ''),  # הוספת שדה תמונת פרויקט
+            'ethereum_address': project_data.get('ethereum_address', ''),
             'status': cls.STATUS_PENDING,
             'status_notes': '',
             'created_at': datetime.utcnow(),

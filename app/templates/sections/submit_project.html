@@ -84,7 +84,17 @@
                         </div>
                         <small data-translate="project-goal-hint">Set a realistic funding goal for your project needs</small>
                     </div>
-                    
+                    <div class="form-group">
+                        <label for="ethereumAddress" data-translate="project-ethereum-address">Ethereum Wallet Address:*</label>
+                        <div class="input-with-icon">
+                            <input type="text" id="ethereumAddress" name="ethereum_address" required>
+                            <i class="fas fa-wallet input-icon"></i>
+                        </div>
+                        <button type="button" id="connectWalletForProject" class="btn btn-sm btn-outline">
+                            <i class="fas fa-link"></i> <span data-translate="connect-wallet">Connect MetaMask</span>
+                        </button>
+                        <small data-translate="project-ethereum-hint">Enter your Ethereum wallet address where donations will be sent</small>
+                    </div>
                     <div class="form-group">
                         <label for="projectOrganization" data-translate="project-organization">Organization Name:</label>
                         <input type="text" id="projectOrganization" name="organization">
