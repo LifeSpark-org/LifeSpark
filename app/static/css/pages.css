@@ -289,15 +289,24 @@
     margin-bottom: 3rem;
 }
 
+/* תיקון לפריסת התוכן */
 .about-content {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 3rem;
-    align-items: center;
-    margin-bottom: 4rem;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    margin-bottom: 3rem;
 }
 
+@media (min-width: 992px) {
+    .about-content {
+        grid-template-columns: 1fr 1fr;
+        align-items: flex-start;
+    }
+}
+
+/* תיקון למיכל התמונה */
 .about-image {
+    width: 100%;
     border-radius: var(--border-radius-lg);
     overflow: hidden;
     box-shadow: var(--box-shadow-lg);
@@ -313,28 +322,60 @@
     transform: scale(1.05);
 }
 
+.image-placeholder {
+    width: 100%;
+    height: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #f8fafc;
+    color: var(--text-light);
+}
+
+.dark-theme .image-placeholder {
+    background-color: #1e293b;
+}
+
 .mission-statement {
     padding: 2rem;
     background: white;
     border-radius: var(--border-radius);
     box-shadow: var(--box-shadow);
-    margin-bottom: 3rem;
+    margin-bottom: 2rem;
 }
 
+/* תיקון לאזור הערכים */
 .values-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 1.5rem;
+    grid-template-columns: 1fr;
+    gap: 1rem;
     margin-top: 1.5rem;
+}
+
+@media (min-width: 576px) {
+    .values-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 992px) {
+    .values-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
 }
 
 .value-item {
     text-align: center;
     padding: 1.5rem;
+    height: 100%;
     background: white;
     border-radius: var(--border-radius);
     box-shadow: var(--box-shadow);
     transition: transform 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .value-item:hover {
@@ -357,11 +398,21 @@
     color: var(--primary-color);
 }
 
+/* תיקון לחלק התכונות */
 .about-features {
+    margin-top: 3rem;
+}
+
+.features-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 2rem;
-    margin-top: 2rem;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+    .features-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
 }
 
 .feature {
@@ -374,6 +425,10 @@
     position: relative;
     z-index: 1;
     overflow: hidden;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .feature::before {
@@ -409,15 +464,22 @@
     color: var(--text-color);
 }
 
+/* תיקון לחלק הצוות */
 .team-section {
-    margin-top: 5rem;
+    margin-top: 3rem;
 }
 
 .team-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: 1fr;
     gap: 2rem;
     margin-top: 2rem;
+}
+
+@media (min-width: 576px) {
+    .team-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
 
 .team-member {
@@ -443,6 +505,78 @@
     font-size: 0.9rem;
 }
 
+.team-description {
+    margin-top: 2rem;
+    text-align: center;
+}
+
+/* תיקון לציר הזמן */
+.timeline {
+    position: relative;
+    margin: 3rem 0;
+    padding-left: 30px;
+}
+
+.timeline:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 20px;
+    width: 2px;
+    background-color: var(--border-color);
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 2rem;
+    padding-left: 40px;
+}
+
+.timeline-icon {
+    position: absolute;
+    left: -30px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--primary-color);
+    z-index: 1;
+}
+
+.timeline-icon i {
+    color: var(--primary-color);
+    font-size: 1.2rem;
+}
+
+.timeline-content {
+    background-color: white;
+    padding: 1.5rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+}
+
+.timeline-content h4 {
+    margin-top: 0;
+    color: var(--primary-color);
+}
+
+.timeline-content p {
+    margin-bottom: 0;
+    color: var(--text-light);
+}
+
+.dark-theme .timeline-icon,
+.dark-theme .timeline-content,
+.dark-theme .feature,
+.dark-theme .value-item,
+.dark-theme .team-member,
+.dark-theme .mission-statement {
+    background-color: #1e293b;
+}
 /* Donate Section */
 .donate-container {
     max-width: 900px;
@@ -763,14 +897,30 @@
     padding: 4rem 2rem;
 }
 
+/* תיקון פריסת תוכן */
 .contact-content {
     display: grid;
-    grid-template-columns: 1fr 2fr;
-    gap: 3rem;
+    grid-template-columns: 1fr;
+    gap: 2rem;
     margin-top: 3rem;
 }
 
+@media (min-width: 992px) {
+    .contact-content {
+        grid-template-columns: 1fr 2fr;
+        gap: 3rem;
+    }
+}
+
+/* תיקון אזור המידע */
 .contact-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.info-card, .faq-preview {
+    width: 100%;
     background: white;
     padding: 2rem;
     border-radius: var(--border-radius);
@@ -789,13 +939,14 @@
 
 .contact-item {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     margin-bottom: 1.5rem;
 }
 
 .contact-icon {
     width: 40px;
     height: 40px;
+    min-width: 40px;
     background-color: rgba(79, 70, 229, 0.1);
     border-radius: 50%;
     display: flex;
@@ -803,6 +954,13 @@
     justify-content: center;
     margin-right: 1rem;
     color: var(--primary-color);
+}
+
+.contact-text {
+    flex: 1;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    max-width: calc(100% - 55px);
 }
 
 .contact-text h4 {
@@ -813,11 +971,14 @@
 .contact-text p {
     margin: 0;
     color: var(--text-light);
+    word-break: break-word;
 }
 
+/* תיקון אזור הקישורים החברתיים */
 .social-links {
-    margin-top: auto;
-    padding-top: 2rem;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-color);
 }
 
 .social-links h4 {
@@ -827,6 +988,7 @@
 .social-icons {
     display: flex;
     gap: 1rem;
+    flex-wrap: wrap;
 }
 
 .social-icons a {
@@ -847,6 +1009,7 @@
     transform: translateY(-3px);
 }
 
+/* תיקון אזור הטופס */
 .contact-form {
     background: white;
     padding: 2rem;
@@ -880,6 +1043,7 @@
     color: var(--error-color);
 }
 
+/* תיקון אזור ה-FAQ */
 .faq-preview {
     margin-top: 2rem;
 }
@@ -900,7 +1064,7 @@
     padding: 1rem 1.5rem;
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
     cursor: pointer;
     user-select: none;
 }
@@ -908,10 +1072,18 @@
 .accordion-header h4 {
     margin: 0;
     font-size: 1rem;
+    flex: 1;
+    padding-right: 1rem;
+    word-wrap: break-word;
 }
 
 .accordion-icon {
     transition: transform 0.3s ease;
+    flex-shrink: 0;
+    min-width: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .accordion-item.active .accordion-icon {
@@ -929,6 +1101,7 @@
     padding-bottom: 1.5rem;
 }
 
+/* תיקון מדור הניוזלטר */
 .newsletter-section {
     margin-top: 4rem;
 }
@@ -939,15 +1112,21 @@
     padding: 2.5rem;
     color: white;
     display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
+    flex-direction: column;
     gap: 2rem;
+}
+
+@media (min-width: 768px) {
+    .newsletter-card {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+    }
 }
 
 .newsletter-content {
     flex: 1;
-    min-width: 300px;
+    min-width: 250px;
 }
 
 .newsletter-content h3 {
@@ -962,13 +1141,21 @@
 
 .newsletter-form {
     flex: 1;
-    min-width: 300px;
+    min-width: 250px;
 }
 
 .newsletter-input-group {
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
     gap: 0.5rem;
+    width: 100%;
+}
+
+@media (min-width: 576px) {
+    .newsletter-input-group {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
 }
 
 .newsletter-input-group input {
@@ -989,11 +1176,67 @@
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
+    white-space: nowrap;
 }
 
 .newsletter-input-group button:hover {
     background-color: #d97706;
     transform: translateY(-2px);
+}
+
+/* תיקונים למצב responsive קטן */
+@media (max-width: 767px) {
+    .newsletter-card {
+        padding: 1.5rem;
+    }
+    
+    .info-card, .contact-form, .faq-preview {
+        padding: 1.5rem;
+    }
+    
+    .accordion-header {
+        padding: 0.75rem 1rem;
+    }
+    
+    .accordion-header h4 {
+        font-size: 0.9rem;
+    }
+    
+    .accordion-content {
+        padding: 0 1rem;
+    }
+    
+    .accordion-item.active .accordion-content {
+        padding-bottom: 1rem;
+    }
+}
+
+/* תיקון למכשירים קטנים במיוחד */
+@media (max-width: 480px) {
+    .contact-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .contact-icon {
+        margin-bottom: 0.5rem;
+    }
+    
+    .contact-text {
+        max-width: 100%;
+    }
+}
+
+/* תיקוני מצב חשוך */
+.dark-theme .info-card,
+.dark-theme .contact-form,
+.dark-theme .accordion-item,
+.dark-theme .faq-preview {
+    background-color: #1e293b;
+}
+
+.dark-theme .accordion-item {
+    border-color: #334155;
 }
 
 /* Auth Section */
