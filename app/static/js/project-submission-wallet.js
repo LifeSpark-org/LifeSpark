@@ -1,5 +1,8 @@
 // חיבור MetaMask בטופס הגשת פרויקט
 
+// דגל לניהול הודעות הצלחה
+let walletConnectSuccessShown = false;
+
 document.addEventListener('DOMContentLoaded', function() {
     // בדיקה אם אנחנו בדף הגשת פרויקט
     if (document.getElementById('submit-project')) {
@@ -37,6 +40,9 @@ function initProjectWalletConnection() {
                     return;
                 }
                 
+                // איפוס הדגל בתחילת החיבור
+                walletConnectSuccessShown = false;
+                
                 // הצגת מצב טעינה
                 this.disabled = true;
                 this.innerHTML = '<div class="loader-inline"></div> מתחבר...';
@@ -49,8 +55,11 @@ function initProjectWalletConnection() {
                     ethereumAddressInput.value = accounts[0];
                     window.userWalletAddress = accounts[0];
                     
-                    // הצגת הודעת הצלחה
-                    showNotification('success', 'הארנק חובר בהצלחה!');
+                    // הצגת הודעת הצלחה רק אם הדגל לא הוגדר
+                    if (!walletConnectSuccessShown) {
+                        showNotification('success', 'הארנק חובר בהצלחה!');
+                        walletConnectSuccessShown = true;
+                    }
                     
                     // עדכון טקסט הכפתור לאחר חיבור מוצלח
                     updateButtonToConnected(this, accounts[0]);
@@ -92,7 +101,6 @@ function initProjectWalletConnection() {
         }
     }
 }
-
 // פונקציה חדשה לעדכון טקסט הכפתור כשמתחבר
 function updateButtonToConnected(button, walletAddress) {
     if (!button) return;
