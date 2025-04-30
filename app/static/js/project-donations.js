@@ -14,10 +14,103 @@ document.addEventListener('DOMContentLoaded', function() {
     const projectsCarousel = document.getElementById('approvedProjectsCarousel');
     console.log("🔍 אלמנט הקרוסלה קיים?", projectsCarousel ? "כן" : "לא");
     
+
+    setTimeout(() => {
+        const selectedProjectFromMap = localStorage.getItem('selectedProjectFromMap');
+        if (selectedProjectFromMap) {
+            console.log(`יש להדגיש פרויקט מהמפה: ${selectedProjectFromMap}`);
+            
+            // ננקה את המידע הזה כדי שלא ידגיש שוב בטעינות עתידיות
+            localStorage.removeItem('selectedProjectFromMap');
+            
+            // מחכים שהפרויקטים יטענו ואז מדגישים
+            setTimeout(() => {
+                if (typeof highlightProjectInCarousel === 'function') {
+                    highlightProjectInCarousel(selectedProjectFromMap);
+                } else if (typeof window.highlightProjectInCarousel === 'function') {
+                    window.highlightProjectInCarousel(selectedProjectFromMap);
+                } else {
+                    console.error("פונקציית הדגשת הפרויקט אינה זמינה");
+                }
+            }, 1000);
+        }
+    }, 500);
+
     // Set up carousel navigation
     const prevBtn = document.getElementById('prevProject');
     const nextBtn = document.getElementById('nextProject');
     
+    const selectedProjectFromMap = localStorage.getItem('selectedProjectFromMap');
+    if (selectedProjectFromMap) {
+        console.log(`יש להדגיש פרויקט מהמפה: ${selectedProjectFromMap}`);
+        
+        // ננקה את המידע הזה כדי שלא ידגיש שוב בטעינות עתידיות
+        localStorage.removeItem('selectedProjectFromMap');
+        
+        // מחכים שהפרויקטים יטענו ואז מדגישים
+        setTimeout(() => {
+            highlightProjectInCarousel(selectedProjectFromMap);
+        }, 1000);
+    }
+
+    // פונקציה להדגשת פרויקט בקרוסלה
+    function highlightProjectInCarousel(projectId) {
+        // ננסה למצוא את הפרויקט בקרוסלה
+        const projectSlides = document.querySelectorAll('.project-slide');
+        
+        let foundProject = false;
+        
+        projectSlides.forEach(slide => {
+            if (slide.dataset.projectId === projectId) {
+                foundProject = true;
+                
+                // גלילה אל הפרויקט
+                const carousel = document.getElementById('approvedProjectsCarousel');
+                if (carousel) {
+                    // חישוב המיקום לגלילה
+                    const slideLeft = slide.offsetLeft;
+                    const carouselWidth = carousel.offsetWidth;
+                    const scrollPosition = slideLeft - (carouselWidth / 2) + (slide.offsetWidth / 2);
+                    
+                    // גלילה חלקה אל הפרויקט
+                    carousel.scrollTo({
+                        left: scrollPosition,
+                        behavior: 'smooth'
+                    });
+                }
+                
+                // הדגשת הפרויקט עם אנימציה
+                slide.classList.add('selected-from-map');
+                
+                // הוספת אנימציה מהבהבת כדי למשוך תשומת לב
+                slide.style.animation = 'pulse-highlight 2s ease-in-out';
+                
+                // בחירת הפרויקט
+                const radioInput = slide.querySelector('input[type="radio"]');
+                if (radioInput) {
+                    radioInput.checked = true;
+                    
+                    // הפעלת אירוע שינוי כדי לעדכן את הממשק
+                    const event = new Event('change');
+                    radioInput.dispatchEvent(event);
+                }
+                
+                // אם קיים כפתור בחירה, נלחץ עליו אוטומטית
+                const selectBtn = slide.querySelector('.project-select-btn');
+                if (selectBtn) {
+                    setTimeout(() => {
+                        selectBtn.click();
+                    }, 800);
+                }
+            }
+        });
+        
+        if (!foundProject) {
+            console.warn(`לא נמצא פרויקט עם מזהה ${projectId} בקרוסלה`);
+        }
+    }
+
+
     if (prevBtn && nextBtn) {
         console.log("✅ כפתורי ניווט קרוסלה נמצאו ואירועים מתווספים");
         prevBtn.addEventListener('click', () => {

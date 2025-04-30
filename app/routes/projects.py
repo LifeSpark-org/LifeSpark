@@ -181,21 +181,26 @@ def submit_project(current_user):
     location_lat = 0.0
     location_lng = 0.0
     location_name = ""
-    
+        
     if 'location_lat' in data and data['location_lat']:
         try:
             location_lat = float(data['location_lat'])
+            print(f"נתוני מיקום: רוחב - {location_lat}")
         except ValueError:
             location_lat = 0.0
+            print("שגיאה בהמרת נתוני מיקום (רוחב)")
             
     if 'location_lng' in data and data['location_lng']:
         try:
             location_lng = float(data['location_lng'])
+            print(f"נתוני מיקום: אורך - {location_lng}")
         except ValueError:
             location_lng = 0.0
+            print("שגיאה בהמרת נתוני מיקום (אורך)")
             
     if 'location_name' in data:
         location_name = data['location_name']
+        print(f"שם מיקום: {location_name}")
 
 
     # Create project data

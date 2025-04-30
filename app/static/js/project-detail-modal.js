@@ -509,6 +509,16 @@ function setupProjectDonationForm(container, project) {
         }
         
         // מאזין לשליחת טופס התרומה
+
+        if (project.location_lat && project.location_lng && 
+            parseFloat(project.location_lat) !== 0 && parseFloat(project.location_lng) !== 0) {
+            donationForm.insertAdjacentHTML('beforeend', `
+                <button type="button" class="btn btn-outline btn-sm view-on-map-btn" 
+                        onclick="viewProjectOnMap('${project.id || project._id}', ${project.location_lat}, ${project.location_lng})">
+                    <i class="fas fa-map-marked-alt"></i> צפייה במפה
+                </button>
+            `);
+        }
         const donationForm = container.querySelector('#projectDonationSubmitForm');
         if (donationForm) {
             donationForm.addEventListener('submit', function(e) {
@@ -758,3 +768,25 @@ async function processDonationToProject(project, amount, message) {
 }
 
 window.showProjectDetails = showProjectDetails;
+
+window.viewProjectOnMap = function(projectId, lat, lng) {
+    // מעבר לעמוד המפה
+    showSection('map');
+    
+    // מחכים שהמפה תיטען
+    setTimeout(() => {
+        if (mapInstance) {
+            // התמקדות במיקום הפרויקט
+            mapInstance.setView([lat, lng], 15);
+            
+            // חיפוש הסמן המתאים ופתיחת החלון הקופץ
+            projectMarkers.forEach(marker => {
+                const markerLatLng = marker.getLatLng();
+                if (Math.abs(markerLatLng.lat - lat) < 0.0001 && 
+                    Math.abs(markerLatLng.lng - lng) < 0.0001) {
+                    marker.openPopup();
+                }
+            });
+        }
+    }, 500);
+};

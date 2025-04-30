@@ -205,13 +205,17 @@ function initProjectSubmission() {
         try {
             // יצירת FormData לטיפול בקבצים
             const formData = new FormData();
-            
+            const locationLat = parseFloat(document.getElementById('projectLocationLat').value);
+            const locationLng = parseFloat(document.getElementById('projectLocationLng').value);
+            console.log(`שולח מיקום בטופס: [${locationLat}, ${locationLng}]`);
             // הוסף את כל שדות הטופס הרגילים
             formData.append('title', title);
             formData.append('description', description);
             formData.append('region', region);
             formData.append('goal_amount', goalAmount);
             formData.append('contact_email', contactEmail);
+            formData.append('location_lat', locationLat);
+            formData.append('location_lng', locationLng);
             
             // הוסף שדות אופציונליים
             const contactPhone = document.getElementById('projectPhone')?.value || '';

@@ -95,6 +95,11 @@ function initLocationFeatures() {
     // פונקציה לעדכון המפה
     function updateLocationMap(lat, lng) {
         // אם כבר יש סמן, הסר אותו
+
+        console.log(`עדכון מפת המיקום: [${lat}, ${lng}]`);
+        const locationLat = document.getElementById('projectLocationLat').value;
+        const locationLng = document.getElementById('projectLocationLng').value;
+        console.log(`שולח מיקום בטופס: [${locationLat}, ${locationLng}]`);
         if (locationMarker) {
             locationMap.removeLayer(locationMarker);
         }
