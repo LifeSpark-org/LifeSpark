@@ -296,7 +296,7 @@ function initProjectSubmission() {
                 submissionStatus.className = 'submission-status error';
                 submissionStatus.innerHTML = `
                     <i class="fas fa-exclamation-circle"></i>
-                    <h4>${translations[currentLanguage]?.['project-submit-error'] || 'Submission Error'}</h4>
+                    <h4>Submission Error</h4>
                     <p>${error.message}</p>
                 `;
                 submissionStatus.style.display = 'block';
