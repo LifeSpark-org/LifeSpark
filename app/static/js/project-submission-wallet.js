@@ -22,6 +22,9 @@ function initProjectWalletConnection() {
         // בדיקה אם יש כבר חיבור קיים
         if (window.ethereum && window.userWalletAddress) {
             ethereumAddressInput.value = window.userWalletAddress;
+            
+            // עדכון טקסט הכפתור כשיש כבר חיבור
+            updateButtonToConnected(connectWalletBtn, window.userWalletAddress);
         }
         
         // מאזין לכפתור חיבור ארנק
@@ -48,11 +51,14 @@ function initProjectWalletConnection() {
                     
                     // הצגת הודעת הצלחה
                     showNotification('success', 'הארנק חובר בהצלחה!');
+                    
+                    // עדכון טקסט הכפתור לאחר חיבור מוצלח
+                    updateButtonToConnected(this, accounts[0]);
+                } else {
+                    // אם אין חשבונות, החזרת הכפתור למצב הרגיל
+                    this.disabled = false;
+                    this.innerHTML = '<i class="fas fa-link"></i> <span data-translate="connect-wallet">Connect MetaMask</span>';
                 }
-                
-                // החזרת הכפתור למצב הרגיל
-                this.disabled = false;
-                this.innerHTML = '<i class="fas fa-link"></i> <span data-translate="connect-wallet">Connect MetaMask</span>';
                 
             } catch (error) {
                 console.error('Error connecting wallet:', error);
@@ -70,8 +76,33 @@ function initProjectWalletConnection() {
                 if (accounts.length > 0 && ethereumAddressInput) {
                     ethereumAddressInput.value = accounts[0];
                     window.userWalletAddress = accounts[0];
+                    
+                    // עדכון טקסט הכפתור בעת שינוי חשבון
+                    if (connectWalletBtn) {
+                        updateButtonToConnected(connectWalletBtn, accounts[0]);
+                    }
+                } else {
+                    // אם התנתק, החזר את הכפתור למצב הרגיל
+                    if (connectWalletBtn) {
+                        connectWalletBtn.disabled = false;
+                        connectWalletBtn.innerHTML = '<i class="fas fa-link"></i> <span data-translate="connect-wallet">Connect MetaMask</span>';
+                    }
                 }
             });
         }
     }
+}
+
+// פונקציה חדשה לעדכון טקסט הכפתור כשמתחבר
+function updateButtonToConnected(button, walletAddress) {
+    if (!button) return;
+    
+    button.disabled = false;
+    
+    // מציג כפתור עם קיצור הכתובת
+    const shortAddress = walletAddress.substring(0, 6) + '...' + walletAddress.substring(walletAddress.length - 4);
+    button.innerHTML = '<i class="fas fa-check-circle"></i> <span>wallet connected</span>';
+    
+    // מוסיף סגנון לכפתור מחובר
+    button.classList.add('wallet-connected');
 }

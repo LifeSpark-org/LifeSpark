@@ -376,3 +376,14 @@
     border-radius: var(--border-radius);
     border: 1px solid var(--border-color);
 }
+
+.wallet-connected {
+    background-color: var(--success-color) !important;
+    color: white !important;
+    border-color: var(--success-color) !important;
+}
+
+.wallet-connected:hover {
+    background-color: #0d8a6a !important;
+    border-color: #0d8a6a !important;
+}
