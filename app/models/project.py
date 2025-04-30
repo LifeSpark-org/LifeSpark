@@ -27,6 +27,9 @@ class Project:
             'proof_documents': project_data.get('proof_documents', []),
             'project_image': project_data.get('project_image', ''),  # הוספת שדה תמונת פרויקט
             'ethereum_address': project_data.get('ethereum_address', ''),
+            'location_lat': float(project_data.get('location_lat', 0)),
+            'location_lng': float(project_data.get('location_lng', 0)),
+            'location_name': project_data.get('location_name', ''),
             'status': cls.STATUS_PENDING,
             'status_notes': '',
             'created_at': datetime.utcnow(),

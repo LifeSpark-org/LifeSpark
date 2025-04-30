@@ -178,6 +178,26 @@ def submit_project(current_user):
             'message': error_msg
         }), 400
     
+    location_lat = 0.0
+    location_lng = 0.0
+    location_name = ""
+    
+    if 'location_lat' in data and data['location_lat']:
+        try:
+            location_lat = float(data['location_lat'])
+        except ValueError:
+            location_lat = 0.0
+            
+    if 'location_lng' in data and data['location_lng']:
+        try:
+            location_lng = float(data['location_lng'])
+        except ValueError:
+            location_lng = 0.0
+            
+    if 'location_name' in data:
+        location_name = data['location_name']
+
+
     # Create project data
     project_data = {
         'title': data.get('title', ''),
@@ -190,7 +210,10 @@ def submit_project(current_user):
         'ethereum_address': data.get('ethereum_address', ''),  # הוספת כתובת הארנק
         'proof_documents': proof_documents,
         'project_image': project_image,  # הוספת תמונת הפרויקט
-        'user_id': str(current_user['_id'])
+        'user_id': str(current_user['_id']),
+        'location_lat': location_lat,
+        'location_lng': location_lng,
+        'location_name': location_name
     }
     
     # Try to create the project
