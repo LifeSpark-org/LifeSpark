@@ -68,3 +68,37 @@ Transaction Hash: {tx_hash}
 This donation will help support your project's goals.
 '''
     mail.send(msg)
+
+
+
+def send_project_submission_email(user_email, project_title):
+    """Send email confirming project submission and awaiting approval"""
+    msg = Message(
+        'Your lifeSpark Project Submission',
+        recipients=[user_email]
+    )
+    msg.body = f'''Thank you for submitting your project "{project_title}" to lifeSpark!
+
+Your project has been received and is now awaiting review by our admin team. We typically review projects within 2-3 business days.
+
+You will receive another email when your project has been reviewed.
+
+If you have any questions, please contact our support team.
+'''
+    mail.send(msg)
+
+def send_project_approved_email(user_email, project_title):
+    """Send email notifying that project has been approved"""
+    msg = Message(
+        'Your lifeSpark Project Has Been Approved!',
+        recipients=[user_email]
+    )
+    msg.body = f'''Great news! Your project "{project_title}" has been approved by our team and is now live on the lifeSpark platform.
+
+Donors can now see your project and make donations directly to your cause.
+
+You can log in to your account to check on your project's status and funding progress.
+
+Thank you for being part of the lifeSpark community!
+'''
+    mail.send(msg)

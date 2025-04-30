@@ -197,7 +197,12 @@ def submit_project(current_user):
     try:
         project = Project.create(mongo, project_data)
         print(f"Project created successfully with ID: {project['_id']}")
-        
+        try:
+            from ..services.email_service import send_project_submission_email
+            send_project_submission_email(project_data['contact_email'], project_data['title'])
+            print(f"Submission confirmation email sent to {project_data['contact_email']}")
+        except Exception as email_error:
+            print(f"Error sending submission confirmation email: {str(email_error)}")
         return jsonify({
             'status': 'success',
             'message': 'Project submitted successfully and pending approval',
@@ -348,6 +353,17 @@ def approve_project(current_user, project_id):
 
         
     print(f"Project {project_id} approved successfully")
+    try:
+        from ..services.email_service import send_project_approved_email
+        
+        # Get project details to get the email and title
+        project = Project.get_by_id(mongo, project_id)
+        if project and project.get('contact_email'):
+            send_project_approved_email(project['contact_email'], project['title'])
+            print(f"Project approval email sent to {project['contact_email']}")
+    except Exception as email_error:
+        print(f"Error sending project approval email: {str(email_error)}")
+
     return jsonify({
         'status': 'success',
         'message': 'Project approved successfully'
