@@ -178,7 +178,6 @@ function tryBackupEndpoint() {
         });
 }
 
-// הצגת הודעה שאין פרויקטים
 function showNoProjectsMessage() {
     console.log("⚠️ אין פרויקטים להצגה");
     const projectsCarousel = document.getElementById('approvedProjectsCarousel');
@@ -187,12 +186,14 @@ function showNoProjectsMessage() {
     
     projectsCarousel.innerHTML = `
         <div class="empty-projects">
-            <p>No approved projects found in the database. Please try again later.</p>
+            <p>אין פרויקטים מאושרים זמינים כרגע. אנא בקר/י באתר מאוחר יותר או הגש/י פרויקט משלך.</p>
+            <div class="empty-projects-actions">
+                <button class="btn btn-primary btn-sm" onclick="showSection('submit-project')">
+                    <i class="fas fa-plus-circle"></i> הגשת פרויקט חדש
+                </button>
+            </div>
         </div>
     `;
-    
-    // הסרנו את המעבר לכרטיסיית האזורים כיוון שהיא אינה קיימת עוד
-    console.log("ℹ️ לא ניתן לעבור לכרטיסיית אזורים - היא לא קיימת");
 }
 
 function renderProjects(projects, container) {
