@@ -341,3 +341,31 @@
     height: 100%;
     object-fit: cover;
 }
+
+/* עיצוב לעמוד ללא פרויקטים */
+.empty-projects {
+    padding: 2rem;
+    text-align: center;
+    background-color: #f8fafc;
+    border-radius: var(--border-radius);
+    margin: 2rem 0;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.dark-theme .empty-projects {
+    background-color: #1e293b;
+}
+
+.empty-projects p {
+    font-size: 1.1rem;
+    margin-bottom: 1.5rem;
+    color: var(--text-light);
+}
+
+.empty-projects-actions {
+    margin-top: 1rem;
+}
