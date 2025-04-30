@@ -114,8 +114,6 @@ section#map.active {
 }
 
 
-
-/* סגנונות לסמני פרויקטים במפה */
 .project-marker {
     width: 30px !important;
     height: 30px !important;
@@ -197,4 +195,72 @@ section#map.active {
 .leaflet-popup-content {
     margin: 0;
     width: 100% !important;
+}
+
+
+/* הוסף את הסגנונות האלה לקובץ app/static/css/map-styles.css: */
+
+/* שיפור עיצוב החלון הקופץ */
+.project-popup {
+    padding: 5px;
+    max-width: 250px;
+}
+
+.project-popup h4 {
+    margin: 0 0 5px 0;
+    font-size: 16px;
+    color: var(--primary-color);
+    font-weight: 700;
+}
+
+.project-popup .project-location {
+    font-size: 12px;
+    color: var(--text-light);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+}
+
+.project-popup .project-location::before {
+    content: '\f3c5';
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 900;
+    margin-right: 5px;
+    color: var(--primary-color);
+}
+
+.project-popup .project-progress {
+    margin: 10px 0;
+}
+
+.project-popup .project-description {
+    font-size: 12px;
+    margin: 8px 0;
+    line-height: 1.4;
+}
+
+.project-popup .view-project-btn {
+    font-size: 12px;
+    padding: 8px;
+    margin-top: 5px;
+    width: 100%;
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    border: none;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.project-popup .view-project-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* שיפור למראה הכולל של חלונות קופצים בלפלט */
+.leaflet-popup-content-wrapper {
+    border-radius: 8px;
+    box-shadow: 0 3px 14px rgba(0, 0, 0, 0.2);
+}
+
+.leaflet-popup-content {
+    margin: 8px 12px;
+    width: auto !important;
 }

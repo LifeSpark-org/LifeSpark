@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (e.target.matches('[onclick*="showSection(\'map\'"]') || 
             e.target.closest('[onclick*="showSection(\'map\'"]')) {
             setTimeout(function() {
+                console.log("יזמתי טעינת מפה בעקבות ניווט");
                 initMap();
                 // קורא לפונקציית הגודל פעמיים, בהפרש זמנים
                 if (mapInstance) {
@@ -167,21 +168,28 @@ window.addEventListener('resize', function() {
     }
 });
 
-// פונקציה שמאפשרת לרענן את המפה מבחוץ
+
+
+// הוסף את הלוגים האלה בפונקציית refreshMap (בערך שורה 190) ב-app/static/js/map.js:
 function refreshMap() {
     if (mapInstance) {
+        console.log("מרענן את המפה...");
         mapInstance.invalidateSize();
         
         // ניקוי סמנים קיימים
+        console.log(`מנקה ${projectMarkers.length} סמנים קודמים...`);
         projectMarkers.forEach(marker => {
             mapInstance.removeLayer(marker);
         });
         projectMarkers.length = 0;
         
         // טעינה מחדש של פרויקטים
+        console.log("מתחיל טעינה מחדש של פרויקטים למפה...");
         loadProjectsToMap();
         
-        console.log("מפה רועננה עם פרויקטים");
+        console.log("מפה רועננה");
+    } else {
+        console.warn("לא ניתן לרענן את המפה - המפה לא אותחלה");
     }
 }
 
@@ -189,7 +197,7 @@ function refreshMap() {
 
 
 
-
+// תקן את הפונקציה loadProjectsToMap (בערך שורה 216) ב-app/static/js/map.js:
 async function loadProjectsToMap() {
     console.log("טוען פרויקטים למפה...");
     if (!mapInstance) {
@@ -207,13 +215,26 @@ async function loadProjectsToMap() {
         const data = await response.json();
         
         if (data && data.projects && Array.isArray(data.projects)) {
+            console.log("דוגמא של פרויקט ראשון:", data.projects[0]);
+            
             // סופרים פרויקטים עם מיקום
-            const projectsWithLocation = data.projects.filter(
-                p => p.location_lat && p.location_lng && 
-                p.location_lat !== 0 && p.location_lng !== 0
-            );
+            const projectsWithLocation = data.projects.filter(project => {
+                // המרה לערכים מספריים
+                const lat = typeof project.location_lat === 'number' ? project.location_lat : parseFloat(project.location_lat);
+                const lng = typeof project.location_lng === 'number' ? project.location_lng : parseFloat(project.location_lng);
+                
+                // בדיקה מפורטת יותר
+                const hasValidLocation = !isNaN(lat) && !isNaN(lng) && 
+                                       lat !== 0 && lng !== 0 &&
+                                       lat >= -90 && lat <= 90 && lng >= -180 && lng <= 180;
+                
+                console.log(`פרויקט ${project.title}: מיקום [${lat}, ${lng}], תקין: ${hasValidLocation}`);
+                
+                return hasValidLocation;
+            });
             
             console.log(`נמצאו ${projectsWithLocation.length} פרויקטים עם מיקום מתוך ${data.projects.length} פרויקטים מאושרים`);
+            console.log("פרויקטים עם מיקום:", projectsWithLocation);
             
             // מוסיפים סמנים למפה עבור כל פרויקט עם מיקום
             projectsWithLocation.forEach(project => {
@@ -221,7 +242,7 @@ async function loadProjectsToMap() {
             });
             
             // אם יש סמנים, התמקד במרכז שלהם
-            if (projectsWithLocation.length > 0) {
+            if (projectMarkers.length > 0) {
                 const projectBounds = L.featureGroup(projectMarkers).getBounds();
                 mapInstance.fitBounds(projectBounds, { padding: [50, 50] });
             }
@@ -230,82 +251,145 @@ async function loadProjectsToMap() {
         console.error("שגיאה בטעינת פרויקטים למפה:", error);
     }
 }
-
 // מערך לשמירת כל הסמנים של פרויקטים במפה
 const projectMarkers = [];
 
 // פונקציה להוספת סמן פרויקט למפה
+// תקן את הפונקציה addProjectMarker (בערך שורה 299) ב-app/static/js/map.js:
 function addProjectMarker(project) {
-    if (!mapInstance || !project.location_lat || !project.location_lng) {
+    if (!mapInstance) return;
+    
+    // ודא שיש ערכי מיקום תקינים
+    const lat = typeof project.location_lat === 'number' ? project.location_lat : parseFloat(project.location_lat);
+    const lng = typeof project.location_lng === 'number' ? project.location_lng : parseFloat(project.location_lng);
+    console.log(`מנסה להוסיף סמן בנקודה [${lat}, ${lng}] לפרויקט ${project.title}`);
+
+    if (isNaN(lat) || isNaN(lng) || lat === 0 || lng === 0) {
+        console.warn(`סמן לא תקין עבור פרויקט ${project.title}: [${lat}, ${lng}]`);
         return;
     }
+    try {
+        // יצירת סמן מותאם לפי האזור
+        const markerIcon = L.divIcon({
+            className: `project-marker ${project.region || 'south'}`, // ברירת מחדל: דרום
+            html: `<i class="fas fa-map-marker-alt"></i>`,
+            iconSize: [30, 30],
+            iconAnchor: [15, 30],
+            popupAnchor: [0, -30]
+        });
+        // יצירת הסמן והוספתו למפה
+        console.log(`יוצר סמן במיקום [${lat}, ${lng}]`);
+        const marker = L.marker(
+            [lat, lng],
+            { icon: markerIcon }
+        ).addTo(mapInstance);
+
+        projectMarkers.push(marker);
+        console.log(`הוספת סמן למפה בהצלחה`);
+
     
-    // יצירת סמן מותאם לפי האזור
-    const markerIcon = L.divIcon({
-        className: `project-marker ${project.region}`,
-        html: `<i class="fas fa-map-marker-alt"></i>`,
-        iconSize: [30, 30],
-        iconAnchor: [15, 30],
-        popupAnchor: [0, -30]
-    });
-    
-    // יצירת הסמן והוספתו למפה
-    const marker = L.marker(
-        [project.location_lat, project.location_lng],
-        { icon: markerIcon }
-    ).addTo(mapInstance);
-    
-    // חישוב אחוז ההתקדמות
-    const progress = project.goal_amount ? 
-        Math.min(100, Math.round((project.current_amount || 0) / project.goal_amount * 100)) : 0;
-    
-    // הוספת חלון קופץ לסמן
-    marker.bindPopup(`
-        <div class="project-popup">
-            <h4>${project.title}</h4>
-            <p class="project-location">${project.location_name}</p>
-            <div class="project-progress">
-                <div class="progress-bar">
-                    <div class="progress-fill" style="width: ${progress}%"></div>
+        // חישוב אחוז ההתקדמות
+        const progress = project.goal_amount ? 
+            Math.min(100, Math.round((project.current_amount || 0) / project.goal_amount * 100)) : 0;
+        
+        // הוספת חלון קופץ לסמן
+        marker.bindPopup(`
+            <div class="project-popup">
+                <h4>${project.title || 'פרויקט ללא שם'}</h4>
+                <p class="project-location">${project.location_name || 'מיקום לא צוין'}</p>
+                <div class="project-progress">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${progress}%"></div>
+                    </div>
+                    <div class="progress-text">
+                        ${project.current_amount || 0} / ${project.goal_amount || 0} ETH (${progress}%)
+                    </div>
                 </div>
-                <div class="progress-text">
-                    ${project.current_amount || 0} / ${project.goal_amount} ETH (${progress}%)
-                </div>
+                <p class="project-description">${project.description ? (project.description.substring(0, 100) + (project.description.length > 100 ? '...' : '')) : 'אין תיאור'}</p>
+                <button class="btn btn-sm btn-primary view-project-btn" 
+                        onclick="window.viewProjectDetails('${project._id}')">
+                    <i class="fas fa-heart"></i> תרום לפרויקט זה
+                </button>
             </div>
-            <p class="project-description">${project.description.substring(0, 100)}${project.description.length > 100 ? '...' : ''}</p>
-            <button class="btn btn-sm btn-primary view-project-btn" 
-                    onclick="viewProjectDetails('${project._id}')">
-                <i class="fas fa-eye"></i> צפייה בפרויקט
-            </button>
-        </div>
-    `);
-    
-    // שמירת הסמן במערך
-    projectMarkers.push(marker);
+        `);
+        
+        // שמירת הסמן במערך
+        projectMarkers.push(marker);
+        console.log(`סמן נוסף בהצלחה למפה עבור פרויקט ${project.title}`);
+    } catch (error) {
+        console.error(`שגיאה ביצירת סמן לפרויקט ${project.title}:`, error);
+    }
 }
 
-// פונקציה לצפייה בפרטי פרויקט (פותחת את מודל הפרויקט)
 function viewProjectDetails(projectId) {
-    // כדי להימנע מבעיות עם מסגרת האייפריים, נסגור את החלון הקופץ
-    mapInstance.closePopup();
+    console.log(`צפייה בפרויקט ${projectId} מהמפה`);
     
-    // נעבור לעמוד התרומה ונפתח את מודל הפרטים של הפרויקט
+    // סגירת החלון הקופץ
+    if (mapInstance) {
+        mapInstance.closePopup();
+    }
+    
+    // שמירת מזהה הפרויקט בלוקל סטורג' כדי שנוכל לגשת אליו מעמוד התרומה
+    localStorage.setItem('selectedProjectFromMap', projectId);
+    
+    // מעבר לעמוד התרומה
+    console.log("מעבר לעמוד התרומה...");
     showSection('donate');
     
-    // מחכים שהדף יטען ואז פותחים את המודל
+    // מחכים שהעמוד יטען ואז מפעילים את הדגשת הפרויקט
     setTimeout(() => {
-        // אם קיימת פונקציה לפתיחת מודל פרטי פרויקט, נשתמש בה
-        if (typeof showProjectDetails === 'function') {
-            // מחפשים את הפרויקט בקרוסלה
-            const projectSlide = document.querySelector(`.project-slide[data-project-id="${projectId}"]`);
-            if (projectSlide) {
-                const selectBtn = projectSlide.querySelector('.project-select-btn');
-                if (selectBtn) {
+        try {
+            highlightProjectInCarousel(projectId);
+        } catch (error) {
+            console.error("שגיאה בהדגשת הפרויקט:", error);
+        }
+    }, 800);
+}
+
+// פונקציה להדגשת הפרויקט בקרוסלה
+function highlightProjectInCarousel(projectId) {
+    // ננסה למצוא את הפרויקט בקרוסלה
+    const projectSlides = document.querySelectorAll('.project-slide');
+    
+    let foundProject = false;
+    
+    projectSlides.forEach(slide => {
+        if (slide.dataset.projectId === projectId) {
+            foundProject = true;
+            
+            // גלילה אל הפרויקט
+            const carousel = document.getElementById('approvedProjectsCarousel');
+            if (carousel) {
+                // חישוב המיקום לגלילה
+                const slideLeft = slide.offsetLeft;
+                const carouselWidth = carousel.offsetWidth;
+                const scrollPosition = slideLeft - (carouselWidth / 2) + (slide.offsetWidth / 2);
+                
+                // גלילה חלקה אל הפרויקט
+                carousel.scrollTo({
+                    left: scrollPosition,
+                    behavior: 'smooth'
+                });
+            }
+            
+            // הדגשת הפרויקט עם אנימציה
+            slide.classList.add('selected-from-map');
+            
+            // אם קיים כפתור בחירה, נלחץ עליו אוטומטית
+            const selectBtn = slide.querySelector('.project-select-btn');
+            if (selectBtn) {
+                setTimeout(() => {
                     selectBtn.click();
-                }
-            } else {
-                console.error("הפרויקט לא נמצא בקרוסלה");
+                }, 800);
             }
         }
-    }, 500);
+    });
+    
+    if (!foundProject) {
+        console.warn(`לא נמצא פרויקט עם מזהה ${projectId} בקרוסלה`);
+    }
 }
+
+// הוספת הפונקציות למרחב הגלובלי
+window.viewProjectDetails = viewProjectDetails;
+window.highlightProjectInCarousel = highlightProjectInCarousel;

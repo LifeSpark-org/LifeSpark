@@ -369,3 +369,79 @@
 .empty-projects-actions {
     margin-top: 1rem;
 }
+
+/* הוסף את הסגנונות האלה לקובץ app/static/css/projects-donation.css: */
+
+/* אנימציית הדגשה לפרויקט שנבחר מהמפה */
+@keyframes pulse-highlight {
+    0% {
+        box-shadow: 0 0 0 0 rgba(79, 70, 229, 0.7);
+        transform: scale(1);
+    }
+    50% {
+        box-shadow: 0 0 0 10px rgba(79, 70, 229, 0);
+        transform: scale(1.05);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(79, 70, 229, 0);
+        transform: scale(1);
+    }
+}
+
+/* סגנון לפרויקט נבחר מהמפה */
+.project-slide.selected-from-map .approved-project-card {
+    border: 2px solid var(--primary-color);
+    box-shadow: 0 0 15px rgba(79, 70, 229, 0.5);
+    transform: translateY(-10px);
+}
+
+/* כוכבית שמופיעה בפינה העליונה של פרויקט שנבחר מהמפה */
+.project-slide.selected-from-map .approved-project-card::before {
+    content: '⭐';
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    z-index: 10;
+    animation: bounce 1s infinite;
+}
+
+/* אנימציית כוכבית */
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-3px);
+    }
+}
+
+
+/* סגנון לפרויקט נבחר מהמפה */
+.project-slide.selected-from-map .approved-project-card {
+    border: 2px solid var(--primary-color);
+    box-shadow: 0 0 15px rgba(79, 70, 229, 0.5);
+    transform: translateY(-10px);
+    animation: pulse-highlight 2s ease-in-out;
+}
+
+/* אנימציית הדגשה לפרויקט שנבחר מהמפה */
+@keyframes pulse-highlight {
+    0% {
+        box-shadow: 0 0 0 0 rgba(79, 70, 229, 0.7);
+    }
+    50% {
+        box-shadow: 0 0 20px 10px rgba(79, 70, 229, 0.5);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(79, 70, 229, 0);
+    }
+}
