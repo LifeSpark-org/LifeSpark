@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     mapInstance.invalidateSize();
                     setTimeout(function() {
                         mapInstance.invalidateSize();
+                        loadProjectsToMap();
                     }, 500);
                 }
             }, 100);
@@ -170,7 +171,141 @@ window.addEventListener('resize', function() {
 function refreshMap() {
     if (mapInstance) {
         mapInstance.invalidateSize();
-        console.log("מפה רועננה חיצונית");
+        
+        // ניקוי סמנים קיימים
+        projectMarkers.forEach(marker => {
+            mapInstance.removeLayer(marker);
+        });
+        projectMarkers.length = 0;
+        
+        // טעינה מחדש של פרויקטים
+        loadProjectsToMap();
+        
+        console.log("מפה רועננה עם פרויקטים");
     }
 }
 
+
+
+
+
+
+async function loadProjectsToMap() {
+    console.log("טוען פרויקטים למפה...");
+    if (!mapInstance) {
+        console.error("המפה לא אותחלה עדיין!");
+        return;
+    }
+    
+    try {
+        const response = await fetch('/projects/approved');
+        
+        if (!response.ok) {
+            throw new Error(`Server returned ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        if (data && data.projects && Array.isArray(data.projects)) {
+            // סופרים פרויקטים עם מיקום
+            const projectsWithLocation = data.projects.filter(
+                p => p.location_lat && p.location_lng && 
+                p.location_lat !== 0 && p.location_lng !== 0
+            );
+            
+            console.log(`נמצאו ${projectsWithLocation.length} פרויקטים עם מיקום מתוך ${data.projects.length} פרויקטים מאושרים`);
+            
+            // מוסיפים סמנים למפה עבור כל פרויקט עם מיקום
+            projectsWithLocation.forEach(project => {
+                addProjectMarker(project);
+            });
+            
+            // אם יש סמנים, התמקד במרכז שלהם
+            if (projectsWithLocation.length > 0) {
+                const projectBounds = L.featureGroup(projectMarkers).getBounds();
+                mapInstance.fitBounds(projectBounds, { padding: [50, 50] });
+            }
+        }
+    } catch (error) {
+        console.error("שגיאה בטעינת פרויקטים למפה:", error);
+    }
+}
+
+// מערך לשמירת כל הסמנים של פרויקטים במפה
+const projectMarkers = [];
+
+// פונקציה להוספת סמן פרויקט למפה
+function addProjectMarker(project) {
+    if (!mapInstance || !project.location_lat || !project.location_lng) {
+        return;
+    }
+    
+    // יצירת סמן מותאם לפי האזור
+    const markerIcon = L.divIcon({
+        className: `project-marker ${project.region}`,
+        html: `<i class="fas fa-map-marker-alt"></i>`,
+        iconSize: [30, 30],
+        iconAnchor: [15, 30],
+        popupAnchor: [0, -30]
+    });
+    
+    // יצירת הסמן והוספתו למפה
+    const marker = L.marker(
+        [project.location_lat, project.location_lng],
+        { icon: markerIcon }
+    ).addTo(mapInstance);
+    
+    // חישוב אחוז ההתקדמות
+    const progress = project.goal_amount ? 
+        Math.min(100, Math.round((project.current_amount || 0) / project.goal_amount * 100)) : 0;
+    
+    // הוספת חלון קופץ לסמן
+    marker.bindPopup(`
+        <div class="project-popup">
+            <h4>${project.title}</h4>
+            <p class="project-location">${project.location_name}</p>
+            <div class="project-progress">
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: ${progress}%"></div>
+                </div>
+                <div class="progress-text">
+                    ${project.current_amount || 0} / ${project.goal_amount} ETH (${progress}%)
+                </div>
+            </div>
+            <p class="project-description">${project.description.substring(0, 100)}${project.description.length > 100 ? '...' : ''}</p>
+            <button class="btn btn-sm btn-primary view-project-btn" 
+                    onclick="viewProjectDetails('${project._id}')">
+                <i class="fas fa-eye"></i> צפייה בפרויקט
+            </button>
+        </div>
+    `);
+    
+    // שמירת הסמן במערך
+    projectMarkers.push(marker);
+}
+
+// פונקציה לצפייה בפרטי פרויקט (פותחת את מודל הפרויקט)
+function viewProjectDetails(projectId) {
+    // כדי להימנע מבעיות עם מסגרת האייפריים, נסגור את החלון הקופץ
+    mapInstance.closePopup();
+    
+    // נעבור לעמוד התרומה ונפתח את מודל הפרטים של הפרויקט
+    showSection('donate');
+    
+    // מחכים שהדף יטען ואז פותחים את המודל
+    setTimeout(() => {
+        // אם קיימת פונקציה לפתיחת מודל פרטי פרויקט, נשתמש בה
+        if (typeof showProjectDetails === 'function') {
+            // מחפשים את הפרויקט בקרוסלה
+            const projectSlide = document.querySelector(`.project-slide[data-project-id="${projectId}"]`);
+            if (projectSlide) {
+                const selectBtn = projectSlide.querySelector('.project-select-btn');
+                if (selectBtn) {
+                    selectBtn.click();
+                }
+            } else {
+                console.error("הפרויקט לא נמצא בקרוסלה");
+            }
+        }
+    }, 500);
+}
