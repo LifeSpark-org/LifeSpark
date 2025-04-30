@@ -387,3 +387,54 @@
     background-color: #0d8a6a !important;
     border-color: #0d8a6a !important;
 }
+.amount-input-group {
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    background-color: #f9fafb;
+    overflow: hidden;
+}
+
+.amount-input-group input {
+    flex: 1;
+    border: none;
+    outline: none;
+    padding: 0.75rem 1rem;
+    background-color: transparent;
+    width: calc(100% - 60px); /* רוחב ללא היחידה */
+}
+
+.amount-prefix {
+    padding: 0.75rem 1rem;
+    font-weight: 600;
+    color: var(--text-color);
+    background-color: #f0f2f5;
+    border-left: 1px solid var(--border-color);
+    min-width: 60px;
+    text-align: center;
+}
+
+/* כאשר הקלט מקבל פוקוס, הדגש את כל הקבוצה */
+.amount-input-group:focus-within {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+}
+
+/* תמיכה בדארק מוד */
+.dark-theme .amount-input-group {
+    background-color: #1e293b;
+    border-color: #334155;
+}
+
+.dark-theme .amount-prefix {
+    background-color: #0f172a;
+    border-color: #334155;
+    color: #e2e8f0;
+}
+
+/* תמיכה בתצוגה RTL */
+[dir="rtl"] .amount-prefix {
+    border-left: none;
+    border-right: 1px solid var(--border-color);
+}
