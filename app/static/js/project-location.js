@@ -32,6 +32,17 @@ function initLocationFeatures() {
     
     let locationMarker = null;
     
+    // מאזינים לשינויים בשדות הקלט עם השהייה
+    locationLatInput.addEventListener('input', debounceUpdateMap);
+    locationLngInput.addEventListener('input', debounceUpdateMap);
+
+    // פונקציית השהייה כדי למנוע עדכונים תכופים מדי
+    let debounceTimeout;
+    function debounceUpdateMap() {
+        clearTimeout(debounceTimeout);
+        debounceTimeout = setTimeout(updateMapFromInputs, 500);
+    }
+    
     // מאזין ללחצן 'קבל מיקום נוכחי'
     getCurrentLocationBtn.addEventListener('click', function() {
         if (navigator.geolocation) {
@@ -47,8 +58,13 @@ function initLocationFeatures() {
                     locationLatInput.value = lat;
                     locationLngInput.value = lng;
                     
-                    // עדכון המפה
+                    // עדכון המפה ישירות
                     updateLocationMap(lat, lng);
+                    
+                    // הפעלת אירוע change כדי לוודא שטפסים יתייחסו לשינוי
+                    const event = new Event('change');
+                    locationLatInput.dispatchEvent(event);
+                    locationLngInput.dispatchEvent(event);
                     
                     // שחזור מצב הכפתור
                     getCurrentLocationBtn.disabled = false;
@@ -78,10 +94,6 @@ function initLocationFeatures() {
         }
     });
     
-    // מאזינים לשינויים בשדות הקלט
-    locationLatInput.addEventListener('input', updateMapFromInputs);
-    locationLngInput.addEventListener('input', updateMapFromInputs);
-    
     // פונקציה לעדכון המפה משדות הקלט
     function updateMapFromInputs() {
         const lat = parseFloat(locationLatInput.value);
@@ -95,11 +107,7 @@ function initLocationFeatures() {
     // פונקציה לעדכון המפה
     function updateLocationMap(lat, lng) {
         // אם כבר יש סמן, הסר אותו
-
         console.log(`עדכון מפת המיקום: [${lat}, ${lng}]`);
-        const locationLat = document.getElementById('projectLocationLat').value;
-        const locationLng = document.getElementById('projectLocationLng').value;
-        console.log(`שולח מיקום בטופס: [${locationLat}, ${locationLng}]`);
         if (locationMarker) {
             locationMap.removeLayer(locationMarker);
         }
@@ -110,6 +118,24 @@ function initLocationFeatures() {
         // עדכן את המרכז של המפה
         locationMap.setView([lat, lng], 12);
     }
+    
+    // הוספת אפשרות לחיצה על המפה
+    locationMap.on('click', function(e) {
+        const lat = e.latlng.lat;
+        const lng = e.latlng.lng;
+        
+        // עדכון שדות הקלט
+        locationLatInput.value = lat.toFixed(6);
+        locationLngInput.value = lng.toFixed(6);
+        
+        // עדכון המפה
+        updateLocationMap(lat, lng);
+        
+        // הפעלת אירוע change כדי לוודא שטפסים יתייחסו לשינוי
+        const event = new Event('change');
+        locationLatInput.dispatchEvent(event);
+        locationLngInput.dispatchEvent(event);
+    });
     
     // אם כבר יש ערכים בשדות, עדכן את המפה
     const initialLat = parseFloat(locationLatInput.value);

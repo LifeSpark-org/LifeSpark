@@ -478,3 +478,30 @@
         gap: 0.5rem;
     }
 }
+
+
+
+/* סטייל לעדכון אוטומטי */
+.location-update-info {
+    color: var(--success-color);
+    font-style: italic;
+    margin-top: 5px;
+    display: block;
+}
+
+/* שיפור למפת הבחירה */
+.location-preview-map {
+    cursor: crosshair;
+}
+
+.location-preview-map:after {
+    content: "לחץ על המפה לבחירת מיקום";
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background: rgba(255,255,255,0.8);
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    pointer-events: none;
+}
