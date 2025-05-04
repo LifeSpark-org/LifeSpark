@@ -61,38 +61,7 @@ function initMap() {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(mapInstance);
         
-        // הוספת סמנים בסיסיים
-        L.marker([31.255, 34.278]).addTo(mapInstance).bindPopup("באר שבע");
-        L.marker([32.794, 35.047]).addTo(mapInstance).bindPopup("חיפה");
-        L.marker([31.423, 34.591]).addTo(mapInstance).bindPopup("שדרות");
-        L.marker([33.223, 35.571]).addTo(mapInstance).bindPopup("קרית שמונה");
-        
-        // אזור דרום
-        L.polygon([
-            [31.255, 34.278],
-            [31.680, 34.560],
-            [31.423, 34.591],
-            [30.608, 34.803],
-            [29.557, 34.952],
-            [31.255, 34.278]
-        ], {
-            color: '#ef4444',
-            fillColor: '#ef4444',
-            fillOpacity: 0.2
-        }).addTo(mapInstance);
-        
-        // אזור צפון
-        L.polygon([
-            [32.794, 35.047],
-            [32.921, 35.308],
-            [33.223, 35.571],
-            [32.701, 35.371],
-            [32.794, 35.047]
-        ], {
-            color: '#3b82f6',
-            fillColor: '#3b82f6',
-            fillOpacity: 0.2
-        }).addTo(mapInstance);
+
         
         // עדכון אזור במידע צד
         updateRegionInfo('south');
