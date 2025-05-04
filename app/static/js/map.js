@@ -306,10 +306,6 @@ function addProjectMarker(project) {
                     </div>
                 </div>
                 <p class="project-description">${project.description ? (project.description.substring(0, 100) + (project.description.length > 100 ? '...' : '')) : 'אין תיאור'}</p>
-                <button class="btn btn-sm btn-primary view-project-btn" 
-                        onclick="window.viewProjectDetails('${project._id}')">
-                    <i class="fas fa-heart"></i> תרום לפרויקט זה
-                </button>
             </div>
         `);
         
