@@ -1,72 +1,70 @@
 // scripts.js
-
-document.getElementById('donationForm').addEventListener('submit', async function (e) {
-    e.preventDefault();
+// document.getElementById('donationForm').addEventListener('submit', async function (e) {
+//     e.preventDefault();
+//         // בדיקה שהמשתמש מחובר
+//     if (!isUserLoggedIn()) {
+//         showNotification('error', 'עליך להתחבר למערכת כדי לתרום');
+//         setTimeout(() => {
+//             showSection('login');
+//         }, 1500);
+//         return;
+//     }
     
-    // בדיקה שהמשתמש מחובר
-    if (!isUserLoggedIn()) {
-        showNotification('error', 'עליך להתחבר למערכת כדי לתרום');
-        setTimeout(() => {
-            showSection('login');
-        }, 1500);
-        return;
-    }
+//     // בדיקה שהארנק מחובר
+//     if (!window.userWalletAddress) {
+//         showNotification('error', 'אנא התחבר לארנק קודם');
+//         const connectWalletButton = document.getElementById('connectWallet');
+//         if (connectWalletButton) {
+//             connectWalletButton.scrollIntoView({ behavior: 'smooth' });
+//         }
+//         return;
+//     }
     
-    // בדיקה שהארנק מחובר
-    if (!window.userWalletAddress) {
-        showNotification('error', 'אנא התחבר לארנק קודם');
-        const connectWalletButton = document.getElementById('connectWallet');
-        if (connectWalletButton) {
-            connectWalletButton.scrollIntoView({ behavior: 'smooth' });
-        }
-        return;
-    }
-    
-    const region = document.querySelector('input[name="region"]:checked').value;
-    const amount = parseFloat(document.getElementById('amount').value);
-    const message = document.getElementById('message')?.value || '';
+//     const region = document.querySelector('input[name="region"]:checked').value;
+//     const amount = parseFloat(document.getElementById('amount').value);
+//     const message = document.getElementById('message')?.value || '';
 
-    if (!region || amount <= 0) {
-        showNotification('error', 'אנא מלא את כל השדות בצורה נכונה');
-        return;
-    }
+//     if (!region || amount <= 0) {
+//         showNotification('error', 'אנא מלא את כל השדות בצורה נכונה');
+//         return;
+//     }
 
-    try {
-        showNotification('info', 'מעבד את התרומה שלך...');
+//     try {
+//         showNotification('info', 'מעבד את התרומה שלך...');
         
-        // הצגת חיווי טעינה
-        const submitButton = document.querySelector('#donationForm button[type="submit"]');
-        if (submitButton) {
-            submitButton.disabled = true;
-            submitButton.innerHTML = '<div class="loader-inline"></div> מעבד...';
-        }
+//         // הצגת חיווי טעינה
+//         const submitButton = document.querySelector('#donationForm button[type="submit"]');
+//         if (submitButton) {
+//             submitButton.disabled = true;
+//             submitButton.innerHTML = '<div class="loader-inline"></div> מעבד...';
+//         }
 
-        // ביצוע תרומה דרך בלוקצ'יין
-        const txHash = await donateToBlockchain(region, amount, message);
+//         // ביצוע תרומה דרך בלוקצ'יין
+//         const txHash = await donateToBlockchain(region, amount, message);
         
-        showNotification('success', `התרומה בוצעה בהצלחה! מזהה עסקה: ${txHash.substring(0, 10)}...`);
+//         showNotification('success', `התרומה בוצעה בהצלחה! מזהה עסקה: ${txHash.substring(0, 10)}...`);
         
-        // איפוס טופס
-        document.getElementById('donationForm').reset();
-        updateDonationSummary();
+//         // איפוס טופס
+//         document.getElementById('donationForm').reset();
+//         updateDonationSummary();
         
-        // החזרת כפתור השליחה למצב רגיל
-        if (submitButton) {
-            submitButton.disabled = false;
-            submitButton.innerHTML = '<i class="fas fa-heart"></i> תרום עכשיו';
-        }
-    } catch (error) {
-        console.error('Error processing donation:', error);
-        showNotification('error', `שגיאה: ${error.message}`);
+//         // החזרת כפתור השליחה למצב רגיל
+//         if (submitButton) {
+//             submitButton.disabled = false;
+//             submitButton.innerHTML = '<i class="fas fa-heart"></i> תרום עכשיו';
+//         }
+//     } catch (error) {
+//         console.error('Error processing donation:', error);
+//         showNotification('error', `שגיאה: ${error.message}`);
         
-        // החזרת כפתור השליחה למצב רגיל
-        const submitButton = document.querySelector('#donationForm button[type="submit"]');
-        if (submitButton) {
-            submitButton.disabled = false;
-            submitButton.innerHTML = '<i class="fas fa-heart"></i> תרום עכשיו';
-        }
-    }
-});
+//         // החזרת כפתור השליחה למצב רגיל
+//         const submitButton = document.querySelector('#donationForm button[type="submit"]');
+//         if (submitButton) {
+//             submitButton.disabled = false;
+//             submitButton.innerHTML = '<i class="fas fa-heart"></i> תרום עכשיו';
+//         }
+//     }
+// });
 
 // פונקציה לבדיקה האם המשתמש מחובר
 function isUserLoggedIn() {
@@ -173,6 +171,7 @@ window.onload = () => {
     }
 
     showSection("home");
+    showSection("donate");
 };
 
 async function fetchConversionRate(currency) {
@@ -186,20 +185,32 @@ async function fetchConversionRate(currency) {
     }
 }
 
-document.getElementById("convertButton").addEventListener("click", async () => {
-    const ethAmount = parseFloat(document.getElementById("ethInput").value);
-    const selectedCurrency = document.getElementById("currencySelect").value;
 
-    if (!ethAmount || ethAmount <= 0) {
-        document.getElementById("conversionResult").innerText = "Please enter a valid ETH amount.";
-        return;
-    }
+const convertButton = document.getElementById("convertButton");
+if (convertButton) {
+    convertButton.addEventListener("click", async () => {
+        console.log("Convert button clicked");
+        const ethAmount = parseFloat(document.getElementById("ethInput").value);
+        const selectedCurrency = document.getElementById("currencySelect").value;
+        
+        if (!ethAmount || ethAmount <= 0) {
+            document.getElementById("conversionResult").innerText = "Please enter a valid ETH amount.";
+            return;
+        }
 
-    const rate = await fetchConversionRate(selectedCurrency);
-    if (rate) {
-        const convertedAmount = (ethAmount * rate).toFixed(2);
-        document.getElementById("conversionResult").innerText = `${ethAmount} ETH = ${convertedAmount} ${selectedCurrency.toUpperCase()}`;
-    } else {
-        document.getElementById("conversionResult").innerText = "Unable to fetch conversion rate. Please try again later.";
-    }
-});
+        try {
+            const rate = await fetchConversionRate(selectedCurrency);
+            if (rate) {
+                const convertedAmount = (ethAmount * rate).toFixed(2);
+                document.getElementById("conversionResult").innerText = `${ethAmount} ETH = ${convertedAmount} ${selectedCurrency.toUpperCase()}`;
+            } else {
+                document.getElementById("conversionResult").innerText = "Unable to fetch conversion rate. Please try again later.";
+            }
+        } catch (error) {
+            console.error("Error during conversion:", error);
+            document.getElementById("conversionResult").innerText = "Error occurred during conversion.";
+        }
+    });
+} else {
+    console.error("Convert button not found in the DOM");
+}
