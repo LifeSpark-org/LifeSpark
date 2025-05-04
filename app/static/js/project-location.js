@@ -1,4 +1,4 @@
-// Simplified project-location.js implementation
+// Improved project-location.js with address search
 document.addEventListener('DOMContentLoaded', function() {
     initLocationFeatures();
     
@@ -15,8 +15,10 @@ function initLocationFeatures() {
     const locationLatInput = document.getElementById('projectLocationLat');
     const locationLngInput = document.getElementById('projectLocationLng');
     const locationMapElement = document.getElementById('locationPreviewMap');
+    const locationNameInput = document.getElementById('projectLocationName');
+    const addressSearchInput = document.getElementById('addressSearch');
     
-    if (!getCurrentLocationBtn || !locationLatInput || !locationLngInput || !locationMapElement) {
+    if (!locationMapElement) {
         return;
     }
     
@@ -30,109 +32,213 @@ function initLocationFeatures() {
     
     let locationMarker = null;
     
-    // Add some predefined locations for major cities in the affected regions
-    const predefinedLocations = {
-        'Sderot': [31.525, 34.596],
-        'Ashkelon': [31.669, 34.571],
-        'Beer Sheva': [31.252, 34.791],
-        'Kiryat Shmona': [33.208, 35.570],
-        'Haifa': [32.794, 34.989],
-        'Metula': [33.280, 35.580]
-    };
+    // Add Geocoding control for address search
+    const geocoder = L.Control.geocoder({
+        defaultMarkGeocode: false
+    }).on('markgeocode', function(e) {
+        const latlng = e.geocode.center;
+        const locationName = e.geocode.name;
+        
+        // Update form values
+        locationLatInput.value = latlng.lat.toFixed(6);
+        locationLngInput.value = latlng.lng.toFixed(6);
+        locationNameInput.value = locationName;
+        
+        // Update map
+        updateLocationMap(latlng.lat, latlng.lng);
+        
+        // Show success notification
+        showNotification('success', 'מיקום נקבע: ' + locationName);
+    }).addTo(locationMap);
     
-    // Create location buttons
-    const locationButtonsContainer = document.getElementById('predefinedLocationsContainer');
-    if (locationButtonsContainer) {
-        Object.keys(predefinedLocations).forEach(city => {
-            const btn = document.createElement('button');
-            btn.type = 'button';
-            btn.className = 'btn btn-sm btn-outline location-preset-btn';
-            btn.textContent = city;
-            btn.addEventListener('click', function() {
-                const [lat, lng] = predefinedLocations[city];
-                locationLatInput.value = lat;
-                locationLngInput.value = lng;
-                updateLocationMap(lat, lng);
-                showNotification('success', `Set location to ${city}`);
-            });
-            locationButtonsContainer.appendChild(btn);
+    // Add custom search field
+    if (addressSearchInput) {
+        addressSearchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                
+                const address = this.value.trim();
+                if (address) {
+                    // Use Nominatim API to geocode the address
+                    fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}&limit=1`)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data && data.length > 0) {
+                                const lat = parseFloat(data[0].lat);
+                                const lng = parseFloat(data[0].lon);
+                                const name = data[0].display_name;
+                                
+                                // Update form values
+                                locationLatInput.value = lat.toFixed(6);
+                                locationLngInput.value = lng.toFixed(6);
+                                locationNameInput.value = name.split(',')[0]; // Take first part of address (city)
+                                
+                                // Update map
+                                updateLocationMap(lat, lng);
+                                
+                                // Show success notification
+                                showNotification('success', 'מיקום נקבע: ' + name);
+                            } else {
+                                showNotification('error', 'לא נמצאה כתובת. נסה לחפש בצורה מפורטת יותר.');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error geocoding address:', error);
+                            showNotification('error', 'שגיאה בחיפוש הכתובת. נסה שוב.');
+                        });
+                }
+            }
         });
     }
     
+    // Add search button
+    const searchButton = document.getElementById('searchAddressBtn');
+    if (searchButton && addressSearchInput) {
+        searchButton.addEventListener('click', function() {
+            const address = addressSearchInput.value.trim();
+            if (address) {
+                // Use Nominatim API to geocode the address
+                fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}&limit=1`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data && data.length > 0) {
+                            const lat = parseFloat(data[0].lat);
+                            const lng = parseFloat(data[0].lon);
+                            const name = data[0].display_name;
+                            
+                            // Update form values
+                            locationLatInput.value = lat.toFixed(6);
+                            locationLngInput.value = lng.toFixed(6);
+                            locationNameInput.value = name.split(',')[0]; // Take first part of address (city)
+                            
+                            // Update map
+                            updateLocationMap(lat, lng);
+                            
+                            // Show success notification
+                            showNotification('success', 'מיקום נקבע: ' + name);
+                        } else {
+                            showNotification('error', 'לא נמצאה כתובת. נסה לחפש בצורה מפורטת יותר.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error geocoding address:', error);
+                        showNotification('error', 'שגיאה בחיפוש הכתובת. נסה שוב.');
+                    });
+            }
+        });
+    }
+    
+
+    
+    // Create location buttons
+    // const locationButtonsContainer = document.getElementById('predefinedLocationsContainer');
+    // if (locationButtonsContainer) {
+    //     Object.keys(predefinedLocations).forEach(city => {
+    //         const btn = document.createElement('button');
+    //         btn.type = 'button';
+    //         btn.className = 'btn btn-sm btn-outline location-preset-btn';
+    //         btn.textContent = city;
+    //         btn.addEventListener('click', function() {
+    //             const [lat, lng] = predefinedLocations[city];
+    //             locationLatInput.value = lat;
+    //             locationLngInput.value = lng;
+    //             locationNameInput.value = city;
+    //             updateLocationMap(lat, lng);
+    //             showNotification('success', `מיקום נקבע ל${city}`);
+    //         });
+    //         locationButtonsContainer.appendChild(btn);
+    //     });
+    // }
+    
     // Modified listener for "Get Current Location" button
-    getCurrentLocationBtn.addEventListener('click', function() {
-        if (navigator.geolocation) {
-            getCurrentLocationBtn.disabled = true;
-            getCurrentLocationBtn.innerHTML = '<div class="loader-inline"></div> Finding your location...';
-            
-            navigator.geolocation.getCurrentPosition(
-                function(position) {
-                    const lat = position.coords.latitude;
-                    const lng = position.coords.longitude;
-                    
-                    // Show confirmation dialog
-                    if (confirm("IMPORTANT: Are you physically at the project location right now?\n\nClick 'OK' only if your current location is the same as the project location.\nClick 'Cancel' if you need to select a different location for the project.")) {
-                        // User confirmed they are at project location - set coordinates
-                        locationLatInput.value = lat;
-                        locationLngInput.value = lng;
+    if (getCurrentLocationBtn) {
+        getCurrentLocationBtn.addEventListener('click', function() {
+            if (navigator.geolocation) {
+                getCurrentLocationBtn.disabled = true;
+                getCurrentLocationBtn.innerHTML = '<div class="loader-inline"></div> מאתר את המיקום שלך...';
+                
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                        const lat = position.coords.latitude;
+                        const lng = position.coords.longitude;
                         
-                        // Update map
-                        updateLocationMap(lat, lng);
-                        
-                        // Success notification
-                        showNotification('success', 'Project location set to your current location');
-                    } else {
-                        // User is not at project location
-                        showNotification('info', 'Please click directly on the map to select the project location, or use one of the preset locations');
-                        
-                        // Just show their location on map without setting form values
-                        if (locationMarker) {
-                            locationMap.removeLayer(locationMarker);
+                        // Show confirmation dialog with improved phrasing
+                        if (confirm("שים לב: האם אתה פיזית נמצא במיקום הפרויקט עכשיו?\n\nלחץ 'אישור' רק אם אתה נמצא כרגע במיקום שבו הפרויקט יתבצע.\nלחץ 'ביטול' אם אתה נמצא במקום אחר ותרצה להזין את המיקום הנכון של הפרויקט בדרך אחרת.")) {
+                            // User confirmed they are at project location - set coordinates
+                            locationLatInput.value = lat;
+                            locationLngInput.value = lng;
+                            
+                            // Get location name using reverse geocoding
+                            fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`)
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data && data.display_name) {
+                                        locationNameInput.value = data.address.city || data.address.town || data.address.village || data.address.hamlet || data.display_name.split(',')[0];
+                                    }
+                                })
+                                .catch(err => {
+                                    console.error("Error in reverse geocoding:", err);
+                                });
+                            
+                            // Update map
+                            updateLocationMap(lat, lng);
+                            
+                            // Success notification
+                            showNotification('success', 'מיקום הפרויקט נקבע למיקומך הנוכחי');
+                        } else {
+                            // User is not at project location
+                            showNotification('info', 'אנא הזן את מיקום הפרויקט באמצעות חיפוש כתובת, בחירה במפה, או בחירה בעיר מהרשימה');
+                            
+                            // Just center map on their location without setting form values
+                            if (locationMarker) {
+                                locationMap.removeLayer(locationMarker);
+                            }
+                            
+                            // Center map on their location but with a temporary marker
+                            locationMap.setView([lat, lng], 10);
+                            
+                            // Add a temporary marker that shows their current position
+                            const tempMarker = L.marker([lat, lng], {
+                                icon: L.divIcon({
+                                    html: '<i class="fas fa-map-pin" style="color: gray;"></i>',
+                                    className: 'temp-location-marker',
+                                    iconSize: [25, 25],
+                                    iconAnchor: [12, 25]
+                                })
+                            }).addTo(locationMap)
+                            .bindPopup('המיקום הנוכחי שלך (לא נבחר כמיקום הפרויקט)').openPopup();
+                            
+                            // Remove temp marker after 5 seconds
+                            setTimeout(() => {
+                                locationMap.removeLayer(tempMarker);
+                            }, 5000);
                         }
                         
-                        // Center map on their location but with a temporary marker
-                        locationMap.setView([lat, lng], 10);
+                        // Restore button state
+                        getCurrentLocationBtn.disabled = false;
+                        getCurrentLocationBtn.innerHTML = '<i class="fas fa-map-marker-alt"></i> <span data-translate="get-current-location">מיקום נוכחי</span>';
+                    },
+                    function(error) {
+                        console.error('Error locating position:', error);
                         
-                        // Add a temporary marker that shows their current position
-                        const tempMarker = L.marker([lat, lng], {
-                            icon: L.divIcon({
-                                html: '<i class="fas fa-map-pin" style="color: gray;"></i>',
-                                className: 'temp-location-marker',
-                                iconSize: [25, 25],
-                                iconAnchor: [12, 25]
-                            })
-                        }).addTo(locationMap);
+                        // Restore button state
+                        getCurrentLocationBtn.disabled = false;
+                        getCurrentLocationBtn.innerHTML = '<i class="fas fa-map-marker-alt"></i> <span data-translate="get-current-location">מיקום נוכחי</span>';
                         
-                        // Remove temp marker after 5 seconds
-                        setTimeout(() => {
-                            locationMap.removeLayer(tempMarker);
-                        }, 5000);
+                        // Error notification
+                        showNotification('error', 'לא ניתן לאתר את מיקומך: ' + getGeolocationErrorMessage(error));
+                    },
+                    {
+                        enableHighAccuracy: true,
+                        timeout: 10000,
+                        maximumAge: 0
                     }
-                    
-                    // Restore button state
-                    getCurrentLocationBtn.disabled = false;
-                    getCurrentLocationBtn.innerHTML = '<i class="fas fa-map-marker-alt"></i> <span data-translate="get-current-location">Get Current Location</span>';
-                },
-                function(error) {
-                    console.error('Error locating position:', error);
-                    
-                    // Restore button state
-                    getCurrentLocationBtn.disabled = false;
-                    getCurrentLocationBtn.innerHTML = '<i class="fas fa-map-marker-alt"></i> <span data-translate="get-current-location">Get Current Location</span>';
-                    
-                    // Error notification
-                    showNotification('error', 'Could not determine your location: ' + getGeolocationErrorMessage(error));
-                },
-                {
-                    enableHighAccuracy: true,
-                    timeout: 10000,
-                    maximumAge: 0
-                }
-            );
-        } else {
-            showNotification('error', 'Your browser does not support geolocation');
-        }
-    });
+                );
+            } else {
+                showNotification('error', 'הדפדפן שלך אינו תומך באיתור מיקום');
+            }
+        });
+    }
     
     // Add click event to map for manual location selection
     locationMap.on('click', function(e) {
@@ -143,16 +249,30 @@ function initLocationFeatures() {
         locationLatInput.value = lat.toFixed(6);
         locationLngInput.value = lng.toFixed(6);
         
+        // Get location name using reverse geocoding
+        fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`)
+            .then(response => response.json())
+            .then(data => {
+                if (data && data.display_name) {
+                    locationNameInput.value = data.address.city || data.address.town || data.address.village || data.address.hamlet || data.display_name.split(',')[0];
+                }
+            })
+            .catch(err => {
+                console.error("Error in reverse geocoding:", err);
+            });
+        
         // Update map marker
         updateLocationMap(lat, lng);
         
         // Show success notification
-        showNotification('success', 'Project location selected from map');
+        showNotification('success', 'מיקום הפרויקט נבחר מהמפה');
     });
     
     // Listeners for input field changes
-    locationLatInput.addEventListener('input', updateMapFromInputs);
-    locationLngInput.addEventListener('input', updateMapFromInputs);
+    if (locationLatInput && locationLngInput) {
+        locationLatInput.addEventListener('input', updateMapFromInputs);
+        locationLngInput.addEventListener('input', updateMapFromInputs);
+    }
     
     // Function to update map from input fields
     function updateMapFromInputs() {
@@ -166,10 +286,7 @@ function initLocationFeatures() {
     
     // Function to update the map marker
     function updateLocationMap(lat, lng) {
-        console.log(`Updating location map: [${lat}, ${lng}]`);
-        const locationLat = document.getElementById('projectLocationLat').value;
-        const locationLng = document.getElementById('projectLocationLng').value;
-        console.log(`Form location: [${locationLat}, ${locationLng}]`);
+        console.log(`עדכון מיקום במפה: [${lat}, ${lng}]`);
         
         // Remove existing marker if any
         if (locationMarker) {
@@ -186,7 +303,7 @@ function initLocationFeatures() {
             })
         }).addTo(locationMap);
         
-        // Update map center
+        // Update map center and zoom
         locationMap.setView([lat, lng], 12);
     }
     
@@ -212,14 +329,14 @@ function initLocationFeatures() {
 function getGeolocationErrorMessage(error) {
     switch(error.code) {
         case error.PERMISSION_DENIED:
-            return "You denied the location permission";
+            return "דחית את בקשת הרשאת המיקום";
         case error.POSITION_UNAVAILABLE:
-            return "Location information is unavailable";
+            return "מידע המיקום אינו זמין";
         case error.TIMEOUT:
-            return "Location request timed out";
+            return "הבקשה לאיתור המיקום נכשלה בשל פסק זמן";
         case error.UNKNOWN_ERROR:
-            return "An unknown error occurred";
+            return "אירעה שגיאה לא ידועה";
         default:
-            return "Error determining location";
+            return "שגיאה באיתור המיקום";
     }
 }

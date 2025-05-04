@@ -65,43 +65,50 @@
                     </div>
                     
                     <div class="form-group">
-                        <label data-translate="project-location-coordinates">Location Coordinates:</label>
+                        <label data-translate="project-location-coordinates">מיקום הפרויקט:</label>
                         <div class="location-input-group">
-                            <div class="input-row">
-                                <div class="input-group half">
-                                    <label for="projectLocationLat" data-translate="project-location-lat">Latitude:</label>
-                                    <input type="number" id="projectLocationLat" name="location_lat" step="0.000001" required>
-                                </div>
-                                <div class="input-group half">
-                                    <label for="projectLocationLng" data-translate="project-location-lng">Longitude:</label>
-                                    <input type="number" id="projectLocationLng" name="location_lng" step="0.000001" required>
+                            <!-- Add this new div for address search at the top -->
+                            <div class="location-search">
+                                <label for="addressSearch" data-translate="project-location-search">חיפוש כתובת:</label>
+                                <div class="input-row">
+                                    <input type="text" id="addressSearch" name="address_search" placeholder="הזן עיר וכתובת (לדוגמה: שדרות, רחוב אלון 5)">
+                                    <button type="button" id="searchAddressBtn" class="btn btn-sm btn-outline">
+                                        <i class="fas fa-search"></i> <span data-translate="search-address">חפש</span>
+                                    </button>
                                 </div>
                             </div>
                             
                             <div class="location-help">
                                 <p class="location-warning">
                                     <i class="fas fa-exclamation-triangle"></i> 
-                                    <strong>Important:</strong> If you are not physically at the project location, please either:
+                                    <strong>חשוב:</strong> יש מספר דרכים לבחור את מיקום הפרויקט:
                                 </p>
                                 <ul class="location-options">
-                                    <li>Click directly on the map to select the project location</li>
-                                    <li>Use one of the preset locations below</li>
-                                    <li>Only use "Get Current Location" if you are physically at the project site</li>
+                                    <li>חפש את הכתובת המדויקת באמצעות שדה החיפוש למעלה</li>
+                                    <li>לחץ ישירות על המפה לבחירת מיקום</li>
+                                    <li>בחר אחת מהערים המוגדרות מראש</li>
+                                    <li>השתמש ב"מיקום נוכחי" רק אם אתה פיזית נמצא במיקום הפרויקט</li>
                                 </ul>
                             </div>
-                            
+                                
+                            <div class="input-row">
+                                <div class="input-group half">
+                                    <label for="projectLocationLat" data-translate="project-location-lat">קו רוחב:</label>
+                                    <input type="number" id="projectLocationLat" name="location_lat" step="0.000001" required>
+                                </div>
+                                <div class="input-group half">
+                                    <label for="projectLocationLng" data-translate="project-location-lng">קו אורך:</label>
+                                    <input type="number" id="projectLocationLng" name="location_lng" step="0.000001" required>
+                                </div>
+                            </div>
+                                
                             <div class="location-buttons">
                                 <button type="button" id="getCurrentLocation" class="btn btn-sm btn-outline">
-                                    <i class="fas fa-map-marker-alt"></i> <span data-translate="get-current-location">Get Current Location</span>
+                                    <i class="fas fa-map-marker-alt"></i> <span data-translate="get-current-location">מיקום נוכחי</span>
                                 </button>
                             </div>
-                            
-                            <div class="predefined-locations">
-                                <p><strong>Common locations:</strong></p>
-                                <div id="predefinedLocationsContainer" class="location-presets"></div>
-                            </div>
                         </div>
-                        
+                            
                         <div id="locationPreviewMap" class="location-preview-map"></div>
                     </div>
                 
