@@ -724,7 +724,6 @@ function viewProjectDetails(projectId) {
     }
 }
 
-// תיקון לפונקציית approveProject בקובץ app/static/js/admin-projects.js
 async function approveProject() {
     console.log("Approve project function called");
     const modal = document.getElementById('projectReviewModal');
@@ -778,13 +777,19 @@ async function approveProject() {
             // Refresh project lists
             loadPendingProjects();
             loadApprovedProjects();
-        } else {
-            // הודעת שגיאה רק אם התשובה שלילית
-            throw new Error(result.message || 'Failed to approve project');
+            
+            return; // חשוב! מניעת המשך ביצוע הקוד והצגת הודעת שגיאה
         }
+        
+        // הקוד הזה ירוץ רק אם response.ok היה false
+        throw new Error(result.message || 'Failed to approve project');
+        
     } catch (error) {
-        console.error('Approve project error:', error);
-        showNotification('error', error.message || 'Failed to approve project');
+        // הסרת ההודעה הכפולה - שינוי משמעותי כאן
+        if (!response || !response.ok) {  // רק אם התגובה נכשלה או אין תגובה
+            console.error('Approve project error:', error);
+            showNotification('error', error.message || 'Failed to approve project');
+        }
     } finally {
         // Re-enable buttons
         if (approveBtn) approveBtn.disabled = false;
