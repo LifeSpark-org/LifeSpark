@@ -170,6 +170,268 @@ window.addEventListener('resize', function() {
 
 
 
+// // Filter map projects function
+// function filterMapProjects() {
+//     console.log("Filtering map projects");
+    
+//     const regionFilter = document.getElementById('regionFilter').value;
+//     const progressFilter = document.getElementById('progressFilter').value;
+    
+//     // Get all project markers
+//     const filteredMarkers = projectMarkers.filter(marker => {
+//         const markerData = marker.options.projectData || {};
+        
+//         // Filter by region
+//         if (regionFilter !== 'all' && markerData.region !== regionFilter) {
+//             return false;
+//         }
+        
+//         // Filter by progress
+//         if (progressFilter !== 'all') {
+//             const progress = (markerData.current_amount / markerData.goal_amount) * 100 || 0;
+            
+//             if (progressFilter === 'urgent' && progress >= 25) {
+//                 return false;
+//             } else if (progressFilter === 'in-progress' && (progress < 25 || progress > 75)) {
+//                 return false;
+//             } else if (progressFilter === 'almost-funded' && progress <= 75) {
+//                 return false;
+//             }
+//         }
+        
+//         return true;
+//     });
+    
+//     // Hide all markers first
+//     projectMarkers.forEach(marker => {
+//         if (mapInstance) {
+//             mapInstance.removeLayer(marker);
+//         }
+//     });
+    
+//     // Show only filtered markers
+//     filteredMarkers.forEach(marker => {
+//         if (mapInstance) {
+//             marker.addTo(mapInstance);
+//         }
+//     });
+    
+//     // Update the projects list
+//     updateProjectsList(filteredMarkers);
+    
+//     // If we have filtered markers, fit the map to show them all
+//     if (filteredMarkers.length > 0 && mapInstance) {
+//         const bounds = L.featureGroup(filteredMarkers).getBounds();
+//         mapInstance.fitBounds(bounds, { padding: [50, 50] });
+//     }
+// }
+
+// Reset map filters
+// function resetMapFilters() {
+//     document.getElementById('regionFilter').value = 'all';
+//     document.getElementById('progressFilter').value = 'all';
+    
+//     // Refresh map with all markers
+//     filterMapProjects();
+// }
+
+// Update projects list
+function updateProjectsList(markers) {
+    const projectsList = document.getElementById('mapProjectsList');
+    
+    if (!projectsList) return;
+    
+    if (markers.length === 0) {
+        projectsList.innerHTML = `
+            <div class="empty-projects">
+                <p data-translate="no-matching-projects">No matching projects found. Try changing your filters.</p>
+            </div>
+        `;
+        return;
+    }
+    
+    let projectsHtml = '';
+    
+    markers.forEach(marker => {
+        const project = marker.options.projectData || {};
+        if (!project.title) return; // Skip markers without proper data
+        
+        const progressPercent = Math.min(100, Math.round((project.current_amount || 0) / (project.goal_amount || 1) * 100));
+        const regionClass = project.region || 'south';
+        const regionText = project.region === 'south' ? 'Southern Israel' : 'Northern Israel';
+        
+        // Default background or use project image if available
+        let backgroundStyle = `background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('/static/images/${regionClass}-project.jpg');`;
+        if (project.project_image) {
+            backgroundStyle = `background-image: url('${project.project_image}');`;
+        }
+        
+        projectsHtml += `
+            <div class="map-project-card" data-project-id="${project._id || project.id}" onclick="highlightProjectOnMap('${project._id || project.id}')">
+                <div class="map-project-image" style="${backgroundStyle}">
+                    <div class="map-project-badge ${regionClass}">${regionText}</div>
+                </div>
+                <div class="map-project-content">
+                    <h4 class="map-project-title">${project.title}</h4>
+                    <p class="map-project-description">${project.description || 'No description available'}</p>
+                    <div class="map-project-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${progressPercent}%"></div>
+                        </div>
+                        <div class="progress-stats">
+                            <span>${project.current_amount || 0} / ${project.goal_amount || 0} ETH</span>
+                            <span>${progressPercent}%</span>
+                        </div>
+                    </div>
+                    <div class="map-project-footer">
+                        <div class="map-project-location">
+                            <i class="fas fa-map-marker-alt"></i> ${project.location_name || 'Unknown Location'}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+    
+    projectsList.innerHTML = projectsHtml;
+}
+
+// Highlight project on map
+function highlightProjectOnMap(projectId) {
+    if (!mapInstance) return;
+    
+    // Find the marker for this project
+    const projectMarker = projectMarkers.find(marker => {
+        const data = marker.options.projectData || {};
+        return (data._id === projectId || data.id === projectId);
+    });
+    
+    if (projectMarker) {
+        // Center map on this marker and zoom in
+        mapInstance.setView(projectMarker.getLatLng(), 13);
+        
+        // Open popup
+        projectMarker.openPopup();
+        
+        // Show project details in sidebar
+        showProjectInSidebar(projectMarker.options.projectData);
+    }
+}
+
+// Show project in sidebar
+function showProjectInSidebar(project) {
+    if (!project) return;
+    
+    const sidebarContainer = document.getElementById('selectedProjectInfo');
+    const detailsContainer = document.getElementById('selectedProjectDetails');
+    
+    if (!sidebarContainer || !detailsContainer) return;
+    
+    // Make container visible
+    sidebarContainer.style.display = 'block';
+    
+    const progressPercent = Math.min(100, Math.round((project.current_amount || 0) / (project.goal_amount || 1) * 100));
+    const regionText = project.region === 'south' ? 'Southern Israel' : 'Northern Israel';
+    
+    // Populate details
+    detailsContainer.innerHTML = `
+        <div class="selected-project-header">
+            <h5>${project.title}</h5>
+            <span class="project-region">${regionText}</span>
+        </div>
+        
+        <div class="project-quick-stats">
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: ${progressPercent}%"></div>
+            </div>
+            <div class="progress-stats">
+                <span>${project.current_amount || 0} / ${project.goal_amount || 0} ETH</span>
+                <span>${progressPercent}%</span>
+            </div>
+        </div>
+        
+        <div class="project-location-info">
+            <i class="fas fa-map-marker-alt"></i> ${project.location_name || 'Unknown Location'}
+        </div>
+    `;
+    
+    // Store selected project ID for donation page
+    localStorage.setItem('selectedProjectFromMap', project._id || project.id);
+}
+
+// Modify the addProjectMarker function to include project data
+// function addProjectMarker(project) {
+//     if (!mapInstance) return;
+    
+//     // Ensure valid location
+//     const lat = typeof project.location_lat === 'number' ? project.location_lat : parseFloat(project.location_lat);
+//     const lng = typeof project.location_lng === 'number' ? project.location_lng : parseFloat(project.location_lng);
+    
+//     if (isNaN(lat) || isNaN(lng) || lat === 0 || lng === 0) {
+//         console.warn(`Invalid location for project ${project.title}: [${lat}, ${lng}]`);
+//         return;
+//     }
+    
+//     try {
+//         // Custom marker icon based on region
+//         const markerIcon = L.divIcon({
+//             className: `project-marker ${project.region || 'south'}`,
+//             html: `<i class="fas fa-map-marker-alt"></i>`,
+//             iconSize: [30, 30],
+//             iconAnchor: [15, 30],
+//             popupAnchor: [0, -30]
+//         });
+        
+//         // Create marker and store project data with it
+//         const marker = L.marker(
+//             [lat, lng],
+//             { 
+//                 icon: markerIcon,
+//                 projectData: project // Store project data for filtering
+//             }
+//         ).addTo(mapInstance);
+        
+//         // Calculate progress percentage
+//         const progress = project.goal_amount ? 
+//             Math.min(100, Math.round((project.current_amount || 0) / project.goal_amount * 100)) : 0;
+        
+//         // Add popup with project info
+//         marker.bindPopup(`
+//             <div class="project-popup">
+//                 <h4>${project.title || 'Unnamed Project'}</h4>
+//                 <p class="project-location">${project.location_name || 'Unknown Location'}</p>
+//                 <div class="project-progress">
+//                     <div class="progress-bar">
+//                         <div class="progress-fill" style="width: ${progress}%"></div>
+//                     </div>
+//                     <div class="progress-text">
+//                         ${project.current_amount || 0} / ${project.goal_amount || 0} ETH (${progress}%)
+//                     </div>
+//                 </div>
+//                 <p class="project-description">${project.description ? (project.description.substring(0, 100) + (project.description.length > 100 ? '...' : '')) : 'No description available'}</p>
+//                 <button onclick="viewProjectDetails('${project._id || project.id}')" class="btn btn-sm btn-primary view-project-btn">View Details</button>
+//             </div>
+//         `);
+        
+//         // Add marker to project markers array
+//         projectMarkers.push(marker);
+        
+//         console.log(`Marker added successfully for project ${project.title}`);
+//     } catch (error) {
+//         console.error(`Error creating marker for project ${project.title}:`, error);
+//     }
+// }
+
+// Modify the loadProjectsToMap function to update projects list
+const originalLoadProjectsToMap = loadProjectsToMap;
+loadProjectsToMap = async function() {
+    await originalLoadProjectsToMap();
+    
+    // Update projects list with all markers
+    updateProjectsList(projectMarkers);
+};
+
+
 // הוסף את הלוגים האלה בפונקציית refreshMap (בערך שורה 190) ב-app/static/js/map.js:
 function refreshMap() {
     if (mapInstance) {
