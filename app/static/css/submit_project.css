@@ -144,7 +144,7 @@
 }
 
 /* Terms checkboxes */
-.terms-checkbox {
+/* .terms-checkbox {
     display: flex;
     align-items: flex-start;
     margin-bottom: 0.5rem;
@@ -160,7 +160,7 @@
     font-weight: normal;
     margin-bottom: 0;
     font-size: 0.95rem;
-}
+} */
 
 /* Submit button styling */
 .submit-group {
