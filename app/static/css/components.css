@@ -401,3 +401,44 @@ footer {
         transform: rotate(360deg);
     }
 }
+
+
+/* אפשר להוסיף לקובץ contact.css או לקובץ components.css */
+
+.form-status {
+    margin-top: 15px;
+    padding: 10px;
+    border-radius: 5px;
+    display: none;
+}
+
+.form-status.success {
+    background-color: rgba(46, 204, 113, 0.1);
+    color: #2ecc71;
+    border: 1px solid #2ecc71;
+}
+
+.form-status.error {
+    background-color: rgba(231, 76, 60, 0.1);
+    color: #e74c3c;
+    border: 1px solid #e74c3c;
+}
+
+/* סגנונות למצב טעינה */
+.loader-inline {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    border: 0.2em solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: #ffffff;
+    animation: spin 1s linear infinite;
+    margin-right: 0.5em;
+    vertical-align: middle;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
