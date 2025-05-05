@@ -155,8 +155,8 @@ def login():
             'name': user['name'],
             'user_type': user.get('user_type', 'donor')  # הוספת סוג המשתמש לתשובה
         }), 200
-        
-    return jsonify({'error': 'Invalid email or password'}), 401
+    else:
+        return jsonify({'error': 'Invalid email or password'}), 401
 
 @auth_bp.route('/check-auth', methods=['GET'])
 @token_required
