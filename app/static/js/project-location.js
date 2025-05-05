@@ -319,7 +319,6 @@ function initLocationFeatures() {
         locationMap.setZoom(7);
     }
     
-    // Fix map size after rendering
     setTimeout(function() {
         locationMap.invalidateSize();
     }, 500);
