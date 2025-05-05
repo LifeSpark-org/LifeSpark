@@ -571,6 +571,7 @@ registerForm?.addEventListener('submit', async (event) => {
     });
     
     // Contact form handler
+// Contact form handler (מחליף את הפונקציה הקיימת)
     contactForm?.addEventListener('submit', async (event) => {
         event.preventDefault();
         showFormLoading(contactForm);
@@ -582,26 +583,65 @@ registerForm?.addEventListener('submit', async (event) => {
             message: document.getElementById('message').value
         };
         
-        // Simulate form submission (replace with actual API call)
-        await new Promise(resolve => setTimeout(resolve, 1500));
-        
-        // Show success message
-        const formStatus = document.getElementById('formStatus');
-        if (formStatus) {
-            formStatus.className = 'form-status success';
-            formStatus.textContent = 'Message sent successfully! We will get back to you soon.';
+        try {
+            // שליחת הנתונים לשרת
+            const response = await fetch('/contact', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData)
+            });
             
-            // Clear form
-            contactForm.reset();
+            const result = await response.json();
             
-            // Hide status after 5 seconds
-            setTimeout(() => {
-                formStatus.textContent = '';
-                formStatus.className = 'form-status';
-            }, 5000);
+            if (response.ok && result.success) {
+                // הצגת הודעת הצלחה
+                const formStatus = document.getElementById('formStatus');
+                if (formStatus) {
+                    formStatus.className = 'form-status success';
+                    formStatus.textContent = 'Message sent successfully! We will get back to you soon.';
+                    formStatus.style.display = 'block';
+                    
+                    // ניקוי הטופס
+                    contactForm.reset();
+                    
+                    // הסתרת הודעת הסטטוס אחרי 5 שניות
+                    setTimeout(() => {
+                        formStatus.style.display = 'none';
+                    }, 5000);
+                }
+                
+                // הצגת הודעת הצלחה
+                showNotification('success', 'Your message has been sent successfully!');
+            } else {
+                // הצגת הודעת שגיאה
+                const formStatus = document.getElementById('formStatus');
+                if (formStatus) {
+                    formStatus.className = 'form-status error';
+                    formStatus.textContent = result.message || 'Failed to send message. Please try again later.';
+                    formStatus.style.display = 'block';
+                }
+                
+                // הצגת הודעת שגיאה
+                showNotification('error', result.message || 'Failed to send message. Please try again later.');
+            }
+        } catch (error) {
+            console.error('Error submitting contact form:', error);
+            
+            // הצגת הודעת שגיאה
+            const formStatus = document.getElementById('formStatus');
+            if (formStatus) {
+                formStatus.className = 'form-status error';
+                formStatus.textContent = 'An error occurred while sending your message. Please try again later.';
+                formStatus.style.display = 'block';
+            }
+            
+            // הצגת הודעת שגיאה
+            showNotification('error', 'An error occurred while sending your message. Please try again later.');
+        } finally {
+            hideFormLoading(contactForm);
         }
-        
-        hideFormLoading(contactForm);
     });
 }
 
@@ -830,3 +870,64 @@ function togglePasswordVisibility(inputId) {
         toggleIcon.classList.add('fa-eye');
     }
 }
+
+
+
+
+// טיפול בטופס הרשמה לניוזלטר
+document.addEventListener('DOMContentLoaded', function() {
+    const newsletterForm = document.querySelector('.newsletter-form');
+    
+    if (newsletterForm) {
+        newsletterForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const emailInput = this.querySelector('input[type="email"]');
+            const submitButton = this.querySelector('button[type="submit"]');
+            
+            if (!emailInput || !emailInput.value.trim()) {
+                // הצגת הודעת שגיאה אם אין מייל
+                showNotification('error', 'Please enter your email address');
+                return;
+            }
+            
+            // הצגת מצב טעינה
+            const originalButtonText = submitButton.innerHTML;
+            submitButton.disabled = true;
+            submitButton.innerHTML = '<div class="loader-inline"></div> Subscribing...';
+            
+            try {
+                // שליחת המייל לשרת
+                const response = await fetch('/subscribe-newsletter', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: emailInput.value.trim()
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok && result.success) {
+                    // הצגת הודעת הצלחה
+                    showNotification('success', 'Thank you for subscribing to our newsletter!');
+                    
+                    // איפוס הטופס
+                    emailInput.value = '';
+                } else {
+                    // הצגת הודעת שגיאה
+                    showNotification('error', result.message || 'Failed to subscribe. Please try again.');
+                }
+            } catch (error) {
+                console.error('Error subscribing to newsletter:', error);
+                showNotification('error', 'An error occurred. Please try again later.');
+            } finally {
+                // החזרת הכפתור למצבו הרגיל
+                submitButton.disabled = false;
+                submitButton.innerHTML = originalButtonText;
+            }
+        });
+    }
+});

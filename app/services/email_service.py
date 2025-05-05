@@ -102,3 +102,81 @@ You can log in to your account to check on your project's status and funding pro
 Thank you for being part of the lifeSpark community!
 '''
     mail.send(msg)
+
+
+
+
+
+def send_contact_form_email(name, email, subject, message):
+    """Send email from contact form to admin email and confirmation to sender"""
+    admin_email = "Lifespark.social.il@gmail.com"
+    
+    # שליחת הודעה לאדמינים
+    admin_msg = Message(
+        f'lifeSpark Contact Form: {subject}',
+        recipients=[admin_email]  # כתובת האדמינים
+    )
+    
+    admin_msg.body = f'''New message from the lifeSpark contact form:
+    
+Name: {name}
+Email: {email}
+Subject: {subject}
+
+Message:
+{message}
+
+---
+This message was sent from the contact form on the lifeSpark website.
+'''
+    mail.send(admin_msg)
+    
+    # שליחת אישור למשתמש
+    user_msg = Message(
+        'We received your message - lifeSpark',
+        recipients=[email]  # כתובת המייל של השולח
+    )
+    
+    user_msg.body = f'''Hello {name},
+
+Thank you for contacting lifeSpark. We have received your message and will get back to you as soon as possible.
+
+Subject: {subject}
+
+We appreciate your interest in our platform.
+
+The lifeSpark Team
+'''
+    
+    mail.send(user_msg)
+
+
+
+
+
+def send_newsletter_subscription_email(subscriber_email):
+    """Send confirmation email to new newsletter subscribers"""
+    msg = Message(
+        'Welcome to lifeSpark Newsletter!',
+        recipients=[subscriber_email],
+        sender="Lifespark.social.il@gmail.com"
+    )
+    
+    msg.body = f'''Dear lifeSpark Supporter,
+
+Thank you for subscribing to our newsletter! We're thrilled to have you join our community of changemakers.
+
+As a subscriber, you'll receive regular updates about:
+- Our ongoing projects and their impact
+- Stories from communities we're helping
+- Opportunities to get involved
+- News about blockchain-based donations and transparency
+
+Your interest in our mission means a lot to us. Together, we can bring positive change to communities in need throughout Israel.
+
+If you have any questions or suggestions, feel free to reach out to us at Lifespark.social.il@gmail.com.
+
+Warm regards,
+The lifeSpark Team
+'''
+    mail.send(msg)
