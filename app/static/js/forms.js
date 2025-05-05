@@ -1,3 +1,32 @@
+(function() {
+    // משתנה גלובלי לשמירת הודעות שגיאה אחרונות
+    window._lastErrorMessages = {};
+    
+    // מחליף את פונקציית showNotification הקיימת
+    const originalShowNotification = window.showNotification;
+    
+    window.showNotification = function(type, message) {
+        // אם זו הודעת שגיאה, בדוק אם כבר הוצגה לאחרונה
+        if (type === 'error') {
+            const now = new Date().getTime();
+            const lastShown = window._lastErrorMessages[message] || 0;
+            
+            // אם אותה הודעה הוצגה ב-2 השניות האחרונות, התעלם
+            if (now - lastShown < 2000) {
+                console.log('Prevented duplicate error notification:', message);
+                return;
+            }
+            
+            // עדכן את הזמן האחרון שבו הוצגה הודעה זו
+            window._lastErrorMessages[message] = now;
+        }
+        
+        // הפעל את הפונקציה המקורית
+        return originalShowNotification(type, message);
+    };
+})();
+
+
 // Close notification
 function closeNotification(notification) {
     if (!notification) return;
@@ -527,6 +556,7 @@ registerForm?.addEventListener('submit', async (event) => {
         };
 
         try {
+            let errorDisplayed = false;
             const response = await fetch('/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -540,7 +570,8 @@ registerForm?.addEventListener('submit', async (event) => {
                 // Store basic user data
                 const userData = {
                     name: result.name,
-                    email: formData.email
+                    email: formData.email,
+                    user_type: result.user_type
                 };
                 localStorage.setItem('userData', JSON.stringify(userData));
                 
@@ -548,6 +579,7 @@ registerForm?.addEventListener('submit', async (event) => {
                 updateAuthMenu(userData);
                 
                 showNotification('success', 'Login successful!');
+                document.dispatchEvent(new CustomEvent('authStateChanged'));
                 
                 // Redirect to home page
                 setTimeout(() => {
@@ -558,16 +590,37 @@ registerForm?.addEventListener('submit', async (event) => {
                 if (result.error && result.error.includes('CAPTCHA')) {
                     loadCaptcha('login');
                     document.getElementById('loginCaptchaError').style.display = 'block';
+                    if (!errorDisplayed) {
+                        showNotification('error', 'CAPTCHA verification failed');
+                        errorDisplayed = true;
+                    }
                 } else {
-                    showNotification('error', result.error || 'Login failed');
+                    if (!errorDisplayed) {
+                        showNotification('error', result.error || 'Login failed');
+                        errorDisplayed = true;
+                        
+                        // מונע מאירועים אחרים להציג הודעות שגיאה דומות
+                        window._lastLoginError = new Date().getTime();
+                    }
                 }
             }
         } catch (error) {
-            showNotification('error', 'An error occurred during login');
-            loadCaptcha('login');
-        }
+            console.error('Error during login:', error);
         
-        hideFormLoading(loginForm);
+            // בודק אם כבר הוצגה הודעת שגיאה לאחרונה
+            const now = new Date().getTime();
+            const lastError = window._lastLoginError || 0;
+            
+            // אם לא עברו 2 שניות מהשגיאה האחרונה, לא מציג הודעה נוספת
+            if (now - lastError > 2000) {
+                showNotification('error', 'An error occurred during login');
+                window._lastLoginError = now;
+            }
+            loadCaptcha('login');
+        } finally {
+            // Hide loading state
+            hideFormLoading(loginForm);
+        }
     });
     
     // Contact form handler
