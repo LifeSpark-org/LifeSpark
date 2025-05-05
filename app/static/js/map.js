@@ -46,8 +46,8 @@ function initMap() {
     try {
         // ניסיון פשוט למפה בסיסית עם אריח אחד
         mapInstance = L.map('leafletMap', {
-            center: [31.0461, 34.8516],
-            zoom: 7,
+            center: [31.4117, 35.0818], // מרכז ישראל
+            zoom: 8, // רמת זום שמראה את רוב המדינה
             zoomControl: true
         });
         
@@ -473,10 +473,10 @@ async function loadProjectsToMap() {
             });
             
             // אם יש סמנים, התמקד במרכז שלהם
-            if (projectMarkers.length > 0) {
-                const projectBounds = L.featureGroup(projectMarkers).getBounds();
-                mapInstance.fitBounds(projectBounds, { padding: [50, 50] });
-            }
+            // if (projectMarkers.length > 0) {
+            //     const projectBounds = L.featureGroup(projectMarkers).getBounds();
+            //     mapInstance.fitBounds(projectBounds, { padding: [50, 50] });
+            // }
         }
     } catch (error) {
         console.error("שגיאה בטעינת פרויקטים למפה:", error);
