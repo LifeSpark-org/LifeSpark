@@ -47,3 +47,13 @@ instance/
 .env.development.local
 .env.test.local
 .env.production.local
+
+# Uploaded content - ignore all files in these directories
+app/static/uploads/
+app/static/uploads/documents/
+app/static/uploads/images/
+
+# Make sure the directories are created but content is ignored
+!app/static/uploads/.gitkeep
+!app/static/uploads/documents/.gitkeep
+!app/static/uploads/images/.gitkeep
