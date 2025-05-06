@@ -680,7 +680,7 @@ async function processDonationToProject(project, amount, message) {
             // // קובע רק setTimeout אחד
             // setTimeout(hideModalAndReload, 2000);
             
-            // return;
+            return;
         }
         
         try {
