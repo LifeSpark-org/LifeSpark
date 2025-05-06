@@ -354,38 +354,41 @@ def approve_project(current_user, project_id):
             'status': 'error',
             'message': 'Failed to approve project. Project may not be pending or does not exist.'
         }), 400
-        # קוד חדש - נסה לרשום את הפרויקט בחוזה החכם
+    
+    # After successful approval, try to register the project in the blockchain
     try:
-        # קבל את פרטי הפרויקט
+        # Get project details
         project = Project.get_by_id(mongo, project_id)
         
         if project and project.get('ethereum_address'):
-            # כאן יש להוסיף קוד שירשום את הפרויקט בחוזה החכם
-            # לדוגמה: שימוש ב-web3.py לקריאה לפונקציית registerProject
+            # Import blockchain service
             from ..services.blockchain import blockchain_service
             
-            # הוסף פונקציה חדשה בשירות ה-blockchain
-            blockchain_service.register_project(
+            # Set the sender address to admin's address or a default admin address
+            # This is required for the register_project function to work
+            admin_wallet = current_user.get('ethereum_address', '0xYourDefaultAdminAddress')
+            blockchain_service.set_sender_address(admin_wallet)
+            
+            # Register the project in the smart contract
+            result = blockchain_service.register_project(
                 project_id=str(project['_id']),
                 beneficiary=project['ethereum_address'],
                 goal_amount=float(project['goal_amount']),
                 region=project['region']
             )
             
-            print(f"Project {project_id} registered in smart contract")
+            print(f"Project {project_id} registered in smart contract: {result}")
         else:
             print(f"Project {project_id} does not have an Ethereum address, skipping contract registration")
     except Exception as e:
-        # אם יש שגיאה ברישום הפרויקט בחוזה, נרשום אותה אבל נמשיך
+        # If there's an error registering the project in the contract, log it but continue
         print(f"Error registering project in smart contract: {str(e)}")
-
-        
-    print(f"Project {project_id} approved successfully")
+    
+    # Send email notification regardless of blockchain registration result
     try:
         from ..services.email_service import send_project_approved_email
         
         # Get project details to get the email and title
-        project = Project.get_by_id(mongo, project_id)
         if project and project.get('contact_email'):
             send_project_approved_email(project['contact_email'], project['title'])
             print(f"Project approval email sent to {project['contact_email']}")
