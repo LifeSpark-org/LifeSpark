@@ -566,19 +566,16 @@ function scrollCarousel(direction) {
 
 // עדכון סיכום תרומה עם פרויקט
 function updateDonationSummaryWithProject(projectTitle, projectRegion) {
-    console.log(`📝 עדכון סיכום תרומה עם פרויקט: ${projectTitle}, אזור: ${projectRegion}`);
     const summaryProject = document.getElementById('summaryProject');
     const summaryAmount = document.getElementById('summaryAmount');
     const summaryGasFee = document.getElementById('summaryGasFee');
     const summaryTotal = document.getElementById('summaryTotal');
     const amountInput = document.getElementById('amount');
     
-    // אם אחד מהאלמנטים חסר, יצא מהפונקציה ללא שגיאות
+    // אם חלק מהאלמנטים חסרים, רושם הודעה ויוצא בנחת
     if (!summaryProject || !summaryAmount || !summaryTotal || !amountInput) {
-        console.warn("אחד או יותר מאלמנטי הסיכום חסרים", {
-            summaryProject, summaryAmount, summaryGasFee, summaryTotal, amountInput
-        });
-        return;
+        console.log("אלמנטי סיכום התרומה לא נמצאו - זה צפוי אם לא נמצאים בדף התרומה");
+        return; // יציאה מהפונקציה ללא שגיאה
     }
     
     const amount = parseFloat(amountInput.value) || 0;
