@@ -302,7 +302,6 @@ function showProjectInSidebar(project) {
     const progressPercent = Math.min(100, Math.round((project.current_amount || 0) / (project.goal_amount || 1) * 100));
     const regionText = project.region === 'south' ? 'Southern Israel' : 'Northern Israel';
     
-    // Populate details
     detailsContainer.innerHTML = `
         <div class="selected-project-header">
             <h5>${project.title}</h5>
