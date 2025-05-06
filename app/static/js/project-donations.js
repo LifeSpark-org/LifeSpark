@@ -40,18 +40,18 @@ document.addEventListener('DOMContentLoaded', function() {
     const prevBtn = document.getElementById('prevProject');
     const nextBtn = document.getElementById('nextProject');
     
-    const selectedProjectFromMap = localStorage.getItem('selectedProjectFromMap');
-    if (selectedProjectFromMap) {
-        console.log(`יש להדגיש פרויקט מהמפה: ${selectedProjectFromMap}`);
+    // const selectedProjectFromMap = localStorage.getItem('selectedProjectFromMap');
+    // if (selectedProjectFromMap) {
+    //     console.log(`יש להדגיש פרויקט מהמפה: ${selectedProjectFromMap}`);
         
-        // ננקה את המידע הזה כדי שלא ידגיש שוב בטעינות עתידיות
-        localStorage.removeItem('selectedProjectFromMap');
+    //     // ננקה את המידע הזה כדי שלא ידגיש שוב בטעינות עתידיות
+    //     localStorage.removeItem('selectedProjectFromMap');
         
-        // מחכים שהפרויקטים יטענו ואז מדגישים
-        setTimeout(() => {
-            highlightProjectInCarousel(selectedProjectFromMap);
-        }, 1000);
-    }
+    //     // מחכים שהפרויקטים יטענו ואז מדגישים
+    //     setTimeout(() => {
+    //         highlightProjectInCarousel(selectedProjectFromMap);
+    //     }, 1000);
+    // }
 
     // פונקציה להדגשת פרויקט בקרוסלה
     function highlightProjectInCarousel(projectId) {
@@ -389,20 +389,20 @@ function setupProjectSelection() {
     projectSlides.forEach((slide, index) => {
         console.log(`📌 מגדיר אירועי בחירה לפרויקט ${index + 1}`);
         
-        slide.addEventListener('click', function(e) {
-            // מונע התנגשות עם מאזיני אירועים אחרים
-            if (e.target.classList.contains('project-select-btn') || 
-                e.target.closest('.project-select-btn')) {
-                return; // נאפשר לכפתור לטפל באירוע בעצמו
-            }
+        // slide.addEventListener('click', function(e) {
+        //     // מונע התנגשות עם מאזיני אירועים אחרים
+        //     if (e.target.classList.contains('project-select-btn') || 
+        //         e.target.closest('.project-select-btn')) {
+        //         return; // נאפשר לכפתור לטפל באירוע בעצמו
+        //     }
             
-            console.log(`👆 לחיצה על שקופית פרויקט`, this.dataset);
-            const projectId = this.dataset.projectId;
-            const projectTitle = this.dataset.projectTitle;
-            const projectRegion = this.dataset.projectRegion;
+        //     console.log(`👆 לחיצה על שקופית פרויקט`, this.dataset);
+        //     const projectId = this.dataset.projectId;
+        //     const projectTitle = this.dataset.projectTitle;
+        //     const projectRegion = this.dataset.projectRegion;
             
-            selectProject(projectId, projectTitle, projectRegion);
-        });
+        //     selectProject(projectId, projectTitle, projectRegion);
+        // });
         
         // חשוב מאוד: הוסף מאזין אירוע לכפתור בחירה
         const selectBtn = slide.querySelector('.project-select-btn');
