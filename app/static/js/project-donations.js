@@ -536,7 +536,7 @@ function selectProject(projectId, projectTitle, projectRegion) {
     });
     
     // Update donation summary
-    // updateDonationSummaryWithProject(projectTitle, projectRegion);
+    updateDonationSummaryWithProject(projectTitle, projectRegion);
 }
 
 // Function to scroll the carousel

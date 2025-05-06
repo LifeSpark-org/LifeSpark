@@ -697,102 +697,102 @@ async function processDonationToProject(project, amount, message) {
             let txHash;
             
             // בדיקה אם הפרויקט רשום בחוזה החכם
-            // try {
-            //     // אנחנו מנסים לקרוא את פרטי הפרויקט מהחוזה
-            //     const projectId = project.id || project._id;
-            //     const projectDetails = await contract.methods.getProjectDetails(projectId).call().catch(() => null);
+            try {
+                // אנחנו מנסים לקרוא את פרטי הפרויקט מהחוזה
+                const projectId = project.id || project._id;
+                const projectDetails = await contract.methods.getProjectDetails(projectId).call().catch(() => null);
                 
-            //     if (projectDetails && projectDetails[3]) { // הערך הרביעי הוא exists
-            //         // אם הפרויקט רשום בחוזה, נשתמש בפונקציית donateToProject
-            //         console.log('Project exists in contract, using donateToProject');
-            //         txHash = await contract.methods.donateToProject(projectId).send({
-            //             from: window.userWalletAddress,
-            //             value: amountInWei,
-            //             gas: 200000
-            //         });
-            //     } else {
-            //         // אם הפרויקט לא רשום בחוזה, נבצע תרומה ישירה לכתובת הארנק של הפרויקט
-            //         console.log('Project not registered in contract, sending directly to beneficiary');
+                if (projectDetails && projectDetails[3]) { // הערך הרביעי הוא exists
+                    // אם הפרויקט רשום בחוזה, נשתמש בפונקציית donateToProject
+                    console.log('Project exists in contract, using donateToProject');
+                    txHash = await contract.methods.donateToProject(projectId).send({
+                        from: window.userWalletAddress,
+                        value: amountInWei,
+                        gas: 200000
+                    });
+                } else {
+                    // אם הפרויקט לא רשום בחוזה, נבצע תרומה ישירה לכתובת הארנק של הפרויקט
+                    console.log('Project not registered in contract, sending directly to beneficiary');
                     
-            //         txHash = await web3.eth.sendTransaction({
-            //             from: window.userWalletAddress,
-            //             to: project.ethereum_address,
-            //             value: amountInWei,
-            //             gas: 21000
-            //         });
+                    txHash = await web3.eth.sendTransaction({
+                        from: window.userWalletAddress,
+                        to: project.ethereum_address,
+                        value: amountInWei,
+                        gas: 21000
+                    });
                     
-            //         // נעדכן גם את מאזן האזור בחוזה החכם
-            //         try {
-            //             await contract.methods.donate(project.region).send({
-            //                 from: window.userWalletAddress,
-            //                 value: 0, // תרומה סמלית של 0 רק לעדכון הנתונים
-            //                 gas: 100000
-            //             });
-            //         } catch (regionError) {
-            //             console.warn('שגיאה בעדכון מאזן האזור בחוזה:', regionError);
-            //         }
-            //     }
+                    // נעדכן גם את מאזן האזור בחוזה החכם
+                    try {
+                        await contract.methods.donate(project.region).send({
+                            from: window.userWalletAddress,
+                            value: 0, // תרומה סמלית של 0 רק לעדכון הנתונים
+                            gas: 100000
+                        });
+                    } catch (regionError) {
+                        console.warn('שגיאה בעדכון מאזן האזור בחוזה:', regionError);
+                    }
+                }
                 
-            //     // עדכון הפרויקט בבסיס הנתונים
-            //     const token = localStorage.getItem('token');
-            //     const updateResponse = await fetch(`/projects/${projectId}/update-donation`, {
-            //         method: 'POST',
-            //         headers: {
-            //             'Authorization': token ? `Bearer ${token}` : '',
-            //             'Content-Type': 'application/json'
-            //         },
-            //         body: JSON.stringify({
-            //             amount: amount,
-            //             txHash: txHash.transactionHash || txHash,
-            //             message: message
-            //         })
-            //     });
+                // עדכון הפרויקט בבסיס הנתונים
+                const token = localStorage.getItem('token');
+                const updateResponse = await fetch(`/projects/${projectId}/update-donation`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': token ? `Bearer ${token}` : '',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        amount: amount,
+                        txHash: txHash.transactionHash || txHash,
+                        message: message
+                    })
+                });
                 
-            //     if (!updateResponse.ok) {
-            //         console.warn('התרומה נרשמה בבלוקצ\'יין אך לא עודכנה במסד הנתונים');
-            //     }
+                if (!updateResponse.ok) {
+                    console.warn('התרומה נרשמה בבלוקצ\'יין אך לא עודכנה במסד הנתונים');
+                }
                 
-            //     // מציג הודעת הצלחה
-            //     showNotification('success', 
-            //         `התרומה בוצעה בהצלחה! ${txHash.transactionHash ? `Transaction: ${txHash.transactionHash.substring(0, 10)}...` : ''}`
-            //     );
+                // מציג הודעת הצלחה
+                showNotification('success', 
+                    `התרומה בוצעה בהצלחה! ${txHash.transactionHash ? `Transaction: ${txHash.transactionHash.substring(0, 10)}...` : ''}`
+                );
                 
-            // } catch (contractError) {
-            //     console.warn('שגיאה בחוזה החכם, מתבצעת תרומה ישירה:', contractError);
+            } catch (contractError) {
+                console.warn('שגיאה בחוזה החכם, מתבצעת תרומה ישירה:', contractError);
                 
-            //     // אם יש שגיאה בחוזה החכם, ננסה לבצע תרומה ישירה
-            //     const txResult = await web3.eth.sendTransaction({
-            //         from: window.userWalletAddress,
-            //         to: project.ethereum_address,
-            //         value: amountInWei,
-            //         gas: 21000
-            //     });
+                // אם יש שגיאה בחוזה החכם, ננסה לבצע תרומה ישירה
+                const txResult = await web3.eth.sendTransaction({
+                    from: window.userWalletAddress,
+                    to: project.ethereum_address,
+                    value: amountInWei,
+                    gas: 21000
+                });
                 
-            //     // עדכון הפרויקט בבסיס הנתונים
-            //     const token = localStorage.getItem('token');
-            //     const projectId = project.id || project._id;
-            //     const updateResponse = await fetch(`/projects/${projectId}/update-donation`, {
-            //         method: 'POST',
-            //         headers: {
-            //             'Authorization': token ? `Bearer ${token}` : '',
-            //             'Content-Type': 'application/json'
-            //         },
-            //         body: JSON.stringify({
-            //             amount: amount,
-            //             txHash: txResult.transactionHash,
-            //             message: message
-            //         })
-            //     });
+                // עדכון הפרויקט בבסיס הנתונים
+                const token = localStorage.getItem('token');
+                const projectId = project.id || project._id;
+                const updateResponse = await fetch(`/projects/${projectId}/update-donation`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': token ? `Bearer ${token}` : '',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        amount: amount,
+                        txHash: txResult.transactionHash,
+                        message: message
+                    })
+                });
                 
-            //     if (!updateResponse.ok) {
-            //         console.warn('התרומה נרשמה בבלוקצ\'יין אך לא עודכנה במסד הנתונים');
-            //     }
+                if (!updateResponse.ok) {
+                    console.warn('התרומה נרשמה בבלוקצ\'יין אך לא עודכנה במסד הנתונים');
+                }
                 
-            //     // מציג הודעת הצלחה
-            //     showNotification('success', 
-            //         `התרומה בוצעה בהצלחה באופן ישיר! ${txResult.transactionHash ? `Transaction: ${txResult.transactionHash.substring(0, 10)}...` : ''}`
-            //     );
-            // }
+                // מציג הודעת הצלחה
+                showNotification('success', 
+                    `התרומה בוצעה בהצלחה באופן ישיר! ${txResult.transactionHash ? `Transaction: ${txResult.transactionHash.substring(0, 10)}...` : ''}`
+                );
+            }
             
             // סגירת המודל והטענה מחדש של הפרויקטים
             setTimeout(() => {
