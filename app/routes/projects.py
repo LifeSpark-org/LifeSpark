@@ -60,19 +60,19 @@ def save_uploaded_file(file, folder='documents'):
     return f"/static/uploads/{folder}/{unique_filename}"
 
 
-@projects_bp.route('/projects', methods=['GET'])
-def get_projects():
-    """Get all approved projects for public display"""
-    projects = Project.get_approved_projects(mongo)
-    print("פרויקט", project)
-    # Convert ObjectId to string in each project for JSON serialization
-    for project in projects:
-        project['_id'] = str(project['_id'])
+# @projects_bp.route('/projects', methods=['GET'])
+# def get_projects():
+#     """Get all approved projects for public display"""
+#     projects = Project.get_approved_projects(mongo)
+
+#     # Convert ObjectId to string in each project for JSON serialization
+#     for project in projects:
+#         project['_id'] = str(project['_id'])
     
-    return jsonify({
-        'status': 'success',
-        'projects': projects
-    })
+#     return jsonify({
+#         'status': 'success',
+#         'projects': projects
+#     })
 
 # @projects_bp.route('/projects/<project_id>', methods=['GET'])
 # def get_project(project_id):
