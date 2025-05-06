@@ -20,13 +20,12 @@ document.addEventListener('DOMContentLoaded', function() {
 function initProjectWalletConnection() {
     const connectWalletBtn = document.getElementById('connectWalletForProject');
     const ethereumAddressInput = document.getElementById('ethereumAddress');
-    console.log(ethereumAddressInput.value)
     
     if (connectWalletBtn && ethereumAddressInput) {
         // בדיקה אם יש כבר חיבור קיים
         if (window.ethereum && window.userWalletAddress) {
             ethereumAddressInput.value = window.userWalletAddress;
-            
+            console.log(window.userWalletAddress)
             // עדכון טקסט הכפתור כשיש כבר חיבור
             updateButtonToConnected(connectWalletBtn, window.userWalletAddress);
         }
