@@ -565,33 +565,33 @@ function scrollCarousel(direction) {
 }
 
 // עדכון סיכום תרומה עם פרויקט
-// function updateDonationSummaryWithProject(projectTitle, projectRegion) {
-//     const summaryProject = document.getElementById('summaryProject');
-//     const summaryAmount = document.getElementById('summaryAmount');
-//     const summaryGasFee = document.getElementById('summaryGasFee');
-//     const summaryTotal = document.getElementById('summaryTotal');
-//     const amountInput = document.getElementById('amount');
+function updateDonationSummaryWithProject(projectTitle, projectRegion) {
+    const summaryProject = document.getElementById('summaryProject');
+    const summaryAmount = document.getElementById('summaryAmount');
+    const summaryGasFee = document.getElementById('summaryGasFee');
+    const summaryTotal = document.getElementById('summaryTotal');
+    const amountInput = document.getElementById('amount');
     
-//     // אם חלק מהאלמנטים חסרים, רושם הודעה ויוצא בנחת
-//     if (!summaryProject || !summaryAmount || !summaryTotal || !amountInput) {
-//         console.log("אלמנטי סיכום התרומה לא נמצאו - זה צפוי אם לא נמצאים בדף התרומה");
-//         return; // יציאה מהפונקציה ללא שגיאה
-//     }
+    // אם חלק מהאלמנטים חסרים, רושם הודעה ויוצא בנחת
+    if (!summaryProject || !summaryAmount || !summaryTotal || !amountInput) {
+        console.log("אלמנטי סיכום התרומה לא נמצאו - זה צפוי אם לא נמצאים בדף התרומה");
+        return; // יציאה מהפונקציה ללא שגיאה
+    }
     
-//     const amount = parseFloat(amountInput.value) || 0;
-//     const gasFee = 0.001; // עמלת גז משוערת באת'ר
-//     const total = amount + gasFee;
+    const amount = parseFloat(amountInput.value) || 0;
+    const gasFee = 0.001; // עמלת גז משוערת באת'ר
+    const total = amount + gasFee;
     
-//     // הצגת שם הפרויקט והאזור בסיכום
-//     const regionText = projectRegion === 'south' ? 'Southern Israel' : 'Northern Israel';
+    // הצגת שם הפרויקט והאזור בסיכום
+    const regionText = projectRegion === 'south' ? 'Southern Israel' : 'Northern Israel';
     
-//     summaryProject.textContent = `${projectTitle} (${regionText})`;
+    summaryProject.textContent = `${projectTitle} (${regionText})`;
     
-//     // עדכון ערכי הסכומים
-//     summaryAmount.textContent = `${amount.toFixed(4)} ETH`;
-//     if (summaryGasFee) summaryGasFee.textContent = `~ ${gasFee.toFixed(4)} ETH`;
-//     summaryTotal.textContent = `${total.toFixed(4)} ETH`;
-// }
+    // עדכון ערכי הסכומים
+    summaryAmount.textContent = `${amount.toFixed(4)} ETH`;
+    if (summaryGasFee) summaryGasFee.textContent = `~ ${gasFee.toFixed(4)} ETH`;
+    summaryTotal.textContent = `${total.toFixed(4)} ETH`;
+}
 
 // רק עבור שלמות - פונקציות עבור בחירה לפי אזורים
 // function updateDonationSummary() {
