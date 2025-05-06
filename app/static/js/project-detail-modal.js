@@ -650,37 +650,37 @@ async function processDonationToProject(project, amount, message) {
                 `התרומה בוצעה בהצלחה לאזור ${project.region}! ${txHash.transactionHash ? `Transaction: ${txHash.transactionHash.substring(0, 10)}...` : ''}`
             );
             
-            const hideModalAndReload = function() {
-                // סגירת המודל
-                const modal = document.getElementById('projectDetailModal');
-                if (modal) {
-                    hideModal(modal);
-                }
+            // const hideModalAndReload = function() {
+            //     // סגירת המודל
+            //     const modal = document.getElementById('projectDetailModal');
+            //     if (modal) {
+            //         hideModal(modal);
+            //     }
                 
-                // ניסיון לטעון מחדש פרויקטים, אך טיפול בשגיאות
-                try {
-                    // בדיקה אם אנחנו בדף התרומה לפני טעינה מחדש
-                    const donateSection = document.getElementById('donate');
-                    if (donateSection && donateSection.classList.contains('active')) {
-                        if (typeof manuallyLoadProjects === 'function') {
-                            console.log("טוען מחדש פרויקטים לאחר תרומה");
-                            setTimeout(() => {
-                                manuallyLoadProjects();
-                            }, 1000); // הוספת השהיה כדי להבטיח שה-DOM מוכן
-                        }
-                    } else {
-                        console.log("לא בדף התרומה, מדלג על טעינה מחדש");
-                    }
-                } catch (error) {
-                    console.warn("שגיאה בזמן טעינה מחדש לאחר תרומה:", error);
-                    // המשך ביצוע גם אם הטעינה מחדש נכשלת
-                }
-            };
+            //     // ניסיון לטעון מחדש פרויקטים, אך טיפול בשגיאות
+            //     try {
+            //         // בדיקה אם אנחנו בדף התרומה לפני טעינה מחדש
+            //         const donateSection = document.getElementById('donate');
+            //         if (donateSection && donateSection.classList.contains('active')) {
+            //             if (typeof manuallyLoadProjects === 'function') {
+            //                 console.log("טוען מחדש פרויקטים לאחר תרומה");
+            //                 setTimeout(() => {
+            //                     manuallyLoadProjects();
+            //                 }, 1000); // הוספת השהיה כדי להבטיח שה-DOM מוכן
+            //             }
+            //         } else {
+            //             console.log("לא בדף התרומה, מדלג על טעינה מחדש");
+            //         }
+            //     } catch (error) {
+            //         console.warn("שגיאה בזמן טעינה מחדש לאחר תרומה:", error);
+            //         // המשך ביצוע גם אם הטעינה מחדש נכשלת
+            //     }
+            // };
             
-            // קובע רק setTimeout אחד
-            setTimeout(hideModalAndReload, 2000);
+            // // קובע רק setTimeout אחד
+            // setTimeout(hideModalAndReload, 2000);
             
-            return;
+            // return;
         }
         
         try {
