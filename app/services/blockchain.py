@@ -71,20 +71,20 @@ def donate_to_region(region, amount):
     return blockchain_service.donate_to_region(region, amount)
 
 def register_project(self, project_id, beneficiary, goal_amount, region):
-    """רושם פרויקט חדש בחוזה החכם"""
+    """Register a new project in the smart contract"""
     if not self.sender_address:
-        raise ValueError("שגיאה: כתובת השולח לא הוגדרה")
+        raise ValueError("Error: Sender address not set")
         
-    # וודא שהכתובת היא מחרוזת תקינה
+    # Ensure the address is a valid string
     if not Web3.is_address(beneficiary):
-        raise ValueError(f"כתובת ארנק לא תקינה: {beneficiary}")
+        raise ValueError(f"Invalid wallet address: {beneficiary}")
     
     nonce = self.web3.eth.get_transaction_count(self.sender_address)
     
-    # המרת סכום היעד ל-wei
+    # Convert goal amount to wei
     goal_amount_wei = self.web3.to_wei(goal_amount, 'ether')
     
-    # קריאה לפונקציית registerProject בחוזה
+    # Call registerProject function in the contract
     transaction = self.contract.functions.registerProject(
         project_id,
         beneficiary,
@@ -98,8 +98,8 @@ def register_project(self, project_id, beneficiary, goal_amount, region):
         'from': self.sender_address
     })
     
-    # הערה: ב-production יש צורך בחתימה של המפתח הפרטי
-    # החזרת העסקה כדי שהלקוח יוכל לחתום עליה
+    # Note: In production, private key signing is needed
+    # Return the transaction so the client can sign it
     return transaction
 
 # הוספת פונקציה עוטפת
