@@ -567,10 +567,15 @@ function scrollCarousel(direction) {
 // עדכון סיכום תרומה עם פרויקט
 function updateDonationSummaryWithProject(projectTitle, projectRegion) {
     const summaryProject = document.getElementById('summaryProject');
+    console.log(summaryProject + "1")
     const summaryAmount = document.getElementById('summaryAmount');
+    console.log(summaryAmount + "2")
     const summaryGasFee = document.getElementById('summaryGasFee');
+    console.log(summaryGasFee + "3")
     const summaryTotal = document.getElementById('summaryTotal');
+    console.log(summaryTotal + "4")
     const amountInput = document.getElementById('amount');
+    console.log(amountInput + "5")
     
     // אם חלק מהאלמנטים חסרים, רושם הודעה ויוצא בנחת
     if (!summaryProject || !summaryAmount || !summaryTotal || !amountInput) {
