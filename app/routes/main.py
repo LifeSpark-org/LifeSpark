@@ -56,7 +56,6 @@ def map():
 def get_public_approved_projects():
     """Return approved projects for public view"""
     approved_projects = Project.get_approved_projects(mongo)
-
     # אם אין פרויקטים - נוסיף פרויקטים לדוגמה
 
     # המרת ObjectID למחרוזות
