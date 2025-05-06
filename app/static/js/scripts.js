@@ -20,6 +20,7 @@ function displayStatus(message, statusType) {
 // Add these functions or modify existing ones in scripts.js
 
 // This modified version of donateToBlockchain supports both region and project donations
+// עדכון לפונקציית donateToBlockchain בקובץ scripts.js
 async function donateToBlockchain(region, amount, message = '') {
     try {
         if (typeof window.ethereum === 'undefined') {
@@ -47,30 +48,32 @@ async function donateToBlockchain(region, amount, message = '') {
         // המרת הסכום ל-wei
         const amountInWei = web3.utils.toWei(amount.toString(), 'ether');
         
-        console.log('Preparing transaction:', {
-            contract: window.CONTRACT_ADDRESS,
-            region: region,
-            amount: amount,
-            amountInWei: amountInWei,
-            from: window.userWalletAddress
-        });
-        
-        // בניית טרנזקציה והוספת פרמטר של הודעה אם קיים
-        const transactionParameters = {
-            from: window.userWalletAddress,
-            value: amountInWei,
-            gas: web3.utils.toHex(200000)
-        };
-        
-        // אם נוספה הודעה ואפשר לצרף אותה לעסקה
-        if (message) {
-            // אפשרות להוסיף את ההודעה כנתונים נוספים, אם החוזה תומך בכך
-            // transactionParameters.data = web3.utils.utf8ToHex(message);
-            console.log('Message included:', message);
+        // נשתמש ב-estimateGas כדי לקבל הערכה של כמות הגז הנדרשת
+        // במקום להגדיר מספר קבוע
+        let estimatedGas;
+        try {
+            estimatedGas = await contract.methods.donate(region)
+                .estimateGas({
+                    from: window.userWalletAddress,
+                    value: amountInWei
+                });
+                
+            // מוסיפים 20% למקרה שההערכה נמוכה מדי
+            estimatedGas = Math.floor(estimatedGas * 1.2);
+            console.log(`כמות הגז המוערכת: ${estimatedGas}`);
+        } catch (error) {
+            console.error("שגיאה בהערכת הגז:", error);
+            // אם יש שגיאה בהערכה, משתמשים בערך ברירת מחדל סביר
+            estimatedGas = 200000;
         }
         
-        // קריאה לפונקציית התרומה בחוזה
-        const result = await contract.methods.donate(region).send(transactionParameters);
+        // ניצור טרנזקציה ללא מחיר גז (MetaMask יציע אוטומטית)
+        const result = await contract.methods.donate(region).send({
+            from: window.userWalletAddress,
+            value: amountInWei,
+            gas: estimatedGas
+            // לא מגדירים gasPrice - MetaMask יציע מחיר דינמי
+        });
 
         console.log('Transaction result:', result);
         return result.transactionHash;
