@@ -64,7 +64,7 @@ def save_uploaded_file(file, folder='documents'):
 def get_projects():
     """Get all approved projects for public display"""
     projects = Project.get_approved_projects(mongo)
-    
+    print("פרויקט", project)
     # Convert ObjectId to string in each project for JSON serialization
     for project in projects:
         project['_id'] = str(project['_id'])
@@ -74,20 +74,19 @@ def get_projects():
         'projects': projects
     })
 
-@projects_bp.route('/projects/<project_id>', methods=['GET'])
-def get_project(project_id):
-    """Get a specific project by ID"""
-    project = Project.get_by_id(mongo, project_id)
-    print("פרויקט", project)
-    if not project:
-        return jsonify({'status': 'error', 'message': 'Project not found'}), 404
-    # Convert ObjectId to string
-    project['_id'] = str(project['_id'])
+# @projects_bp.route('/projects/<project_id>', methods=['GET'])
+# def get_project(project_id):
+#     """Get a specific project by ID"""
+#     project = Project.get_by_id(mongo, project_id)
+#     if not project:
+#         return jsonify({'status': 'error', 'message': 'Project not found'}), 404
+#     # Convert ObjectId to string
+#     project['_id'] = str(project['_id'])
         
-    return jsonify({
-        'status': 'success',
-        'project': project
-    })
+#     return jsonify({
+#         'status': 'success',
+#         'project': project
+#     })
 
 @projects_bp.route('/submit-project', methods=['POST'])
 @token_required
