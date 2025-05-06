@@ -390,20 +390,6 @@ function setupProjectSelection() {
     projectSlides.forEach((slide, index) => {
         console.log(`📌 מגדיר אירועי בחירה לפרויקט ${index + 1}`);
         
-        // slide.addEventListener('click', function(e) {
-        //     // מונע התנגשות עם מאזיני אירועים אחרים
-        //     if (e.target.classList.contains('project-select-btn') || 
-        //         e.target.closest('.project-select-btn')) {
-        //         return; // נאפשר לכפתור לטפל באירוע בעצמו
-        //     }
-            
-        //     console.log(`👆 לחיצה על שקופית פרויקט`, this.dataset);
-        //     const projectId = this.dataset.projectId;
-        //     const projectTitle = this.dataset.projectTitle;
-        //     const projectRegion = this.dataset.projectRegion;
-            
-        //     selectProject(projectId, projectTitle, projectRegion);
-        // });
         
         // חשוב מאוד: הוסף מאזין אירוע לכפתור בחירה
         const selectBtn = slide.querySelector('.project-select-btn');
