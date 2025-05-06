@@ -1,382 +1,382 @@
-// project-detail-modal.js
-// מודול זה מאפשר תצוגה מפורטת של פרטי פרויקט עם טופס תרומה משולב
+// // project-detail-modal.js
+// // מודול זה מאפשר תצוגה מפורטת של פרטי פרויקט עם טופס תרומה משולב
 
-// כאשר העמוד נטען, נאתחל את המערכת
-document.addEventListener('DOMContentLoaded', function() {
-    // נאתחל את מערכת תצוגת פרטי הפרויקט
-    initProjectDetailModal();
-});
+// // כאשר העמוד נטען, נאתחל את המערכת
+// document.addEventListener('DOMContentLoaded', function() {
+//     // נאתחל את מערכת תצוגת פרטי הפרויקט
+//     initProjectDetailModal();
+// });
 
-function initProjectDetailModal() {
-    if (window.projectModalInitialized) {
-        console.log("מודאל פרטי פרויקט כבר אותחל, מדלג על אתחול נוסף");
-        return;
-    }
-    console.log("מאתחל מערכת תצוגת פרטי פרויקט");
-    window.projectModalInitialized = true;
+// function initProjectDetailModal() {
+//     if (window.projectModalInitialized) {
+//         console.log("מודאל פרטי פרויקט כבר אותחל, מדלג על אתחול נוסף");
+//         return;
+//     }
+//     console.log("מאתחל מערכת תצוגת פרטי פרויקט");
+//     window.projectModalInitialized = true;
     
-    // יוצר את המודל אם הוא לא קיים
-    let projectDetailModal = document.getElementById('projectDetailModal');
-    if (!projectDetailModal) {
-        projectDetailModal = document.createElement('div');
-        projectDetailModal.id = 'projectDetailModal';
-        projectDetailModal.className = 'modal project-detail-modal';
-        document.body.appendChild(projectDetailModal);
+//     // יוצר את המודל אם הוא לא קיים
+//     let projectDetailModal = document.getElementById('projectDetailModal');
+//     if (!projectDetailModal) {
+//         projectDetailModal = document.createElement('div');
+//         projectDetailModal.id = 'projectDetailModal';
+//         projectDetailModal.className = 'modal project-detail-modal';
+//         document.body.appendChild(projectDetailModal);
         
-        // מגדיר את מבנה ה-HTML של המודל
-        projectDetailModal.innerHTML = `
-            <div class="modal-content modal-lg">
-                <div class="modal-header">
-                    <h3 id="projectDetailTitle">פרטי הפרויקט</h3>
-                    <button class="close-button">&times;</button>
-                </div>
-                <div class="modal-body">
-                    <div class="project-detail-container">
-                        <div class="project-detail-content">
-                            <!-- מידע על הפרויקט יוצג כאן -->
-                            <div id="projectDetailInfo"></div>
-                        </div>
-                        <div class="project-detail-sidebar">
-                            <!-- טופס התרומה יוצג כאן -->
-                            <div id="projectDonationForm"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        `;
+//         // מגדיר את מבנה ה-HTML של המודל
+//         projectDetailModal.innerHTML = `
+//             <div class="modal-content modal-lg">
+//                 <div class="modal-header">
+//                     <h3 id="projectDetailTitle">פרטי הפרויקט</h3>
+//                     <button class="close-button">&times;</button>
+//                 </div>
+//                 <div class="modal-body">
+//                     <div class="project-detail-container">
+//                         <div class="project-detail-content">
+//                             <!-- מידע על הפרויקט יוצג כאן -->
+//                             <div id="projectDetailInfo"></div>
+//                         </div>
+//                         <div class="project-detail-sidebar">
+//                             <!-- טופס התרומה יוצג כאן -->
+//                             <div id="projectDonationForm"></div>
+//                         </div>
+//                     </div>
+//                 </div>
+//             </div>
+//         `;
         
-        // מוסיף מאזין אירועים לכפתור הסגירה
-        const closeButton = projectDetailModal.querySelector('.close-button');
-        closeButton.addEventListener('click', () => {
-            hideModal(projectDetailModal);
-        });
+//         // מוסיף מאזין אירועים לכפתור הסגירה
+//         const closeButton = projectDetailModal.querySelector('.close-button');
+//         closeButton.addEventListener('click', () => {
+//             hideModal(projectDetailModal);
+//         });
         
-        // מוסיף מאזין אירועים לסגירה בלחיצה מחוץ למודל
-        projectDetailModal.addEventListener('click', (event) => {
-            if (event.target === projectDetailModal) {
-                hideModal(projectDetailModal);
-            }
-        });
-    }
+//         // מוסיף מאזין אירועים לסגירה בלחיצה מחוץ למודל
+//         projectDetailModal.addEventListener('click', (event) => {
+//             if (event.target === projectDetailModal) {
+//                 hideModal(projectDetailModal);
+//             }
+//         });
+//     }
     
-    // מוסיף מאזיני אירועים לכפתורי בחירת הפרויקט
-    setupProjectSelectionListeners();
+//     // מוסיף מאזיני אירועים לכפתורי בחירת הפרויקט
+//     setupProjectSelectionListeners();
     
-    // מוסיף סגנונות CSS למודל פרטי הפרויקט
-    addProjectDetailStyles();
-}
+//     // מוסיף סגנונות CSS למודל פרטי הפרויקט
+//     addProjectDetailStyles();
+// }
 
-// מוסיף סגנונות CSS למודל פרטי הפרויקט
-function addProjectDetailStyles() {
-    // בודק אם סגנונות כבר קיימים
-    if (document.getElementById('project-detail-styles')) {
-        return;
-    }
+// // מוסיף סגנונות CSS למודל פרטי הפרויקט
+// function addProjectDetailStyles() {
+//     // בודק אם סגנונות כבר קיימים
+//     if (document.getElementById('project-detail-styles')) {
+//         return;
+//     }
     
-    // יוצר אלמנט סגנון
-    const styleElement = document.createElement('style');
-    styleElement.id = 'project-detail-styles';
+//     // יוצר אלמנט סגנון
+//     const styleElement = document.createElement('style');
+//     styleElement.id = 'project-detail-styles';
     
-    // מגדיר את הסגנונות
-    styleElement.textContent = `
-        /* סגנונות למודל פרטי הפרויקט */
-        .project-detail-modal .modal-content {
-            max-width: 900px;
-            height: 80vh;
-            max-height: 700px;
-            display: flex;
-            flex-direction: column;
-        }
+//     // מגדיר את הסגנונות
+//     styleElement.textContent = `
+//         /* סגנונות למודל פרטי הפרויקט */
+//         .project-detail-modal .modal-content {
+//             max-width: 900px;
+//             height: 80vh;
+//             max-height: 700px;
+//             display: flex;
+//             flex-direction: column;
+//         }
         
-        .project-detail-container {
-            display: flex;
-            flex-direction: row;
-            height: 100%;
-            overflow: hidden;
-        }
+//         .project-detail-container {
+//             display: flex;
+//             flex-direction: row;
+//             height: 100%;
+//             overflow: hidden;
+//         }
         
-        .project-detail-content {
-            flex: 1;
-            padding: 20px;
-            overflow-y: auto;
-        }
+//         .project-detail-content {
+//             flex: 1;
+//             padding: 20px;
+//             overflow-y: auto;
+//         }
         
-        .project-detail-sidebar {
-            width: 320px;
-            background-color: var(--card-bg);
-            border-left: 1px solid var(--border-color);
-            padding: 20px;
-            overflow-y: auto;
-        }
+//         .project-detail-sidebar {
+//             width: 320px;
+//             background-color: var(--card-bg);
+//             border-left: 1px solid var(--border-color);
+//             padding: 20px;
+//             overflow-y: auto;
+//         }
         
-        .project-detail-badge {
-            display: inline-block;
-            padding: 0.5rem 1rem;
-            border-radius: 50px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-        }
+//         .project-detail-badge {
+//             display: inline-block;
+//             padding: 0.5rem 1rem;
+//             border-radius: 50px;
+//             font-size: 0.9rem;
+//             font-weight: 600;
+//             margin-bottom: 1rem;
+//         }
         
-        .project-detail-badge.south {
-            background-color: rgba(239, 68, 68, 0.1);
-            color: #ef4444;
-        }
+//         .project-detail-badge.south {
+//             background-color: rgba(239, 68, 68, 0.1);
+//             color: #ef4444;
+//         }
         
-        .project-detail-badge.north {
-            background-color: rgba(59, 130, 246, 0.1);
-            color: #3b82f6;
-        }
+//         .project-detail-badge.north {
+//             background-color: rgba(59, 130, 246, 0.1);
+//             color: #3b82f6;
+//         }
         
-        .project-detail-description {
-            margin-bottom: 2rem;
-        }
+//         .project-detail-description {
+//             margin-bottom: 2rem;
+//         }
         
-        .project-detail-description h4,
-        .project-detail-progress h4,
-        .project-detail-contact h4 {
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 0.8rem;
-            color: var(--primary-color);
-        }
+//         .project-detail-description h4,
+//         .project-detail-progress h4,
+//         .project-detail-contact h4 {
+//             font-size: 1.1rem;
+//             font-weight: 600;
+//             margin-bottom: 0.8rem;
+//             color: var(--primary-color);
+//         }
         
-        .project-detail-progress {
-            margin-bottom: 2rem;
-        }
+//         .project-detail-progress {
+//             margin-bottom: 2rem;
+//         }
         
-        .project-donation-form {
-            padding-bottom: 1rem;
-        }
+//         .project-donation-form {
+//             padding-bottom: 1rem;
+//         }
         
-        .project-donation-form h4 {
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 1.2rem;
-            color: var(--primary-color);
-        }
+//         .project-donation-form h4 {
+//             font-size: 1.1rem;
+//             font-weight: 600;
+//             margin-bottom: 1.2rem;
+//             color: var(--primary-color);
+//         }
         
-        .wallet-connection-required {
-            text-align: center;
-            padding: 1rem;
-            margin-bottom: 1rem;
-            background-color: rgba(79, 70, 229, 0.1);
-            border-radius: var(--border-radius);
-        }
+//         .wallet-connection-required {
+//             text-align: center;
+//             padding: 1rem;
+//             margin-bottom: 1rem;
+//             background-color: rgba(79, 70, 229, 0.1);
+//             border-radius: var(--border-radius);
+//         }
         
-        .donation-quick-amounts {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            margin-top: 0.8rem;
-            margin-bottom: 1rem;
-        }
+//         .donation-quick-amounts {
+//             display: flex;
+//             flex-wrap: wrap;
+//             gap: 0.5rem;
+//             margin-top: 0.8rem;
+//             margin-bottom: 1rem;
+//         }
         
-        .quick-amount-btn {
-            padding: 0.5rem 0.8rem;
-            border-radius: 50px;
-            background-color: rgba(79, 70, 229, 0.1);
-            color: var(--primary-color);
-            font-size: 0.9rem;
-            border: none;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
+//         .quick-amount-btn {
+//             padding: 0.5rem 0.8rem;
+//             border-radius: 50px;
+//             background-color: rgba(79, 70, 229, 0.1);
+//             color: var(--primary-color);
+//             font-size: 0.9rem;
+//             border: none;
+//             cursor: pointer;
+//             transition: all 0.2s ease;
+//         }
         
-        .quick-amount-btn:hover {
-            background-color: rgba(79, 70, 229, 0.2);
-        }
+//         .quick-amount-btn:hover {
+//             background-color: rgba(79, 70, 229, 0.2);
+//         }
         
-        .quick-amount-btn.active {
-            background-color: var(--primary-color);
-            color: white;
-        }
+//         .quick-amount-btn.active {
+//             background-color: var(--primary-color);
+//             color: white;
+//         }
         
-        /* תמיכה בדארק מוד */
-        .dark-theme .project-detail-sidebar {
-            background-color: #1e293b;
-            border-color: #334155;
-        }
+//         /* תמיכה בדארק מוד */
+//         .dark-theme .project-detail-sidebar {
+//             background-color: #1e293b;
+//             border-color: #334155;
+//         }
         
-        .dark-theme .wallet-connection-required {
-            background-color: rgba(79, 70, 229, 0.2);
-        }
+//         .dark-theme .wallet-connection-required {
+//             background-color: rgba(79, 70, 229, 0.2);
+//         }
         
-        /* תמיכה ב-RTL */
-        [dir="rtl"] .project-detail-sidebar {
-            border-left: none;
-            border-right: 1px solid var(--border-color);
-        }
+//         /* תמיכה ב-RTL */
+//         [dir="rtl"] .project-detail-sidebar {
+//             border-left: none;
+//             border-right: 1px solid var(--border-color);
+//         }
         
-        /* התאמות תצוגה למסכים קטנים */
-        @media (max-width: 768px) {
-            .project-detail-container {
-                flex-direction: column;
-            }
+//         /* התאמות תצוגה למסכים קטנים */
+//         @media (max-width: 768px) {
+//             .project-detail-container {
+//                 flex-direction: column;
+//             }
             
-            .project-detail-sidebar {
-                width: 100%;
-                border-left: none;
-                border-top: 1px solid var(--border-color);
-            }
+//             .project-detail-sidebar {
+//                 width: 100%;
+//                 border-left: none;
+//                 border-top: 1px solid var(--border-color);
+//             }
             
-            [dir="rtl"] .project-detail-sidebar {
-                border-right: none;
-                border-top: 1px solid var(--border-color);
-            }
-        }
-    `;
+//             [dir="rtl"] .project-detail-sidebar {
+//                 border-right: none;
+//                 border-top: 1px solid var(--border-color);
+//             }
+//         }
+//     `;
     
-    // מוסיף את הסגנונות למסמך
-    document.head.appendChild(styleElement);
-}
+//     // מוסיף את הסגנונות למסמך
+//     document.head.appendChild(styleElement);
+// }
 
-// מוסיף מאזיני אירועים לכפתורי בחירת הפרויקט
-function setupProjectSelectionListeners() {
-    // מוסיף מאזיני אירועים לכפתורי בחירת הפרויקט בטעינה הראשונית
-    addProjectButtonListeners();
+// // מוסיף מאזיני אירועים לכפתורי בחירת הפרויקט
+// function setupProjectSelectionListeners() {
+//     // מוסיף מאזיני אירועים לכפתורי בחירת הפרויקט בטעינה הראשונית
+//     addProjectButtonListeners();
     
-    // מוסיף מאזין למוטציות ב-DOM כדי להוסיף מאזינים לכפתורים חדשים שמתווספים
-    const projectsObserver = new MutationObserver(function(mutations) {
-        mutations.forEach(function(mutation) {
-            if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
-                // כאשר נוספים אלמנטים חדשים, מוסיף מאזיני אירועים לכפתורים
-                addProjectButtonListeners();
-            }
-        });
-    });
+//     // מוסיף מאזין למוטציות ב-DOM כדי להוסיף מאזינים לכפתורים חדשים שמתווספים
+//     const projectsObserver = new MutationObserver(function(mutations) {
+//         mutations.forEach(function(mutation) {
+//             if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+//                 // כאשר נוספים אלמנטים חדשים, מוסיף מאזיני אירועים לכפתורים
+//                 addProjectButtonListeners();
+//             }
+//         });
+//     });
     
-    // מתחיל לעקוב אחרי שינויים במיכל הפרויקטים
-    const projectsCarousel = document.getElementById('approvedProjectsCarousel');
-    if (projectsCarousel) {
-        projectsObserver.observe(projectsCarousel, {
-            childList: true,
-            subtree: true
-        });
-    }
-}
+//     // מתחיל לעקוב אחרי שינויים במיכל הפרויקטים
+//     const projectsCarousel = document.getElementById('approvedProjectsCarousel');
+//     if (projectsCarousel) {
+//         projectsObserver.observe(projectsCarousel, {
+//             childList: true,
+//             subtree: true
+//         });
+//     }
+// }
 
-// מוסיף מאזיני אירועים לכפתורי בחירת הפרויקט
-function addProjectButtonListeners() {
-    const selectButtons = document.querySelectorAll('.project-select-btn');
+// // מוסיף מאזיני אירועים לכפתורי בחירת הפרויקט
+// function addProjectButtonListeners() {
+//     const selectButtons = document.querySelectorAll('.project-select-btn');
     
-    selectButtons.forEach(function(button) {
-        // מסיר מאזיני אירועים קיימים כדי למנוע כפילויות
-        const newButton = button.cloneNode(true);
-        if (button.parentNode) {
-            button.parentNode.replaceChild(newButton, button);
-        }
+//     selectButtons.forEach(function(button) {
+//         // מסיר מאזיני אירועים קיימים כדי למנוע כפילויות
+//         const newButton = button.cloneNode(true);
+//         if (button.parentNode) {
+//             button.parentNode.replaceChild(newButton, button);
+//         }
         
-        // מוסיף מאזין אירועים חדש
-        newButton.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
+//         // מוסיף מאזין אירועים חדש
+//         newButton.addEventListener('click', function(e) {
+//             e.preventDefault();
+//             e.stopPropagation();
             
-            // מאתר את הפרויקט המתאים
-            const projectSlide = this.closest('.project-slide');
-            if (!projectSlide) return;
+//             // מאתר את הפרויקט המתאים
+//             const projectSlide = this.closest('.project-slide');
+//             if (!projectSlide) return;
             
-            // מחלץ מידע על הפרויקט
-            const projectId = projectSlide.dataset.projectId;
-            const projectTitle = projectSlide.dataset.projectTitle;
-            const projectDescription = projectSlide.querySelector('.project-description')?.textContent;
-            const projectRegion = projectSlide.dataset.projectRegion;
+//             // מחלץ מידע על הפרויקט
+//             const projectId = projectSlide.dataset.projectId;
+//             const projectTitle = projectSlide.dataset.projectTitle;
+//             const projectDescription = projectSlide.querySelector('.project-description')?.textContent;
+//             const projectRegion = projectSlide.dataset.projectRegion;
             
-            // מחלץ מידע על ההתקדמות
-            const progressFill = projectSlide.querySelector('.progress-fill');
-            const progressPercent = progressFill ? 
-                parseInt(progressFill.style.width.replace('%', '')) : 0;
+//             // מחלץ מידע על ההתקדמות
+//             const progressFill = projectSlide.querySelector('.progress-fill');
+//             const progressPercent = progressFill ? 
+//                 parseInt(progressFill.style.width.replace('%', '')) : 0;
             
-            const progressStats = projectSlide.querySelector('.progress-stats');
-            const progressText = progressStats ? progressStats.textContent : '';
+//             const progressStats = projectSlide.querySelector('.progress-stats');
+//             const progressText = progressStats ? progressStats.textContent : '';
             
-            // מחלץ את הסכומים מהטקסט
-            let currentAmount = 0;
-            let goalAmount = 0;
+//             // מחלץ את הסכומים מהטקסט
+//             let currentAmount = 0;
+//             let goalAmount = 0;
             
-            if (progressText) {
-                const amountMatch = progressText.match(/(\d+(?:\.\d+)?)\s*\/\s*(\d+(?:\.\d+)?)/);
-                if (amountMatch && amountMatch.length >= 3) {
-                    currentAmount = parseFloat(amountMatch[1]);
-                    goalAmount = parseFloat(amountMatch[2]);
-                }
-            }
+//             if (progressText) {
+//                 const amountMatch = progressText.match(/(\d+(?:\.\d+)?)\s*\/\s*(\d+(?:\.\d+)?)/);
+//                 if (amountMatch && amountMatch.length >= 3) {
+//                     currentAmount = parseFloat(amountMatch[1]);
+//                     goalAmount = parseFloat(amountMatch[2]);
+//                 }
+//             }
             
-            // יוצר אובייקט פרויקט
-            const project = {
-                id: projectId,
-                title: projectTitle,
-                description: projectDescription,
-                region: projectRegion,
-                currentAmount: currentAmount,
-                goalAmount: goalAmount,
-                progressPercent: progressPercent
-            };
+//             // יוצר אובייקט פרויקט
+//             const project = {
+//                 id: projectId,
+//                 title: projectTitle,
+//                 description: projectDescription,
+//                 region: projectRegion,
+//                 currentAmount: currentAmount,
+//                 goalAmount: goalAmount,
+//                 progressPercent: progressPercent
+//             };
             
-            // מציג את פרטי הפרויקט
-            showProjectDetails(project);
-        });
-    });
-}
+//             // מציג את פרטי הפרויקט
+//             showProjectDetails(project);
+//         });
+//     });
+// }
 
-// מציג את פרטי הפרויקט במודל
-function showProjectDetails(project) {
-    console.log("מציג פרטי פרויקט:", project);
+// // מציג את פרטי הפרויקט במודל
+// function showProjectDetails(project) {
+//     console.log("מציג פרטי פרויקט:", project);
 
-    // הוספת שדה ethereum_address אם חסר
-    if (!project.ethereum_address) {
-        project.ethereum_address = '';
-        console.warn("הפרויקט חסר כתובת ארנק, הוספנו שדה ריק:", project);
-    }
-    // מאתר את המודל
-    const modal = document.getElementById('projectDetailModal');
-    if (!modal) return;
+//     // הוספת שדה ethereum_address אם חסר
+//     if (!project.ethereum_address) {
+//         project.ethereum_address = '';
+//         console.warn("הפרויקט חסר כתובת ארנק, הוספנו שדה ריק:", project);
+//     }
+//     // מאתר את המודל
+//     const modal = document.getElementById('projectDetailModal');
+//     if (!modal) return;
     
-    // מעדכן את הכותרת
-    const titleElement = modal.querySelector('#projectDetailTitle');
-    if (titleElement) {
-        titleElement.textContent = project.title;
-    }
+//     // מעדכן את הכותרת
+//     const titleElement = modal.querySelector('#projectDetailTitle');
+//     if (titleElement) {
+//         titleElement.textContent = project.title;
+//     }
     
-    // מציג את פרטי הפרויקט
-    const detailsContainer = modal.querySelector('#projectDetailInfo');
-    if (detailsContainer) {
-        // מחלץ את שם האזור לפי השפה הנוכחית
-        const regionText = project.region === 'south' ? 'אזור הדרום' : 'אזור הצפון';
+//     // מציג את פרטי הפרויקט
+//     const detailsContainer = modal.querySelector('#projectDetailInfo');
+//     if (detailsContainer) {
+//         // מחלץ את שם האזור לפי השפה הנוכחית
+//         const regionText = project.region === 'south' ? 'אזור הדרום' : 'אזור הצפון';
         
-        // עדכון תוכן המידע על הפרויקט
-        detailsContainer.innerHTML = `
-            <div class="project-detail-badge ${project.region}">
-                ${regionText}
-            </div>
+//         // עדכון תוכן המידע על הפרויקט
+//         detailsContainer.innerHTML = `
+//             <div class="project-detail-badge ${project.region}">
+//                 ${regionText}
+//             </div>
             
-            <div class="project-detail-description">
-                <h4>תיאור הפרויקט</h4>
-                <p>${project.description}</p>
-            </div>
+//             <div class="project-detail-description">
+//                 <h4>תיאור הפרויקט</h4>
+//                 <p>${project.description}</p>
+//             </div>
             
-            <div class="project-detail-progress">
-                <h4>התקדמות המימון</h4>
-                <div class="progress-bar">
-                    <div class="progress-fill" style="width: ${project.progressPercent}%"></div>
-                </div>
-                <div class="progress-stats">
-                    <span>${project.currentAmount} / ${project.goalAmount} ETH</span>
-                    <span>${project.progressPercent}%</span>
-                </div>
-            </div>
-        `;
-    }
+//             <div class="project-detail-progress">
+//                 <h4>התקדמות המימון</h4>
+//                 <div class="progress-bar">
+//                     <div class="progress-fill" style="width: ${project.progressPercent}%"></div>
+//                 </div>
+//                 <div class="progress-stats">
+//                     <span>${project.currentAmount} / ${project.goalAmount} ETH</span>
+//                     <span>${project.progressPercent}%</span>
+//                 </div>
+//             </div>
+//         `;
+//     }
     
-    // מעדכן את טופס התרומה
-    const donationFormContainer = modal.querySelector('#projectDonationForm');
-    if (donationFormContainer) {
-        setupProjectDonationForm(donationFormContainer, project);
-    }
+//     // מעדכן את טופס התרומה
+//     const donationFormContainer = modal.querySelector('#projectDonationForm');
+//     if (donationFormContainer) {
+//         setupProjectDonationForm(donationFormContainer, project);
+//     }
     
-    // מציג את המודל
-    showModal(modal);
-}
+//     // מציג את המודל
+//     showModal(modal);
+// }
 
 // מגדיר את טופס התרומה לפרויקט
 function setupProjectDonationForm(container, project) {
