@@ -435,15 +435,17 @@ function setupProjectSelection() {
                     title: projectTitle,
                     region: projectRegion
                 });
-                console.log("בדיקה בדיקתית!!!")
+
                 // קריאה לפונקציה להצגת פרטי הפרויקט
                 if (typeof showProjectDetails === 'function') {
                     // נסה להשיג מידע נוסף על הפרויקט
                     fetchProjectDetails(projectId)
                         .then(project => {
                             if (project) {
+                                console.log("הצלחתי")
                                 showProjectDetails(project);
                             } else {
+                                console.log("אני דפוק")
                                 // אם לא הצלחנו להשיג מידע מלא, נשתמש במה שיש
                                 showProjectDetails({
                                     id: projectId,
