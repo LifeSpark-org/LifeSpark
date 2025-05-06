@@ -535,16 +535,57 @@ function setupProjectDonationForm(container, project) {
     }
 }
 
+
+// פונקציה להערכת עלויות גז בזמן אמת
+async function estimateGasFee(project, amount) {
+    try {
+        // חיבור לחוזה החכם
+        const web3 = new Web3(window.ethereum);
+        const contract = new web3.eth.Contract(
+            window.CONTRACT_ABI, 
+            window.CONTRACT_ADDRESS
+        );
+        
+        // המרת הסכום ל-wei
+        const amountInWei = web3.utils.toWei(amount.toString(), 'ether');
+        
+        // הערכת הגז הנדרש
+        const estimatedGas = await contract.methods.donate(project.region)
+            .estimateGas({
+                from: window.userWalletAddress,
+                value: amountInWei
+            });
+        
+        // קבלת מחיר הגז הנוכחי ברשת
+        const gasPrice = await web3.eth.getGasPrice();
+        
+        // חישוב העלות הכוללת
+        const gasCost = web3.utils.toBN(estimatedGas).mul(web3.utils.toBN(gasPrice));
+        const gasCostInEther = parseFloat(web3.utils.fromWei(gasCost, 'ether'));
+        
+        return gasCostInEther;
+    } catch (error) {
+        console.error("שגיאה בהערכת עלות הגז:", error);
+        // במקרה של שגיאה, החזר ערך ברירת מחדל
+        return 0.001;
+    }
+}
+
 // מעדכן את סיכום התרומה
-function updateDonationSummary(amountInput, summaryAmount, summaryTotal) {
+async function updateDonationSummary(amountInput, summaryAmount, summaryTotal) {
     if (!amountInput || !summaryAmount || !summaryTotal) return;
     
     const amount = parseFloat(amountInput.value) || 0;
-    const gasFee = 0.001; // עמלת גז משוערת
+    const project = {
+        region: selectedRegion // משתנה גלובלי שמכיל את האזור הנבחר
+    };
+    const gasFee = await estimateGasFee(project, amount);
     const total = amount + gasFee;
     
     summaryAmount.textContent = `${amount.toFixed(4)} ETH`;
-    summaryTotal.textContent = `${total.toFixed(4)} ETH`;
+    const summaryGasFee = document.getElementById('summaryGasFee');
+    if (summaryGasFee) summaryGasFee.textContent = `~ ${gasFee.toFixed(6)} ETH`;
+    summaryTotal.textContent = `${total.toFixed(6)} ETH`;
 }
 
 // מבצע תרומה לפרויקט ספציפי
