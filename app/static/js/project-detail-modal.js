@@ -589,239 +589,239 @@ async function updateDonationSummary(amountInput, summaryAmount, summaryTotal) {
 }
 
 // מבצע תרומה לפרויקט ספציפי
-async function processDonationToProject(project, amount, message) {
-    try {
-        // מציג הודעת עיבוד
-        showNotification('info', 'מעבד את התרומה שלך...');
+// async function processDonationToProject(project, amount, message) {
+//     try {
+//         // מציג הודעת עיבוד
+//         showNotification('info', 'מעבד את התרומה שלך...');
         
-        // מציג חיווי טעינה בכפתור
-        const submitButton = document.querySelector('#projectDonationSubmitForm button[type="submit"]');
-        if (submitButton) {
-            submitButton.disabled = true;
-            submitButton.innerHTML = '<div class="loader-inline"></div> מעבד...';
-        }
+//         // מציג חיווי טעינה בכפתור
+//         const submitButton = document.querySelector('#projectDonationSubmitForm button[type="submit"]');
+//         if (submitButton) {
+//             submitButton.disabled = true;
+//             submitButton.innerHTML = '<div class="loader-inline"></div> מעבד...';
+//         }
         
-        // בדיקה שהארנק של הפרויקט קיים
-        if (!project.ethereum_address) {
-            console.warn("לא נמצאה כתובת ארנק לפרויקט זה, ננסה לבצע תרומה לאזור", project);
+//         // בדיקה שהארנק של הפרויקט קיים
+//         if (!project.ethereum_address) {
+//             console.warn("לא נמצאה כתובת ארנק לפרויקט זה, ננסה לבצע תרומה לאזור", project);
             
-            // אם אין כתובת ארנק לפרויקט, ננסה לבצע תרומה לאזור
-            const web3 = new Web3(window.ethereum);
-            const contract = new web3.eth.Contract(
-                window.CONTRACT_ABI, 
-                window.CONTRACT_ADDRESS
-            );
+//             // אם אין כתובת ארנק לפרויקט, ננסה לבצע תרומה לאזור
+//             const web3 = new Web3(window.ethereum);
+//             const contract = new web3.eth.Contract(
+//                 window.CONTRACT_ABI, 
+//                 window.CONTRACT_ADDRESS
+//             );
             
-            // המרת הסכום ל-wei
-            const amountInWei = web3.utils.toWei(amount.toString(), 'ether');
+//             // המרת הסכום ל-wei
+//             const amountInWei = web3.utils.toWei(amount.toString(), 'ether');
             
-            // קריאה לפונקציית donate הרגילה לאזור
-            const txHash = await contract.methods.donate(project.region).send({
-                from: window.userWalletAddress,
-                value: amountInWei,
-                gas: 200000
-            });
+//             // קריאה לפונקציית donate הרגילה לאזור
+//             const txHash = await contract.methods.donate(project.region).send({
+//                 from: window.userWalletAddress,
+//                 value: amountInWei,
+//                 gas: 200000
+//             });
             
-            // עדכון הפרויקט בבסיס הנתונים
-            try {
-                const token = localStorage.getItem('token');
-                const updateResponse = await fetch(`/projects/${project.id}/update-donation`, {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': token ? `Bearer ${token}` : '',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        amount: amount,
-                        txHash: txHash.transactionHash,
-                        message: message
-                    })
-                });
+//             // עדכון הפרויקט בבסיס הנתונים
+//             try {
+//                 const token = localStorage.getItem('token');
+//                 const updateResponse = await fetch(`/projects/${project.id}/update-donation`, {
+//                     method: 'POST',
+//                     headers: {
+//                         'Authorization': token ? `Bearer ${token}` : '',
+//                         'Content-Type': 'application/json'
+//                     },
+//                     body: JSON.stringify({
+//                         amount: amount,
+//                         txHash: txHash.transactionHash,
+//                         message: message
+//                     })
+//                 });
                 
-                if (!updateResponse.ok) {
-                    console.warn('התרומה נרשמה בבלוקצ\'יין אך לא עודכנה במסד הנתונים');
-                }
-            } catch (updateError) {
-                console.warn('שגיאה בעדכון הפרויקט:', updateError);
-            }
+//                 if (!updateResponse.ok) {
+//                     console.warn('התרומה נרשמה בבלוקצ\'יין אך לא עודכנה במסד הנתונים');
+//                 }
+//             } catch (updateError) {
+//                 console.warn('שגיאה בעדכון הפרויקט:', updateError);
+//             }
             
-            // מציג הודעת הצלחה
-            showNotification('success', 
-                `התרומה בוצעה בהצלחה לאזור ${project.region}! ${txHash.transactionHash ? `Transaction: ${txHash.transactionHash.substring(0, 10)}...` : ''}`
-            );
+//             // מציג הודעת הצלחה
+//             showNotification('success', 
+//                 `התרומה בוצעה בהצלחה לאזור ${project.region}! ${txHash.transactionHash ? `Transaction: ${txHash.transactionHash.substring(0, 10)}...` : ''}`
+//             );
             
-            // const hideModalAndReload = function() {
-            //     // סגירת המודל
-            //     const modal = document.getElementById('projectDetailModal');
-            //     if (modal) {
-            //         hideModal(modal);
-            //     }
+//             // const hideModalAndReload = function() {
+//             //     // סגירת המודל
+//             //     const modal = document.getElementById('projectDetailModal');
+//             //     if (modal) {
+//             //         hideModal(modal);
+//             //     }
                 
-            //     // ניסיון לטעון מחדש פרויקטים, אך טיפול בשגיאות
-            //     try {
-            //         // בדיקה אם אנחנו בדף התרומה לפני טעינה מחדש
-            //         const donateSection = document.getElementById('donate');
-            //         if (donateSection && donateSection.classList.contains('active')) {
-            //             if (typeof manuallyLoadProjects === 'function') {
-            //                 console.log("טוען מחדש פרויקטים לאחר תרומה");
-            //                 setTimeout(() => {
-            //                     manuallyLoadProjects();
-            //                 }, 1000); // הוספת השהיה כדי להבטיח שה-DOM מוכן
-            //             }
-            //         } else {
-            //             console.log("לא בדף התרומה, מדלג על טעינה מחדש");
-            //         }
-            //     } catch (error) {
-            //         console.warn("שגיאה בזמן טעינה מחדש לאחר תרומה:", error);
-            //         // המשך ביצוע גם אם הטעינה מחדש נכשלת
-            //     }
-            // };
+//             //     // ניסיון לטעון מחדש פרויקטים, אך טיפול בשגיאות
+//             //     try {
+//             //         // בדיקה אם אנחנו בדף התרומה לפני טעינה מחדש
+//             //         const donateSection = document.getElementById('donate');
+//             //         if (donateSection && donateSection.classList.contains('active')) {
+//             //             if (typeof manuallyLoadProjects === 'function') {
+//             //                 console.log("טוען מחדש פרויקטים לאחר תרומה");
+//             //                 setTimeout(() => {
+//             //                     manuallyLoadProjects();
+//             //                 }, 1000); // הוספת השהיה כדי להבטיח שה-DOM מוכן
+//             //             }
+//             //         } else {
+//             //             console.log("לא בדף התרומה, מדלג על טעינה מחדש");
+//             //         }
+//             //     } catch (error) {
+//             //         console.warn("שגיאה בזמן טעינה מחדש לאחר תרומה:", error);
+//             //         // המשך ביצוע גם אם הטעינה מחדש נכשלת
+//             //     }
+//             // };
             
-            // // קובע רק setTimeout אחד
-            // setTimeout(hideModalAndReload, 2000);
+//             // // קובע רק setTimeout אחד
+//             // setTimeout(hideModalAndReload, 2000);
             
-            return;
-        }
+//             // return;
+//         }
         
-        try {
-            // ביצוע תרומה ישירה דרך בלוקצ'יין או דרך החוזה החכם
-            const web3 = new Web3(window.ethereum);
-            const contract = new web3.eth.Contract(
-                window.CONTRACT_ABI, 
-                window.CONTRACT_ADDRESS
-            );
+//         try {
+//             // ביצוע תרומה ישירה דרך בלוקצ'יין או דרך החוזה החכם
+//             const web3 = new Web3(window.ethereum);
+//             const contract = new web3.eth.Contract(
+//                 window.CONTRACT_ABI, 
+//                 window.CONTRACT_ADDRESS
+//             );
             
-            // המרת הסכום ל-wei
-            const amountInWei = web3.utils.toWei(amount.toString(), 'ether');
+//             // המרת הסכום ל-wei
+//             const amountInWei = web3.utils.toWei(amount.toString(), 'ether');
             
-            let txHash;
+//             let txHash;
             
-            // בדיקה אם הפרויקט רשום בחוזה החכם
-            try {
-                // אנחנו מנסים לקרוא את פרטי הפרויקט מהחוזה
-                const projectId = project.id || project._id;
-                const projectDetails = await contract.methods.getProjectDetails(projectId).call().catch(() => null);
+//             // בדיקה אם הפרויקט רשום בחוזה החכם
+//             try {
+//                 // אנחנו מנסים לקרוא את פרטי הפרויקט מהחוזה
+//                 const projectId = project.id || project._id;
+//                 const projectDetails = await contract.methods.getProjectDetails(projectId).call().catch(() => null);
                 
-                if (projectDetails && projectDetails[3]) { // הערך הרביעי הוא exists
-                    // אם הפרויקט רשום בחוזה, נשתמש בפונקציית donateToProject
-                    console.log('Project exists in contract, using donateToProject');
-                    txHash = await contract.methods.donateToProject(projectId).send({
-                        from: window.userWalletAddress,
-                        value: amountInWei,
-                        gas: 200000
-                    });
-                } else {
-                    // אם הפרויקט לא רשום בחוזה, נבצע תרומה ישירה לכתובת הארנק של הפרויקט
-                    console.log('Project not registered in contract, sending directly to beneficiary');
+//                 if (projectDetails && projectDetails[3]) { // הערך הרביעי הוא exists
+//                     // אם הפרויקט רשום בחוזה, נשתמש בפונקציית donateToProject
+//                     console.log('Project exists in contract, using donateToProject');
+//                     txHash = await contract.methods.donateToProject(projectId).send({
+//                         from: window.userWalletAddress,
+//                         value: amountInWei,
+//                         gas: 200000
+//                     });
+//                 } else {
+//                     // אם הפרויקט לא רשום בחוזה, נבצע תרומה ישירה לכתובת הארנק של הפרויקט
+//                     console.log('Project not registered in contract, sending directly to beneficiary');
                     
-                    txHash = await web3.eth.sendTransaction({
-                        from: window.userWalletAddress,
-                        to: project.ethereum_address,
-                        value: amountInWei,
-                        gas: 21000
-                    });
+//                     txHash = await web3.eth.sendTransaction({
+//                         from: window.userWalletAddress,
+//                         to: project.ethereum_address,
+//                         value: amountInWei,
+//                         gas: 21000
+//                     });
                     
-                    // נעדכן גם את מאזן האזור בחוזה החכם
-                    try {
-                        await contract.methods.donate(project.region).send({
-                            from: window.userWalletAddress,
-                            value: 0, // תרומה סמלית של 0 רק לעדכון הנתונים
-                            gas: 100000
-                        });
-                    } catch (regionError) {
-                        console.warn('שגיאה בעדכון מאזן האזור בחוזה:', regionError);
-                    }
-                }
+//                     // נעדכן גם את מאזן האזור בחוזה החכם
+//                     try {
+//                         await contract.methods.donate(project.region).send({
+//                             from: window.userWalletAddress,
+//                             value: 0, // תרומה סמלית של 0 רק לעדכון הנתונים
+//                             gas: 100000
+//                         });
+//                     } catch (regionError) {
+//                         console.warn('שגיאה בעדכון מאזן האזור בחוזה:', regionError);
+//                     }
+//                 }
                 
-                // עדכון הפרויקט בבסיס הנתונים
-                const token = localStorage.getItem('token');
-                const updateResponse = await fetch(`/projects/${projectId}/update-donation`, {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': token ? `Bearer ${token}` : '',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        amount: amount,
-                        txHash: txHash.transactionHash || txHash,
-                        message: message
-                    })
-                });
+//                 // עדכון הפרויקט בבסיס הנתונים
+//                 const token = localStorage.getItem('token');
+//                 const updateResponse = await fetch(`/projects/${projectId}/update-donation`, {
+//                     method: 'POST',
+//                     headers: {
+//                         'Authorization': token ? `Bearer ${token}` : '',
+//                         'Content-Type': 'application/json'
+//                     },
+//                     body: JSON.stringify({
+//                         amount: amount,
+//                         txHash: txHash.transactionHash || txHash,
+//                         message: message
+//                     })
+//                 });
                 
-                if (!updateResponse.ok) {
-                    console.warn('התרומה נרשמה בבלוקצ\'יין אך לא עודכנה במסד הנתונים');
-                }
+//                 if (!updateResponse.ok) {
+//                     console.warn('התרומה נרשמה בבלוקצ\'יין אך לא עודכנה במסד הנתונים');
+//                 }
                 
-                // מציג הודעת הצלחה
-                showNotification('success', 
-                    `התרומה בוצעה בהצלחה! ${txHash.transactionHash ? `Transaction: ${txHash.transactionHash.substring(0, 10)}...` : ''}`
-                );
+//                 // מציג הודעת הצלחה
+//                 showNotification('success', 
+//                     `התרומה בוצעה בהצלחה! ${txHash.transactionHash ? `Transaction: ${txHash.transactionHash.substring(0, 10)}...` : ''}`
+//                 );
                 
-            } catch (contractError) {
-                console.warn('שגיאה בחוזה החכם, מתבצעת תרומה ישירה:', contractError);
+//             } catch (contractError) {
+//                 console.warn('שגיאה בחוזה החכם, מתבצעת תרומה ישירה:', contractError);
                 
-                // אם יש שגיאה בחוזה החכם, ננסה לבצע תרומה ישירה
-                const txResult = await web3.eth.sendTransaction({
-                    from: window.userWalletAddress,
-                    to: project.ethereum_address,
-                    value: amountInWei,
-                    gas: 21000
-                });
+//                 // אם יש שגיאה בחוזה החכם, ננסה לבצע תרומה ישירה
+//                 const txResult = await web3.eth.sendTransaction({
+//                     from: window.userWalletAddress,
+//                     to: project.ethereum_address,
+//                     value: amountInWei,
+//                     gas: 21000
+//                 });
                 
-                // עדכון הפרויקט בבסיס הנתונים
-                const token = localStorage.getItem('token');
-                const projectId = project.id || project._id;
-                const updateResponse = await fetch(`/projects/${projectId}/update-donation`, {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': token ? `Bearer ${token}` : '',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        amount: amount,
-                        txHash: txResult.transactionHash,
-                        message: message
-                    })
-                });
+//                 // עדכון הפרויקט בבסיס הנתונים
+//                 const token = localStorage.getItem('token');
+//                 const projectId = project.id || project._id;
+//                 const updateResponse = await fetch(`/projects/${projectId}/update-donation`, {
+//                     method: 'POST',
+//                     headers: {
+//                         'Authorization': token ? `Bearer ${token}` : '',
+//                         'Content-Type': 'application/json'
+//                     },
+//                     body: JSON.stringify({
+//                         amount: amount,
+//                         txHash: txResult.transactionHash,
+//                         message: message
+//                     })
+//                 });
                 
-                if (!updateResponse.ok) {
-                    console.warn('התרומה נרשמה בבלוקצ\'יין אך לא עודכנה במסד הנתונים');
-                }
+//                 if (!updateResponse.ok) {
+//                     console.warn('התרומה נרשמה בבלוקצ\'יין אך לא עודכנה במסד הנתונים');
+//                 }
                 
-                // מציג הודעת הצלחה
-                showNotification('success', 
-                    `התרומה בוצעה בהצלחה באופן ישיר! ${txResult.transactionHash ? `Transaction: ${txResult.transactionHash.substring(0, 10)}...` : ''}`
-                );
-            }
+//                 // מציג הודעת הצלחה
+//                 showNotification('success', 
+//                     `התרומה בוצעה בהצלחה באופן ישיר! ${txResult.transactionHash ? `Transaction: ${txResult.transactionHash.substring(0, 10)}...` : ''}`
+//                 );
+//             }
             
-            // סגירת המודל והטענה מחדש של הפרויקטים
-            setTimeout(() => {
-                const modal = document.getElementById('projectDetailModal');
-                if (modal) {
-                    hideModal(modal);
-                }
+//             // סגירת המודל והטענה מחדש של הפרויקטים
+//             setTimeout(() => {
+//                 const modal = document.getElementById('projectDetailModal');
+//                 if (modal) {
+//                     hideModal(modal);
+//                 }
                 
-                if (typeof manuallyLoadProjects === 'function') {
-                    manuallyLoadProjects();
-                }
-            }, 2000);
+//                 if (typeof manuallyLoadProjects === 'function') {
+//                     manuallyLoadProjects();
+//                 }
+//             }, 2000);
             
-        } catch (error) {
-            throw error;
-        }
+//         } catch (error) {
+//             throw error;
+//         }
         
-    } catch (error) {
-        console.error('שגיאה בביצוע התרומה:', error);
-        showNotification('error', error.message || 'שגיאה בביצוע התרומה');
+//     } catch (error) {
+//         console.error('שגיאה בביצוע התרומה:', error);
+//         showNotification('error', error.message || 'שגיאה בביצוע התרומה');
         
-        // מחזיר את הכפתור למצב הרגיל
-        const submitButton = document.querySelector('#projectDonationSubmitForm button[type="submit"]');
-        if (submitButton) {
-            submitButton.disabled = false;
-            submitButton.innerHTML = `<i class="fas fa-heart"></i> תרום עכשיו`;
-        }
-    }
-}
+//         // מחזיר את הכפתור למצב הרגיל
+//         const submitButton = document.querySelector('#projectDonationSubmitForm button[type="submit"]');
+//         if (submitButton) {
+//             submitButton.disabled = false;
+//             submitButton.innerHTML = `<i class="fas fa-heart"></i> תרום עכשיו`;
+//         }
+//     }
+// }
 
 window.showProjectDetails = showProjectDetails;
 
