@@ -25,7 +25,6 @@ function initProjectWalletConnection() {
         // בדיקה אם יש כבר חיבור קיים
         if (window.ethereum && window.userWalletAddress) {
             ethereumAddressInput.value = window.userWalletAddress;
-            console.log(window.userWalletAddress)
             // עדכון טקסט הכפתור כשיש כבר חיבור
             updateButtonToConnected(connectWalletBtn, window.userWalletAddress);
         }
