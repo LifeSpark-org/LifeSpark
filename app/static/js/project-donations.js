@@ -566,33 +566,48 @@ function scrollCarousel(direction) {
 
 // עדכון סיכום תרומה עם פרויקט
 function updateDonationSummaryWithProject(projectTitle, projectRegion) {
-    const summaryProject = document.getElementById('summaryProject');
-    const summaryAmount = document.getElementById('summaryAmount');
-    const summaryGasFee = document.getElementById('summaryGasFee');
-    const summaryTotal = document.getElementById('summaryTotal');
-    const amountInput = document.getElementById('amount');
+    console.log("מנסה לעדכן סיכום תרומה עם פרויקט:", projectTitle);
     
-    // אם חלק מהאלמנטים חסרים, רושם הודעה ויוצא בנחת
-    if (!summaryProject || !summaryAmount || !summaryTotal || !amountInput) {
-        console.log("אלמנטי סיכום התרומה לא נמצאו - זה צפוי אם לא נמצאים בדף התרומה");
-        return; // יציאה מהפונקציה ללא שגיאה
-    }
-    
-    const amount = parseFloat(amountInput.value) || 0;
-    const gasFee = 0.001; // עמלת גז משוערת באת'ר
-    const total = amount + gasFee;
-    
-    // הצגת שם הפרויקט והאזור בסיכום
-    const regionText = projectRegion === 'south' ? 'Southern Israel' : 'Northern Israel';
-    
-    summaryProject.textContent = `${projectTitle} (${regionText})`;
-    
-    // עדכון ערכי הסכומים
-    summaryAmount.textContent = `${amount.toFixed(4)} ETH`;
-    if (summaryGasFee) summaryGasFee.textContent = `~ ${gasFee.toFixed(4)} ETH`;
-    summaryTotal.textContent = `${total.toFixed(4)} ETH`;
+    // מחכים רגע קט לוודא שהדף התעדכן
+    setTimeout(() => {
+        try {
+            // ניסיון למצוא את האלמנטים בדף
+            const summaryElements = {
+                project: document.getElementById('summaryProject') || document.querySelector('.summary-project'),
+                amount: document.getElementById('summaryAmount') || document.querySelector('.summary-amount'),
+                gasFee: document.getElementById('summaryGasFee') || document.querySelector('.summary-gas'),
+                total: document.getElementById('summaryTotal') || document.querySelector('.summary-total'),
+                input: document.getElementById('amount')
+            };
+            
+            console.log("אלמנטי סיכום שנמצאו:", summaryElements);
+            
+            // בדיקה אם מצאנו את האלמנטים העיקריים
+            if (!summaryElements.project || !summaryElements.amount || 
+                !summaryElements.total || !summaryElements.input) {
+                console.log("לא נמצאו כל אלמנטי הסיכום הנדרשים");
+                return;
+            }
+            
+            // חישוב הערכים
+            const amount = parseFloat(summaryElements.input.value) || 0;
+            const gasFee = 0.001;
+            const total = amount + gasFee;
+            
+            // עדכון התצוגה
+            summaryElements.project.textContent = `${projectTitle} (${projectRegion === 'south' ? 'דרום' : 'צפון'})`;
+            summaryElements.amount.textContent = `${amount.toFixed(4)} ETH`;
+            if (summaryElements.gasFee) {
+                summaryElements.gasFee.textContent = `~ ${gasFee.toFixed(4)} ETH`;
+            }
+            summaryElements.total.textContent = `${total.toFixed(4)} ETH`;
+            
+            console.log("עדכון סיכום התרומה הושלם בהצלחה");
+        } catch (error) {
+            console.warn("שגיאה בעדכון סיכום התרומה:", error);
+        }
+    }, 100); // מחכים 100 מילישניות
 }
-
 // רק עבור שלמות - פונקציות עבור בחירה לפי אזורים
 // function updateDonationSummary() {
 //     const selectedRegion = document.querySelector('input[name="region"]:checked');
