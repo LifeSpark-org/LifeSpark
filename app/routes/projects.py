@@ -80,7 +80,7 @@ def get_project(project_id):
     project = Project.get_by_id(mongo, project_id)
     if not project:
         return jsonify({'status': 'error', 'message': 'Project not found'}), 404
-    
+    print(f"Project ethereum_address: {project.get('ethereum_address', 'NOT_FOUND')}")
     # Convert ObjectId to string
     project['_id'] = str(project['_id'])
         
@@ -429,7 +429,6 @@ def reject_project(current_user, project_id):
 @projects_bp.route('/projects/<project_id>/update-donation', methods=['POST'])
 @token_required
 def update_project_donation(current_user, project_id):
-    """Update a project's donation amount after a successful blockchain transaction"""
     data = request.json
     
     if not data or 'amount' not in data:
