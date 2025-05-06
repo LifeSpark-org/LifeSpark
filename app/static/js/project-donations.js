@@ -513,7 +513,9 @@ function selectProject(projectId, projectTitle, projectRegion) {
     
     // Update global variables
     selectedProjectId = projectId;
+    console.log(selectedProjectId +  " check" + projectId)
     selectedRegion = projectRegion;
+    console.log(selectedRegion + projectRegion)
     donationType = 'projects';
     
     // Update UI to show selected project
@@ -536,7 +538,7 @@ function selectProject(projectId, projectTitle, projectRegion) {
     });
     
     // Update donation summary
-    // updateDonationSummaryWithProject(projectTitle, projectRegion);
+    updateDonationSummaryWithProject(projectTitle, projectRegion);
 }
 
 // Function to scroll the carousel
