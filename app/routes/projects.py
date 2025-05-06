@@ -78,9 +78,9 @@ def get_projects():
 def get_project(project_id):
     """Get a specific project by ID"""
     project = Project.get_by_id(mongo, project_id)
+    print("פרויקט", project)
     if not project:
         return jsonify({'status': 'error', 'message': 'Project not found'}), 404
-    print(f"Project ethereum_address: {project.get('ethereum_address', 'NOT_FOUND')}")
     # Convert ObjectId to string
     project['_id'] = str(project['_id'])
         
