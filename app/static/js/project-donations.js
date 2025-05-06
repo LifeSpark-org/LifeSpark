@@ -135,133 +135,9 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // נקרא ישירות לפונקציה פנימית במקום לקרוא לפונקציה החיצונית שאולי נכשלת
         manuallyLoadProjects();
-        addProjectButtonListeners();
     } catch (error) {
         console.error("❌❌❌ שגיאה חמורה בטעינת פרויקטים:", error);
     }
-
-    
-// מוסיף מאזיני אירועים לכפתורי בחירת הפרויקט
-function addProjectButtonListeners() {
-    const selectButtons = document.querySelectorAll('.project-select-btn');
-    
-    selectButtons.forEach(function(button) {
-        // מסיר מאזיני אירועים קיימים כדי למנוע כפילויות
-        const newButton = button.cloneNode(true);
-        if (button.parentNode) {
-            button.parentNode.replaceChild(newButton, button);
-        }
-        
-        // מוסיף מאזין אירועים חדש
-        newButton.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            
-            // מאתר את הפרויקט המתאים
-            const projectSlide = this.closest('.project-slide');
-            if (!projectSlide) return;
-            
-            // מחלץ מידע על הפרויקט
-            const projectId = projectSlide.dataset.projectId;
-            const projectTitle = projectSlide.dataset.projectTitle;
-            const projectDescription = projectSlide.querySelector('.project-description')?.textContent;
-            const projectRegion = projectSlide.dataset.projectRegion;
-            
-            // מחלץ מידע על ההתקדמות
-            const progressFill = projectSlide.querySelector('.progress-fill');
-            const progressPercent = progressFill ? 
-                parseInt(progressFill.style.width.replace('%', '')) : 0;
-            
-            const progressStats = projectSlide.querySelector('.progress-stats');
-            const progressText = progressStats ? progressStats.textContent : '';
-            
-            // מחלץ את הסכומים מהטקסט
-            let currentAmount = 0;
-            let goalAmount = 0;
-            
-            if (progressText) {
-                const amountMatch = progressText.match(/(\d+(?:\.\d+)?)\s*\/\s*(\d+(?:\.\d+)?)/);
-                if (amountMatch && amountMatch.length >= 3) {
-                    currentAmount = parseFloat(amountMatch[1]);
-                    goalAmount = parseFloat(amountMatch[2]);
-                }
-            }
-            
-            // יוצר אובייקט פרויקט
-            const project = {
-                id: projectId,
-                title: projectTitle,
-                description: projectDescription,
-                region: projectRegion,
-                currentAmount: currentAmount,
-                goalAmount: goalAmount,
-                progressPercent: progressPercent
-            };
-            
-            // מציג את פרטי הפרויקט
-            showProjectDetails(project);
-        });
-    });
-}
-
-// מציג את פרטי הפרויקט במודל
-function showProjectDetails(project) {
-    console.log("מציג פרטי פרויקט:", project);
-
-    // הוספת שדה ethereum_address אם חסר
-    if (!project.ethereum_address) {
-        project.ethereum_address = '';
-        console.warn("הפרויקט חסר כתובת ארנק, הוספנו שדה ריק:", project);
-    }
-    // מאתר את המודל
-    const modal = document.getElementById('projectDetailModal');
-    if (!modal) return;
-    
-    // מעדכן את הכותרת
-    const titleElement = modal.querySelector('#projectDetailTitle');
-    if (titleElement) {
-        titleElement.textContent = project.title;
-    }
-    
-    // מציג את פרטי הפרויקט
-    const detailsContainer = modal.querySelector('#projectDetailInfo');
-    if (detailsContainer) {
-        // מחלץ את שם האזור לפי השפה הנוכחית
-        const regionText = project.region === 'south' ? 'אזור הדרום' : 'אזור הצפון';
-        
-        // עדכון תוכן המידע על הפרויקט
-        detailsContainer.innerHTML = `
-            <div class="project-detail-badge ${project.region}">
-                ${regionText}
-            </div>
-            
-            <div class="project-detail-description">
-                <h4>תיאור הפרויקט</h4>
-                <p>${project.description}</p>
-            </div>
-            
-            <div class="project-detail-progress">
-                <h4>התקדמות המימון</h4>
-                <div class="progress-bar">
-                    <div class="progress-fill" style="width: ${project.progressPercent}%"></div>
-                </div>
-                <div class="progress-stats">
-                    <span>${project.currentAmount} / ${project.goalAmount} ETH</span>
-                    <span>${project.progressPercent}%</span>
-                </div>
-            </div>
-        `;
-    }
-    
-    // מעדכן את טופס התרומה
-    const donationFormContainer = modal.querySelector('#projectDonationForm');
-    if (donationFormContainer) {
-        setupProjectDonationForm(donationFormContainer, project);
-    }
-    
-    // מציג את המודל
-    showModal(modal);
-}
 
 });
 
@@ -301,7 +177,6 @@ function manuallyLoadProjects() {
         })
         .then(data => {
             console.log("✅ נתונים התקבלו:", data);
-            
             if (data && data.projects && Array.isArray(data.projects)) {
                 if (data.projects.length > 0) {
                     renderProjects(data.projects, projectsCarousel);
@@ -422,7 +297,7 @@ function renderProjects(projects, container) {
 
         projects.forEach((project, index) => {
             console.log(`🏗️ מייצר תצוגת פרויקט ${index + 1}`);
-            
+            console.log("project project project", project)
             // בדיקת מזהה
             if (!project._id) {
                 console.warn(`⚠️ פרויקט ללא מזהה, משתמש במזהה זמני`, project);
@@ -455,6 +330,7 @@ function renderProjects(projects, container) {
             const projectSlide = document.createElement('div');
             projectSlide.className = 'project-slide';
             projectSlide.dataset.projectId = project._id;
+            projectSlide.dataset.ethereumAddress = project.ethereum_address;
             projectSlide.dataset.projectTitle = project.title || 'Unnamed Project';
             projectSlide.dataset.projectRegion = project.region || 'south';
 
