@@ -848,6 +848,7 @@ function hideModal(modal) {
     }, 300);
 }
 
+
 // Show notification
 function showNotification(type, message) {
     // Check if a notification container exists, if not create one
