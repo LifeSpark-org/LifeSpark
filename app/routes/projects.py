@@ -59,35 +59,6 @@ def save_uploaded_file(file, folder='documents'):
     # החזרת נתיב הקובץ היחסי
     return f"/static/uploads/{folder}/{unique_filename}"
 
-
-# @projects_bp.route('/projects', methods=['GET'])
-# def get_projects():
-#     """Get all approved projects for public display"""
-#     projects = Project.get_approved_projects(mongo)
-
-#     # Convert ObjectId to string in each project for JSON serialization
-#     for project in projects:
-#         project['_id'] = str(project['_id'])
-    
-#     return jsonify({
-#         'status': 'success',
-#         'projects': projects
-#     })
-
-# @projects_bp.route('/projects/<project_id>', methods=['GET'])
-# def get_project(project_id):
-#     """Get a specific project by ID"""
-#     project = Project.get_by_id(mongo, project_id)
-#     if not project:
-#         return jsonify({'status': 'error', 'message': 'Project not found'}), 404
-#     # Convert ObjectId to string
-#     project['_id'] = str(project['_id'])
-        
-#     return jsonify({
-#         'status': 'success',
-#         'project': project
-#     })
-
 @projects_bp.route('/submit-project', methods=['POST'])
 @token_required
 def submit_project(current_user):
@@ -141,12 +112,6 @@ def submit_project(current_user):
                         print(f"Added project image: {image_filename}")
                 else:
                     print(f"Image type not allowed: {image_file.filename}")
-    
-    # # Print all received data for debugging
-    # print("All data:")
-    # print(data)
-    # print(f"Proof documents: {proof_documents}")
-    # print(f"Project image: {project_image}")
     
     # Validate required fields
     required_fields = ['title', 'description', 'region', 'goal_amount', 'contact_email']
