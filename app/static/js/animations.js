@@ -136,53 +136,6 @@ function updateActiveNavLink(sectionId) {
     });
 }
 
-// Add parallax effect to home section
-function initParallaxEffect() {
-    const homeSection = document.getElementById('home');
-    if (homeSection) {
-        window.addEventListener('scroll', function() {
-            const scrollPosition = window.scrollY;
-            
-            // Only apply effect if we're near the home section
-            if (scrollPosition < window.innerHeight) {
-                const parallaxElements = homeSection.querySelectorAll('.parallax');
-                parallaxElements.forEach(element => {
-                    const speed = element.getAttribute('data-speed') || 0.5;
-                    element.style.transform = `translateY(${scrollPosition * speed}px)`;
-                });
-            }
-        });
-    }
-}
-
-// Interactive form effects
-function initFormEffects() {
-    const formInputs = document.querySelectorAll('.form-group input, .form-group textarea, .form-group select');
-    
-    formInputs.forEach(input => {
-        // Add focus effect
-        input.addEventListener('focus', function() {
-            this.parentElement.classList.add('focused');
-        });
-        
-        // Remove focus effect
-        input.addEventListener('blur', function() {
-            this.parentElement.classList.remove('focused');
-            
-            // Add filled class if input has value
-            if (this.value.trim() !== '') {
-                this.parentElement.classList.add('filled');
-            } else {
-                this.parentElement.classList.remove('filled');
-            }
-        });
-        
-        // Check initial state
-        if (input.value.trim() !== '') {
-            input.parentElement.classList.add('filled');
-        }
-    });
-}
 
 // Make functions available globally if needed
 window.showSection = showSection;

@@ -381,51 +381,6 @@ function initializeDonationSummary() {
     });
 }
 
-// Update donation summary
-function updateDonationSummary() {
-    const amountInput = document.getElementById('amount');
-    const selectedRegion = document.querySelector('input[name="region"]:checked');
-    const summaryRegion = document.getElementById('summaryRegion');
-    const summaryAmount = document.getElementById('summaryAmount');
-    const summaryGasFee = document.getElementById('summaryGasFee');
-    const summaryTotal = document.getElementById('summaryTotal');
-    
-    if (!amountInput || !selectedRegion || !summaryAmount || !summaryTotal) return;
-    
-    const amount = parseFloat(amountInput.value) || 0;
-    const gasFee = 0.001; // Estimated gas fee in ETH
-    const total = amount + gasFee;
-    
-    // Update region name in summary
-    if (summaryRegion) {
-        const regionLabel = selectedRegion.parentElement.querySelector('h4')?.textContent || selectedRegion.value;
-        summaryRegion.textContent = regionLabel;
-    }
-    
-    // Update amount values
-    summaryAmount.textContent = `${amount.toFixed(4)} ETH`;
-    if (summaryGasFee) summaryGasFee.textContent = `~ ${gasFee.toFixed(4)} ETH`;
-    summaryTotal.textContent = `${total.toFixed(4)} ETH`;
-}
-
-// Region selection function
-function selectRegion(region) {
-    const radioInput = document.getElementById(`region${region.charAt(0).toUpperCase() + region.slice(1)}`);
-    if (radioInput) {
-        radioInput.checked = true;
-        
-        // Highlight the selected region card
-        const regionCards = document.querySelectorAll('.region-card');
-        regionCards.forEach(card => {
-            card.classList.remove('selected');
-        });
-        
-        radioInput.parentElement.querySelector('.region-card').classList.add('selected');
-        
-        // Update the summary
-        updateDonationSummary();
-    }
-}
 
 // Form submissions
 function initializeFormSubmissions() {
