@@ -4,19 +4,22 @@ window.onload = () => {
     const token = localStorage.getItem('token');
     const userMenu = document.getElementById('userMenu');
 
-    if (token) {
-        // כאן תוכלי לשלוף שם משתמש מהטוקן אם את רוצה (פענוח JWT)
-        userMenu.innerHTML = `
-            <li><a href="#" onclick="logout()">Logout</a></li>
-        `;
+    if (userMenu) {  // בדיקה אם האלמנט נמצא
+        if (token) {
+            userMenu.innerHTML = `
+                <li><a href="#" onclick="logout()">Logout</a></li>
+            `;
+        } else {
+            userMenu.innerHTML = `
+                <li><a href="#" onclick="showSection('login')">Login / Register</a></li>
+            `;
+        }
     } else {
-        userMenu.innerHTML = `
-            <li><a href="#" onclick="showSection('login')">Login / Register</a></li>
-        `;
+        console.log("האלמנט userMenu לא נמצא בדף");
     }
 
     showSection("home");
-    showSection("donate");
+    // בחירה אחת בלבד - לא שניהם ביחד
 };
 
 async function fetchConversionRate(currency) {
