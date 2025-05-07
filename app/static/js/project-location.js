@@ -128,27 +128,6 @@ function initLocationFeatures() {
         });
     }
     
-
-    
-    // Create location buttons
-    // const locationButtonsContainer = document.getElementById('predefinedLocationsContainer');
-    // if (locationButtonsContainer) {
-    //     Object.keys(predefinedLocations).forEach(city => {
-    //         const btn = document.createElement('button');
-    //         btn.type = 'button';
-    //         btn.className = 'btn btn-sm btn-outline location-preset-btn';
-    //         btn.textContent = city;
-    //         btn.addEventListener('click', function() {
-    //             const [lat, lng] = predefinedLocations[city];
-    //             locationLatInput.value = lat;
-    //             locationLngInput.value = lng;
-    //             locationNameInput.value = city;
-    //             updateLocationMap(lat, lng);
-    //             showNotification('success', `מיקום נקבע ל${city}`);
-    //         });
-    //         locationButtonsContainer.appendChild(btn);
-    //     });
-    // }
     
     // Modified listener for "Get Current Location" button
     if (getCurrentLocationBtn) {
