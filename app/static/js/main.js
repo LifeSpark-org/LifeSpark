@@ -322,5 +322,5 @@ function coordinateTranslationSystems() {
     themeObserver.observe(document.documentElement, { attributes: true });
 }
 // Export for global access
-window.showSection = showSection;
+// window.showSection = showSection;
 window.initializeMobileMenu = initializeMobileMenu;
