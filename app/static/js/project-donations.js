@@ -5,7 +5,6 @@ console.log("===== project-donations.js מתחיל לטעון =====");
 let selectedProjectId = null;
 let selectedRegion = 'south'; // Default region
 let donationType = 'projects'; // Default donation type (projects or regions)
-
 // נקרא כשהמסמך מוכן
 document.addEventListener('DOMContentLoaded', function() {
     console.log("✅ DOM נטען, מתחיל אתחול מערכת תרומות הפרויקט");
@@ -13,7 +12,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // בדיקת קיום אלמנטים קריטיים
     const projectsCarousel = document.getElementById('approvedProjectsCarousel');
     console.log("🔍 אלמנט הקרוסלה קיים?", projectsCarousel ? "כן" : "לא");
-    
 
     setTimeout(() => {
         const selectedProjectFromMap = localStorage.getItem('selectedProjectFromMap');
@@ -39,19 +37,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Set up carousel navigation
     const prevBtn = document.getElementById('prevProject');
     const nextBtn = document.getElementById('nextProject');
-    
-    // const selectedProjectFromMap = localStorage.getItem('selectedProjectFromMap');
-    // if (selectedProjectFromMap) {
-    //     console.log(`יש להדגיש פרויקט מהמפה: ${selectedProjectFromMap}`);
-        
-    //     // ננקה את המידע הזה כדי שלא ידגיש שוב בטעינות עתידיות
-    //     localStorage.removeItem('selectedProjectFromMap');
-        
-    //     // מחכים שהפרויקטים יטענו ואז מדגישים
-    //     setTimeout(() => {
-    //         highlightProjectInCarousel(selectedProjectFromMap);
-    //     }, 1000);
-    // }
 
     // פונקציה להדגשת פרויקט בקרוסלה
     function highlightProjectInCarousel(projectId) {
@@ -149,7 +134,6 @@ function manuallyLoadProjects() {
         console.error("❌ מכיל קרוסלת פרויקטים לא נמצא");
         return;
     }
-    
     // הצג מסך טעינה
     projectsCarousel.innerHTML = `
         <div class="loading-placeholder">
@@ -160,7 +144,6 @@ function manuallyLoadProjects() {
     
     // נסה כל אחד מהנתיבים בנפרד ובצורה מבוקרת
     console.log("🔎 מתחיל לבדוק נתיבי API שונים");
-    
     fetch('/projects/approved')
         .then(response => {
             console.log("📊 תשובה מ-/projects/approved:", {
@@ -171,7 +154,6 @@ function manuallyLoadProjects() {
             if (!response.ok) {
                 throw new Error(`Server returned ${response.status}`);
             }
-            
             return response.json();
         })
         .then(data => {
@@ -192,65 +174,10 @@ function manuallyLoadProjects() {
             }
             
             // אם הגענו לכאן, לא היו פרויקטים
-            tryBackupEndpoint();
+            showNoProjectsMessage();
         })
         .catch(error => {
             console.error("❌ שגיאה בקריאה לנתיב הראשי:", error);
-            tryBackupEndpoint();
-        });
-}
-
-// נסיון לנתיב גיבוי
-function tryBackupEndpoint() {
-    console.log("🔄 מנסה נתיב גיבוי");
-    const projectsCarousel = document.getElementById('approvedProjectsCarousel');
-    
-    if (!projectsCarousel) return;
-    
-    fetch('/api/projects?status=approved')
-        .then(response => {
-            console.log("📊 תשובה מנתיב גיבוי:", {
-                status: response.status,
-                ok: response.ok
-            });
-            
-            if (!response.ok) {
-                throw new Error(`Server returned ${response.status}`);
-            }
-            
-            return response.json();
-        })
-        .then(data => {
-            console.log("✅ נתונים התקבלו מנתיב גיבוי:", data);
-            
-            if (data && data.projects && Array.isArray(data.projects) && data.projects.length > 0) {
-                renderProjects(data.projects, projectsCarousel);
-                setupProjectSelection();
-                
-                if (data.projects[0]) {
-                    selectProject(
-                        data.projects[0]._id,
-                        data.projects[0].title,
-                        data.projects[0].region
-                    );
-                }
-            } else if (data && Array.isArray(data) && data.length > 0) {
-                renderProjects(data, projectsCarousel);
-                setupProjectSelection();
-                
-                if (data[0]) {
-                    selectProject(
-                        data[0]._id,
-                        data[0].title,
-                        data[0].region
-                    );
-                }
-            } else {
-                showNoProjectsMessage();
-            }
-        })
-        .catch(error => {
-            console.error("❌ שגיאה בקריאה לנתיב גיבוי:", error);
             showNoProjectsMessage();
         });
 }
@@ -278,7 +205,6 @@ function renderProjects(projects, container) {
     
     try {
         container.innerHTML = '';
-
         projects.forEach((project, index) => {
             console.log(`🏗️ מייצר תצוגת פרויקט ${index + 1}`);
             console.log("project project project", project)
@@ -367,13 +293,10 @@ function renderProjects(projects, container) {
 // Set up project selection
 function setupProjectSelection() {
     console.log("🔄 מגדיר בחירת פרויקטים");
-    
     // Add click event to project cards
     const projectSlides = document.querySelectorAll('.project-slide');
-    
     projectSlides.forEach((slide, index) => {
         console.log(`📌 מגדיר אירועי בחירה לפרויקט ${index + 1}`);
-        
         
         // חשוב מאוד: הוסף מאזין אירוע לכפתור בחירה
         const selectBtn = slide.querySelector('.project-select-btn');
@@ -383,100 +306,8 @@ function setupProjectSelection() {
             if (selectBtn.parentNode) {
                 selectBtn.parentNode.replaceChild(newBtn, selectBtn);
             }
-            
-            // הוסף מאזין חדש
-            newBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation(); // מנע בועה למעלה
-                
-                console.log(`👆 לחיצה על כפתור בחירת פרויקט`);
-                const projectId = this.getAttribute('data-project-id');
-                const projectSlide = this.closest('.project-slide');
-                
-                if (!projectSlide) {
-                    console.error("לא נמצאה שקופית פרויקט", this);
-                    return;
-                }
-                
-                const projectTitle = projectSlide.dataset.projectTitle;
-                const projectRegion = projectSlide.dataset.projectRegion;
-                
-                console.log("נתוני פרויקט:", {
-                    id: projectId,
-                    title: projectTitle,
-                    region: projectRegion
-                });
-
-                // קריאה לפונקציה להצגת פרטי הפרויקט
-                if (typeof showProjectDetails === 'function') {
-                    // נסה להשיג מידע נוסף על הפרויקט
-                    fetchProjectDetails(projectId)
-                        .then(project => {
-                            if (project) {
-                                console.log("הצלחתי")
-                                showProjectDetails(project);
-                            } else {
-                                console.log("אני דפוק")
-                                // אם לא הצלחנו להשיג מידע מלא, נשתמש במה שיש
-                                showProjectDetails({
-                                    id: projectId,
-                                    title: projectTitle,
-                                    description: projectSlide.querySelector('.project-description')?.textContent || '',
-                                    region: projectRegion,
-                                    // מידע נוסף שקיים בשקופית
-                                    progressPercent: parseInt(projectSlide.querySelector('.progress-fill')?.style.width || '0'),
-                                    goalAmount: parseFloat(projectSlide.querySelector('.progress-stats')?.textContent.match(/\d+(\.\d+)?/g)?.[1] || 0),
-                                    currentAmount: parseFloat(projectSlide.querySelector('.progress-stats')?.textContent.match(/\d+(\.\d+)?/g)?.[0] || 0)
-                                });
-                            }
-                        });
-                } else {
-                    console.error("פונקציית showProjectDetails לא קיימת!");
-                    // נסה פתרון חלופי
-                    if (typeof initProjectDetailModal === 'function' && typeof window.showProjectDetails === 'function') {
-                        initProjectDetailModal();
-                        window.showProjectDetails({
-                            id: projectId,
-                            title: projectTitle,
-                            description: projectSlide.querySelector('.project-description')?.textContent || '',
-                            region: projectRegion
-                        });
-                    } else {
-                        console.error("לא נמצאו פונקציות חלופיות להצגת פרטי פרויקט");
-                    }
-                }
-            });
         }
     });
-}
-
-// פונקציה חדשה לקבלת פרטי פרויקט מהשרת
-// פונקציה לקבלת פרטי פרויקט מהשרת
-async function fetchProjectDetails(projectId) {
-    try {
-        console.log("מנסה לקבל פרטי פרויקט מהשרת:", projectId);
-        const response = await fetch(`/projects/${projectId}`);
-        if (response.ok) {
-            const data = await response.json();
-            console.log("פרטי פרויקט שהתקבלו:", data);
-            
-            if (data.status === 'success' && data.project) {
-                // וודא שיש שדה ethereum_address, אפילו אם הוא ריק
-                if (!data.project.ethereum_address) {
-                    data.project.ethereum_address = '';
-                    console.warn("הפרויקט חסר כתובת ארנק:", data.project);
-                }
-                
-                return data.project;
-            }
-        }
-        
-        console.warn("לא הצלחנו לקבל פרטי פרויקט מהשרת", response);
-        return null;
-    } catch (error) {
-        console.error("שגיאה בקבלת פרטי פרויקט:", error);
-        return null;
-    }
 }
 
 
@@ -536,33 +367,3 @@ function scrollCarousel(direction) {
         });
     }
 }
-
-// עדכון סיכום תרומה עם פרויקט
-function updateDonationSummaryWithProject(projectTitle, projectRegion) {
-    const summaryProject = document.getElementById('summaryProject');
-    const summaryAmount = document.getElementById('summaryAmount');
-    const summaryGasFee = document.getElementById('summaryGasFee');
-    const summaryTotal = document.getElementById('summaryTotal');
-    const amountInput = document.getElementById('amount');
-    
-    // אם חלק מהאלמנטים חסרים, רושם הודעה ויוצא בנחת
-    if (!summaryProject || !summaryAmount || !summaryTotal || !amountInput) {
-        console.log("אלמנטי סיכום התרומה לא נמצאו - זה צפוי אם לא נמצאים בדף התרומה");
-        return; // יציאה מהפונקציה ללא שגיאה
-    }
-    
-    const amount = parseFloat(amountInput.value) || 0;
-    const gasFee = 0.001; // עמלת גז משוערת באת'ר
-    const total = amount + gasFee;
-    
-    // הצגת שם הפרויקט והאזור בסיכום
-    const regionText = projectRegion === 'south' ? 'Southern Israel' : 'Northern Israel';
-    
-    summaryProject.textContent = `${projectTitle} (${regionText})`;
-    
-    // עדכון ערכי הסכומים
-    summaryAmount.textContent = `${amount.toFixed(4)} ETH`;
-    if (summaryGasFee) summaryGasFee.textContent = `~ ${gasFee.toFixed(4)} ETH`;
-    summaryTotal.textContent = `${total.toFixed(4)} ETH`;
-}
-console.log("===== project-donations.js טעינה הסתיימה =====");

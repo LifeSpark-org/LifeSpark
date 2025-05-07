@@ -13,8 +13,8 @@ class Config:
     MAIL_SERVER = 'smtp.gmail.com'
     MAIL_PORT = 587
     MAIL_USE_TLS = True
-    MAIL_USERNAME = 'lifesparkAuth@gmail.com'  # שנה לאימייל שלך
-    MAIL_PASSWORD = 'qzjk zcta qtmq otqf'     # שנה לסיסמת האפליקציה שלך
+    MAIL_USERNAME = 'lifesparkAuth@gmail.com'  
+    MAIL_PASSWORD = 'qzjk zcta qtmq otqf'  
     MAIL_DEFAULT_SENDER = 'lifesparkAuth@gmail.com'    
     
     # Blockchain
@@ -23,8 +23,8 @@ class Config:
     CHAIN_ID = 1337
 
     # Google reCAPTCHA v2 - עדכון למפתחות גרסה 2
-    RECAPTCHA_SITE_KEY = '6LeYjA4rAAAAACw9czE2uPiE6jyHJuB8QhOda8-y'  # יש להחליף במפתח האמיתי שלך
-    RECAPTCHA_SECRET_KEY = '6LeYjA4rAAAAACJo0geQstFMrDSoreqhVuGzULmT'  # יש להחליף במפתח האמיתי שלך
+    RECAPTCHA_SITE_KEY = '6LeYjA4rAAAAACw9czE2uPiE6jyHJuB8QhOda8-y'  
+    RECAPTCHA_SECRET_KEY = '6LeYjA4rAAAAACJo0geQstFMrDSoreqhVuGzULmT'  
    
     # Contract ABI
     CONTRACT_ABI = [

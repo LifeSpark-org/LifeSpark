@@ -11,13 +11,9 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeTheme();
     initializeSections();
     initializeBackToTop();
-    initializeRegionSelection();
     
     // Initialize mobile menu - IMPORTANT: Call this function explicitly
     initializeMobileMenu();
-
-    
-    // Initialize first content update
     
     // Hide loading screen after everything is initialized
     setTimeout(() => {
@@ -188,33 +184,6 @@ function initializeBackToTop() {
     }
 }
 
-// Initialize region selection in donation form
-function initializeRegionSelection() {
-    const regionOptions = document.querySelectorAll('.region-option');
-    
-    regionOptions.forEach(option => {
-        option.addEventListener('click', function() {
-            // Get the radio input inside this option
-            const radioInput = this.querySelector('input[type="radio"]');
-            
-            if (radioInput) {
-                radioInput.checked = true;
-                
-                // Trigger the change event to update summary
-                const event = new Event('change');
-                radioInput.dispatchEvent(event);
-                
-                // Update UI to show selection
-                regionOptions.forEach(opt => {
-                    opt.classList.remove('selected');
-                });
-                this.classList.add('selected');
-            }
-        });
-    });
-}
-
-
 function initializeMobileMenu() {
     const menuBtn = document.querySelector('.mobile-menu-btn');
     const navMenus = document.querySelector('.nav-menus'); 
@@ -239,111 +208,6 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-
-// Enhanced section navigation with smoother transitions
-function showSection(sectionId) {
-    console.log("Showing section:", sectionId);
-    
-    // Hide all sections
-    const sections = document.querySelectorAll('section');
-    sections.forEach(section => {
-        section.style.display = 'none';
-        section.classList.remove('active', 'fade-out');
-    });
-    
-    // Show the selected section
-    const targetSection = document.getElementById(sectionId);
-    if (targetSection) {
-        // Make sure the section is displayed
-        targetSection.style.display = 'block';
-        
-        // Slight delay to ensure display change is processed
-        setTimeout(() => {
-            // Add active class to trigger animation
-            targetSection.classList.add('active');
-            
-            // Smooth scroll to top
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
-            
-            // If this is the donate section, initialize project details modal
-            if (sectionId === 'donate') {
-                if (typeof initProjectDetailModal === 'function') {
-                    setTimeout(() => {
-                        initProjectDetailModal();
-                    }, 300);
-                }
-            }
-            // Animate child elements with staggered delay
-            const animateItems = targetSection.querySelectorAll('.animate-on-scroll');
-            animateItems.forEach((item, index) => {
-                setTimeout(() => {
-                    item.classList.add('animated');
-                }, 100 + (index * 80));
-            });
-            
-            // If this is the map section, refresh the map
-            if (sectionId === 'map' && typeof refreshMap === 'function') {
-                setTimeout(refreshMap, 500);
-            }
-            
-            // Refresh AOS animations
-            if (typeof AOS !== 'undefined' && AOS.refresh) {
-                AOS.refresh();
-            }
-        }, 50);
-    } else {
-        console.error("Section not found:", sectionId);
-    }
-    
-    // Update active state in navigation
-    updateActiveNavLink(sectionId);
-}
-
-// Update active navigation link
-function updateActiveNavLink(sectionId) {
-    const navLinks = document.querySelectorAll('.navbar a');
-    
-    navLinks.forEach(link => {
-        // Remove active class from all links
-        link.classList.remove('active-link');
-        
-        // Check if this link points to the current section
-        if (link.getAttribute('onclick') && 
-            link.getAttribute('onclick').includes(`showSection('${sectionId}')`)) {
-            link.classList.add('active-link');
-        }
-    });
-}
-
-// Function to help with debugging if needed
-function debugSections() {
-    const sections = document.querySelectorAll('section');
-    console.log("All sections:");
-    sections.forEach(section => {
-        console.log(`${section.id}: display=${section.style.display}, active=${section.classList.contains('active')}`);
-    });
-}
-
-// Can be called from browser console for debugging
-window.debugSections = debugSections;
-
-// Preload images for better performance
-function preloadImages() {
-    const imagesToPreload = [
-        '/static/images/hero-bg.jpg',
-        '/static/images/about-image.jpg',
-        '/static/images/south-region.jpg',
-        '/static/images/north-region.jpg'
-    ];
-    
-    imagesToPreload.forEach(src => {
-        const img = new Image();
-        img.src = src;
-    });
-}
 // Google Translate Integration
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize Google Translate Widget
