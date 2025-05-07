@@ -78,42 +78,6 @@ section#map.active {
     margin: 10px !important;
 }
 
-
-
-.map-refresh-button {
-    margin-right: 10px;
-    margin-top: 10px;
-}
-
-.map-refresh-button button {
-    background: white;
-    border: none;
-    border-radius: 4px;
-    color: #333;
-    cursor: pointer;
-    width: 30px;
-    height: 30px;
-    box-shadow: 0 1px 5px rgba(0,0,0,0.4);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 14px;
-}
-
-.dark-theme .map-refresh-button button {
-    background: #1e293b;
-    color: #e2e8f0;
-}
-
-.map-refresh-button button:hover {
-    background: #f0f0f0;
-}
-
-.dark-theme .map-refresh-button button:hover {
-    background: #2d3748;
-}
-
-
 .project-marker {
     width: 30px !important;
     height: 30px !important;
@@ -187,71 +151,10 @@ section#map.active {
     width: 100%;
 }
 
-/* תיקון לחלונות קופצים במפה */
-.leaflet-popup-content-wrapper {
-    padding: 0;
-}
 
 .leaflet-popup-content {
     margin: 0;
     width: 100% !important;
-}
-
-
-/* הוסף את הסגנונות האלה לקובץ app/static/css/map-styles.css: */
-
-/* שיפור עיצוב החלון הקופץ */
-.project-popup {
-    padding: 5px;
-    max-width: 250px;
-}
-
-.project-popup h4 {
-    margin: 0 0 5px 0;
-    font-size: 16px;
-    color: var(--primary-color);
-    font-weight: 700;
-}
-
-.project-popup .project-location {
-    font-size: 12px;
-    color: var(--text-light);
-    margin-bottom: 8px;
-    display: flex;
-    align-items: center;
-}
-
-.project-popup .project-location::before {
-    content: '\f3c5';
-    font-family: 'Font Awesome 5 Free';
-    font-weight: 900;
-    margin-right: 5px;
-    color: var(--primary-color);
-}
-
-.project-popup .project-progress {
-    margin: 10px 0;
-}
-
-.project-popup .project-description {
-    font-size: 12px;
-    margin: 8px 0;
-    line-height: 1.4;
-}
-
-.project-popup .view-project-btn {
-    font-size: 12px;
-    padding: 8px;
-    margin-top: 5px;
-    width: 100%;
-    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
-    border: none;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.project-popup .view-project-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 /* שיפור למראה הכולל של חלונות קופצים בלפלט */
@@ -263,140 +166,8 @@ section#map.active {
 .leaflet-popup-content {
     margin: 8px 12px;
     width: auto !important;
-}
+} */
 
-
-/* Enhanced Map Section Styles */
-.map-filters {
-    margin: 2rem 0;
-}
-
-.filter-options {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 1.5rem;
-    margin-top: 1rem;
-}
-
-.filter-group {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.filter-group select {
-    padding: 0.5rem;
-    border-radius: var(--border-radius);
-    border: 1px solid var(--border-color);
-    background-color: white;
-    min-width: 150px;
-}
-
-.dark-theme .filter-group select {
-    background-color: #1e293b;
-    color: white;
-    border-color: #334155;
-}
-
-.map-projects-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 1.5rem;
-    margin-top: 1.5rem;
-}
-
-.map-project-card {
-    background-color: white;
-    border-radius: var(--border-radius);
-    box-shadow: var(--box-shadow);
-    overflow: hidden;
-    cursor: pointer;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    height: 100%;
-}
-
-.map-project-card:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--box-shadow-lg);
-}
-
-.map-project-card.active {
-    border: 2px solid var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.3);
-}
-
-.map-project-image {
-    height: 140px;
-    background-size: cover;
-    background-position: center;
-    position: relative;
-}
-
-.map-project-badge {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    padding: 0.25rem 0.75rem;
-    border-radius: 50px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: white;
-}
-
-.map-project-badge.south {
-    background-color: #ef4444;
-}
-
-.map-project-badge.north {
-    background-color: #3b82f6;
-}
-
-.map-project-content {
-    padding: 1.25rem;
-}
-
-.map-project-title {
-    font-size: 1.1rem;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-}
-
-.map-project-description {
-    font-size: 0.9rem;
-    color: var(--text-light);
-    margin-bottom: 0.75rem;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-
-.map-project-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 0.75rem;
-}
-
-.map-project-progress {
-    width: 100%;
-    margin-bottom: 0.5rem;
-}
-
-.map-project-location {
-    font-size: 0.85rem;
-    color: var(--text-light);
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
-}
-
-.map-action-center {
-    display: flex;
-    justify-content: center;
-    margin-top: 2rem;
-}
 
 .map-selected-project {
     margin-top: 1.5rem;
@@ -404,6 +175,16 @@ section#map.active {
     background-color: rgba(37, 99, 235, 0.1);
     border-radius: var(--border-radius);
     border-left: 3px solid var(--primary-color);
+}
+
+.dark-theme .map-selected-project {
+    background-color: rgba(37, 99, 235, 0.2);
+}
+
+.map-action-center {
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
 }
 
 .dark-theme .map-selected-project {
@@ -418,211 +199,4 @@ section#map.active {
 
 .map-instruction {
     margin-bottom: 1rem;
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    .filter-options {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 1rem;
-    }
-    
-    .filter-group {
-        width: 100%;
-    }
-    
-    .filter-group select {
-        width: 100%;
-    }
-    
-    .map-projects-list {
-        grid-template-columns: 1fr;
-    }
-}
-
-/* Dark theme support */
-.dark-theme .map-project-card {
-    background-color: #1e293b;
-}
-
-
-/* Enhanced Map Section Styles */
-.map-filters {
-    margin: 2rem 0;
-}
-
-.filter-options {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 1.5rem;
-    margin-top: 1rem;
-}
-
-.filter-group {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.filter-group select {
-    padding: 0.5rem;
-    border-radius: var(--border-radius);
-    border: 1px solid var(--border-color);
-    background-color: white;
-    min-width: 150px;
-}
-
-.dark-theme .filter-group select {
-    background-color: #1e293b;
-    color: white;
-    border-color: #334155;
-}
-
-.map-projects-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 1.5rem;
-    margin-top: 1.5rem;
-}
-
-.map-project-card {
-    background-color: white;
-    border-radius: var(--border-radius);
-    box-shadow: var(--box-shadow);
-    overflow: hidden;
-    cursor: pointer;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    height: 100%;
-}
-
-.map-project-card:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--box-shadow-lg);
-}
-
-.map-project-card.active {
-    border: 2px solid var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.3);
-}
-
-.map-project-image {
-    height: 140px;
-    background-size: cover;
-    background-position: center;
-    position: relative;
-}
-
-.map-project-badge {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    padding: 0.25rem 0.75rem;
-    border-radius: 50px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: white;
-}
-
-.map-project-badge.south {
-    background-color: #ef4444;
-}
-
-.map-project-badge.north {
-    background-color: #3b82f6;
-}
-
-.map-project-content {
-    padding: 1.25rem;
-}
-
-.map-project-title {
-    font-size: 1.1rem;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-}
-
-.map-project-description {
-    font-size: 0.9rem;
-    color: var(--text-light);
-    margin-bottom: 0.75rem;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-
-.map-project-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 0.75rem;
-}
-
-.map-project-progress {
-    width: 100%;
-    margin-bottom: 0.5rem;
-}
-
-.map-project-location {
-    font-size: 0.85rem;
-    color: var(--text-light);
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
-}
-
-.map-action-center {
-    display: flex;
-    justify-content: center;
-    margin-top: 2rem;
-}
-
-.map-selected-project {
-    margin-top: 1.5rem;
-    padding: 1rem;
-    background-color: rgba(37, 99, 235, 0.1);
-    border-radius: var(--border-radius);
-    border-left: 3px solid var(--primary-color);
-}
-
-.dark-theme .map-selected-project {
-    background-color: rgba(37, 99, 235, 0.2);
-}
-
-.projects-description {
-    text-align: center;
-    color: var(--text-light);
-    margin-top: 0.5rem;
-}
-
-.map-instruction {
-    margin-bottom: 1rem;
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    .filter-options {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 1rem;
-    }
-    
-    .filter-group {
-        width: 100%;
-    }
-    
-    .filter-group select {
-        width: 100%;
-    }
-    
-    .map-projects-list {
-        grid-template-columns: 1fr;
-    }
-}
-
-/* Dark theme support */
-.dark-theme .map-project-card {
-    background-color: #1e293b;
 }

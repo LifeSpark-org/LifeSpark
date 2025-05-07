@@ -219,50 +219,6 @@ function initLocationFeatures() {
         });
     }
     
-//     // Add click event to map for manual location selection
-//     locationMap.on('click', function(e) {
-//         const lat = e.latlng.lat;
-//         const lng = e.latlng.lng;
-        
-//         // Update form inputs
-//         locationLatInput.value = lat.toFixed(6);
-//         locationLngInput.value = lng.toFixed(6);
-        
-//         // Get location name using reverse geocoding
-//         fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`)
-//             .then(response => response.json())
-//             .then(data => {
-//                 if (data && data.display_name) {
-//                     locationNameInput.value = data.address.city || data.address.town || data.address.village || data.address.hamlet || data.display_name.split(',')[0];
-//                 }
-//             })
-//             .catch(err => {
-//                 console.error("Error in reverse geocoding:", err);
-//             });
-        
-//         // Update map marker
-//         updateLocationMap(lat, lng);
-        
-//         // Show success notification
-//         showNotification('success', 'מיקום הפרויקט נבחר מהמפה');
-//     });
-    
-//     // Listeners for input field changes
-//     if (locationLatInput && locationLngInput) {
-//         locationLatInput.addEventListener('input', updateMapFromInputs);
-//         locationLngInput.addEventListener('input', updateMapFromInputs);
-//     }
-    
-//     // Function to update map from input fields
-//     function updateMapFromInputs() {
-//         const lat = parseFloat(locationLatInput.value);
-//         const lng = parseFloat(locationLngInput.value);
-        
-//         if (!isNaN(lat) && !isNaN(lng)) {
-//             updateLocationMap(lat, lng);
-//         }
-//     }
-    
 //     // Function to update the map marker
     function updateLocationMap(lat, lng) {
         console.log(`עדכון מיקום במפה: [${lat}, ${lng}]`);

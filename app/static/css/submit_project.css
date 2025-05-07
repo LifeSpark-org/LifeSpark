@@ -143,25 +143,6 @@
     margin-left: 0.5rem;
 }
 
-/* Terms checkboxes */
-/* .terms-checkbox {
-    display: flex;
-    align-items: flex-start;
-    margin-bottom: 0.5rem;
-}
-
-.terms-checkbox input[type="checkbox"] {
-    margin-top: 0.3rem;
-    margin-right: 0.5rem;
-    min-width: 16px;
-}
-
-.terms-checkbox label {
-    font-weight: normal;
-    margin-bottom: 0;
-    font-size: 0.95rem;
-} */
-
 /* Submit button styling */
 .submit-group {
     margin-top: 2rem;
