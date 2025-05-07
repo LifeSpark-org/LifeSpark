@@ -105,15 +105,3 @@ function observeProjectCarousel() {
         subtree: true
     });
 }
-
-// // אם נדרשת טעינה מחדש של הפרויקטים (אחרי תרומה מוצלחת)
-// function refreshProjectsAfterDonation() {
-//     // מנסה להשתמש בפונקציה הקיימת אם היא זמינה
-//     if (typeof manuallyLoadProjects === 'function') {
-//         manuallyLoadProjects();
-//     } 
-//     // אם לא, מנסה את הפונקציה השנייה שיכולה להיות זמינה
-//     else if (typeof loadApprovedProjects === 'function') {
-//         loadApprovedProjects();
-//     }
-// }
