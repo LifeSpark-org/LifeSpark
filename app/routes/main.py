@@ -61,7 +61,6 @@ def get_public_approved_projects():
     # המרת ObjectID למחרוזות
     for project in approved_projects:
         project['_id'] = str(project['_id'])
-
     return jsonify({
         'status': 'success',
         'projects': approved_projects

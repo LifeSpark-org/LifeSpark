@@ -145,7 +145,6 @@ document.addEventListener('DOMContentLoaded', function() {
 function manuallyLoadProjects() {
     console.log("🔄 טעינת פרויקטים ידנית");
     const projectsCarousel = document.getElementById('approvedProjectsCarousel');
-    
     if (!projectsCarousel) {
         console.error("❌ מכיל קרוסלת פרויקטים לא נמצא");
         return;
@@ -177,32 +176,17 @@ function manuallyLoadProjects() {
         })
         .then(data => {
             console.log("✅ נתונים התקבלו:", data);
+            console.log("✅ נתונים התקבלו:", data.projects[0]);
             if (data && data.projects && Array.isArray(data.projects)) {
                 if (data.projects.length > 0) {
                     renderProjects(data.projects, projectsCarousel);
                     setupProjectSelection();
-                    
-                    if (data.projects[0]) {
-                        selectProject(
-                            data.projects[0]._id,
-                            data.projects[0].title,
-                            data.projects[0].region
-                        );
-                    }
                     return;
                 }
             } else if (data && Array.isArray(data)) {
                 if (data.length > 0) {
                     renderProjects(data, projectsCarousel);
                     setupProjectSelection();
-                    
-                    if (data[0]) {
-                        selectProject(
-                            data[0]._id,
-                            data[0].title,
-                            data[0].region
-                        );
-                    }
                     return;
                 }
             }
@@ -525,7 +509,7 @@ function selectProject(projectId, projectTitle, projectRegion) {
     });
     
     // Update donation summary
-    updateDonationSummaryWithProject(projectTitle, projectRegion);
+    // updateDonationSummaryWithProject(projectTitle, projectRegion);
 }
 
 // Function to scroll the carousel
@@ -608,124 +592,124 @@ function updateDonationSummaryWithProject(projectTitle, projectRegion) {
 //     summaryTotal.textContent = `${total.toFixed(4)} ETH`;
 // }
 
-// Process donation to project (תרומה לפרויקט ספציפי)
-async function processDonateToProject(projectId, amount, message = '') {
-    try {
-        // Show processing notification
-        showNotification('info', 'Processing your donation...');
+// // Process donation to project (תרומה לפרויקט ספציפי)
+// async function processDonateToProject(projectId, amount, message = '') {
+//     try {
+//         // Show processing notification
+//         showNotification('info', 'Processing your donation...');
         
-        // Display loading indicator on submit button
-        const submitButton = document.querySelector('#donationForm button[type="submit"]');
-        if (submitButton) {
-            submitButton.disabled = true;
-            submitButton.innerHTML = '<div class="loader-inline"></div> Processing...';
-        }
+//         // Display loading indicator on submit button
+//         const submitButton = document.querySelector('#donationForm button[type="submit"]');
+//         if (submitButton) {
+//             submitButton.disabled = true;
+//             submitButton.innerHTML = '<div class="loader-inline"></div> Processing...';
+//         }
         
-        // Get project information to know which region to donate to
-        const token = localStorage.getItem('token');
-        const projectResponse = await fetch(`/projects/${projectId}`, {
-            headers: {
-                'Authorization': `Bearer ${token || ''}`
-            }
-        });
+//         // Get project information to know which region to donate to
+//         const token = localStorage.getItem('token');
+//         const projectResponse = await fetch(`/projects/${projectId}`, {
+//             headers: {
+//                 'Authorization': `Bearer ${token || ''}`
+//             }
+//         });
         
-        if (!projectResponse.ok) {
-            throw new Error('Cannot get project information');
-        }
+//         if (!projectResponse.ok) {
+//             throw new Error('Cannot get project information');
+//         }
         
-        const projectData = await projectResponse.json();
-        const region = projectData.project.region;
+//         const projectData = await projectResponse.json();
+//         const region = projectData.project.region;
         
-        // Perform the blockchain donation to the region
-        const txHash = await donateToBlockchain(region, amount, message);
+//         // Perform the blockchain donation to the region
+//         const txHash = await donateToBlockchain(region, amount, message);
         
-        // After successful blockchain donation, update the project in our database
-        const updateResponse = await fetch(`/projects/${projectId}/update-donation`, {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${token || ''}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                amount: parseFloat(amount),
-                txHash: txHash,
-                message: message
-            })
-        });
+//         // After successful blockchain donation, update the project in our database
+//         const updateResponse = await fetch(`/projects/${projectId}/update-donation`, {
+//             method: 'POST',
+//             headers: {
+//                 'Authorization': `Bearer ${token || ''}`,
+//                 'Content-Type': 'application/json'
+//             },
+//             body: JSON.stringify({
+//                 amount: parseFloat(amount),
+//                 txHash: txHash,
+//                 message: message
+//             })
+//         });
         
-        if (!updateResponse.ok) {
-            console.warn('Project donation was recorded on blockchain but not updated in database');
-        }
+//         if (!updateResponse.ok) {
+//             console.warn('Project donation was recorded on blockchain but not updated in database');
+//         }
         
-        // Show success notification
-        showNotification('success', `Donation successful! Transaction: ${txHash.substring(0, 10)}...`);
+//         // Show success notification
+//         showNotification('success', `Donation successful! Transaction: ${txHash.substring(0, 10)}...`);
         
-        // Reset form
-        document.getElementById('donationForm').reset();
-        updateDonationSummary();
+//         // Reset form
+//         document.getElementById('donationForm').reset();
+//         updateDonationSummary();
         
-        // Reset submit button
-        if (submitButton) {
-            submitButton.disabled = false;
-            submitButton.innerHTML = '<i class="fas fa-heart"></i> Donate Now';
-        }
+//         // Reset submit button
+//         if (submitButton) {
+//             submitButton.disabled = false;
+//             submitButton.innerHTML = '<i class="fas fa-heart"></i> Donate Now';
+//         }
         
-        // Refresh the projects to show updated funding
-        setTimeout(manuallyLoadProjects, 2000);
+//         // Refresh the projects to show updated funding
+//         setTimeout(manuallyLoadProjects, 2000);
         
-    } catch (error) {
-        console.error('Error processing project donation:', error);
-        showNotification('error', `Error: ${error.message}`);
+//     } catch (error) {
+//         console.error('Error processing project donation:', error);
+//         showNotification('error', `Error: ${error.message}`);
         
-        // Reset submit button
-        const submitButton = document.querySelector('#donationForm button[type="submit"]');
-        if (submitButton) {
-            submitButton.disabled = false;
-            submitButton.innerHTML = '<i class="fas fa-heart"></i> Donate Now';
-        }
-    }
-}
+//         // Reset submit button
+//         const submitButton = document.querySelector('#donationForm button[type="submit"]');
+//         if (submitButton) {
+//             submitButton.disabled = false;
+//             submitButton.innerHTML = '<i class="fas fa-heart"></i> Donate Now';
+//         }
+//     }
+// }
 
-// Process donation to region (תרומה לאזור)
-async function processDonateToRegion(region, amount, message = '') {
-    try {
-        // Show processing notification
-        showNotification('info', 'Processing your donation...');
+// // Process donation to region (תרומה לאזור)
+// async function processDonateToRegion(region, amount, message = '') {
+//     try {
+//         // Show processing notification
+//         showNotification('info', 'Processing your donation...');
         
-        // Display loading indicator on submit button
-        const submitButton = document.querySelector('#donationForm button[type="submit"]');
-        if (submitButton) {
-            submitButton.disabled = true;
-            submitButton.innerHTML = '<div class="loader-inline"></div> Processing...';
-        }
+//         // Display loading indicator on submit button
+//         const submitButton = document.querySelector('#donationForm button[type="submit"]');
+//         if (submitButton) {
+//             submitButton.disabled = true;
+//             submitButton.innerHTML = '<div class="loader-inline"></div> Processing...';
+//         }
         
-        // Use existing blockchain donation function
-        const txHash = await donateToBlockchain(region, amount, message);
+//         // Use existing blockchain donation function
+//         const txHash = await donateToBlockchain(region, amount, message);
         
-        // Show success notification
-        showNotification('success', `Donation successful! Transaction: ${txHash.substring(0, 10)}...`);
+//         // Show success notification
+//         showNotification('success', `Donation successful! Transaction: ${txHash.substring(0, 10)}...`);
         
-        // Reset form
-        document.getElementById('donationForm').reset();
-        updateDonationSummary();
+//         // Reset form
+//         document.getElementById('donationForm').reset();
+//         updateDonationSummary();
         
-        // Reset submit button
-        if (submitButton) {
-            submitButton.disabled = false;
-            submitButton.innerHTML = '<i class="fas fa-heart"></i> Donate Now';
-        }
+//         // Reset submit button
+//         if (submitButton) {
+//             submitButton.disabled = false;
+//             submitButton.innerHTML = '<i class="fas fa-heart"></i> Donate Now';
+//         }
         
-    } catch (error) {
-        console.error('Error processing region donation:', error);
-        showNotification('error', `Error: ${error.message}`);
+//     } catch (error) {
+//         console.error('Error processing region donation:', error);
+//         showNotification('error', `Error: ${error.message}`);
         
-        // Reset submit button
-        const submitButton = document.querySelector('#donationForm button[type="submit"]');
-        if (submitButton) {
-            submitButton.disabled = false;
-            submitButton.innerHTML = '<i class="fas fa-heart"></i> Donate Now';
-        }
-    }
-}
+//         // Reset submit button
+//         const submitButton = document.querySelector('#donationForm button[type="submit"]');
+//         if (submitButton) {
+//             submitButton.disabled = false;
+//             submitButton.innerHTML = '<i class="fas fa-heart"></i> Donate Now';
+//         }
+//     }
+// }
 
 console.log("===== project-donations.js טעינה הסתיימה =====");
