@@ -717,48 +717,29 @@ section.fade-out {
     color: #94a3b8;
 }
 
-/* Placeholder for missing profile images */
+
 .member-avatar {
-    width: 100px;
-    height: 100px;
+    width: 150px; /* גודל העיגול - ניתן לשנות לפי הצורך */
+    height: 150px; /* שמירה על יחס 1:1 לעיגול מושלם */
+    border-radius: 50%; /* זה מה שיוצר את העיגול */
+    background-size: cover; /* התמונה תכסה את כל השטח */
+    background-position: center; /* התמונה תמוקם במרכז */
+    margin: 0 auto; /* מירכוז אופקי */
+    overflow: hidden; /* במקרה שיש חלקים שחורגים מהעיגול */
+}
+.member-avatar {
+    width: 150px;
+    height: 150px;
     border-radius: 50%;
-    background-color: #f1f5f9;
-    margin: 0 auto 1rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
     overflow: hidden;
+    margin: 0 auto;
 }
 
-.member-avatar::before {
-    content: '';
-    position: absolute;
-    top: 60%;
-    left: 0;
+.member-avatar img {
     width: 100%;
-    height: 40%;
-    background-color: var(--primary-light);
+    height: 100%;
+    object-fit: cover; /* שומר על יחס התמונה ללא עיוות */
 }
-
-.member-avatar::after {
-    content: '\f007';
-    font-family: 'Font Awesome 5 Free';
-    font-weight: 900;
-    font-size: 40px;
-    color: #cbd5e1;
-    position: relative;
-    top: -10px;
-}
-
-.dark-theme .member-avatar {
-    background-color: #334155;
-}
-
-.dark-theme .member-avatar::after {
-    color: #1e293b;
-}
-
 /* Testimonial author avatars */
 .author-avatar {
     width: 60px;
