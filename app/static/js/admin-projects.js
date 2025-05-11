@@ -883,7 +883,6 @@ function hideModal(modal) {
         modal.style.display = 'none';
         document.body.style.overflow = '';
         
-        // Clear notes field
         const adminNotes = document.getElementById('adminNotes');
         if (adminNotes) {
             adminNotes.value = '';
