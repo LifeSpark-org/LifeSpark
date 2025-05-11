@@ -19,7 +19,7 @@ class BlockchainService:
     def check_balance_and_donate(self, region, amount):
         """בודק את היתרה בארנק ומבצע תרומה"""
         if not self.sender_address:
-            raise ValueError("שגיאה: כתובת השולח לא הוגדרה")
+            raise ValueError("Error: Sender address not defined")
             
         balance = self.web3.eth.get_balance(self.sender_address)
         gas = 200000
@@ -28,7 +28,7 @@ class BlockchainService:
         total_cost = gas * gas_price + value
         
         if balance < total_cost:
-            raise ValueError("אין מספיק כספים בארנק")
+            raise ValueError("Insufficient funds in wallet")
             
         return self.donate_to_region(region, amount)
         

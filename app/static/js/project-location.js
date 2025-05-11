@@ -48,7 +48,7 @@ function initLocationFeatures() {
         updateLocationMap(latlng.lat, latlng.lng);
         
         // Show success notification
-        showNotification('success', 'מיקום נקבע: ' + locationName);
+        showNotification('success', 'Location set: ' + locationName);
     }).addTo(locationMap);
     
     // Add custom search field
@@ -77,13 +77,13 @@ function initLocationFeatures() {
                                 updateLocationMap(lat, lng);
                                 
                                 // Show success notification
-                                showNotification('success', 'מיקום נקבע: ' + name);
+                                showNotification('success', 'Location set: ' + name);
                             } else {
-                                showNotification('error', 'לא נמצאה כתובת. נסה לחפש בצורה מפורטת יותר.');
+                                showNotification('error', 'Address not found. Try searching with more details.');
                             }
                         })
                         .catch(error => {
-                            showNotification('error', 'שגיאה בחיפוש הכתובת. נסה שוב.');
+                            showNotification('error', 'Error searching for address. Please try again.');
                         });
                 }
             }
@@ -114,13 +114,13 @@ function initLocationFeatures() {
                             updateLocationMap(lat, lng);
                             
                             // Show success notification
-                            showNotification('success', 'מיקום נקבע: ' + name);
+                            showNotification('success', 'Location set: ' + name);
                         } else {
-                            showNotification('error', 'לא נמצאה כתובת. נסה לחפש בצורה מפורטת יותר.');
+                            showNotification('error', 'Address not found. Try searching with more details.');
                         }
                     })
                     .catch(error => {
-                        showNotification('error', 'שגיאה בחיפוש הכתובת. נסה שוב.');
+                        showNotification('error', 'Error searching for address. Please try again.');
                     });
             }
         });
@@ -132,7 +132,7 @@ function initLocationFeatures() {
         getCurrentLocationBtn.addEventListener('click', function() {
             if (navigator.geolocation) {
                 getCurrentLocationBtn.disabled = true;
-                getCurrentLocationBtn.innerHTML = '<div class="loader-inline"></div> מאתר את המיקום שלך...';
+                getCurrentLocationBtn.innerHTML = '<div class="loader-inline"></div> Finding your location...';
                 
                 navigator.geolocation.getCurrentPosition(
                     function(position) {
@@ -140,7 +140,7 @@ function initLocationFeatures() {
                         const lng = position.coords.longitude;
                         
                         // Show confirmation dialog with improved phrasing
-                        if (confirm("שים לב: האם אתה פיזית נמצא במיקום הפרויקט עכשיו?\n\nלחץ 'אישור' רק אם אתה נמצא כרגע במיקום שבו הפרויקט יתבצע.\nלחץ 'ביטול' אם אתה נמצא במקום אחר ותרצה להזין את המיקום הנכון של הפרויקט בדרך אחרת.")) {
+                        if (confirm("Note: Are you physically at the project location now?\n\nClick 'OK' only if you are currently at the location where the project will take place.\nClick 'Cancel' if you are elsewhere and want to enter the correct project location another way.")) {
                             // User confirmed they are at project location - set coordinates
                             locationLatInput.value = lat;
                             locationLngInput.value = lng;
@@ -161,10 +161,10 @@ function initLocationFeatures() {
                             updateLocationMap(lat, lng);
                             
                             // Success notification
-                            showNotification('success', 'מיקום הפרויקט נקבע למיקומך הנוכחי');
+                            showNotification('success', 'Project location set to your current location');
                         } else {
                             // User is not at project location
-                            showNotification('info', 'אנא הזן את מיקום הפרויקט באמצעות חיפוש כתובת, בחירה במפה, או בחירה בעיר מהרשימה');
+                            showNotification('info', 'Please enter the project location using address search, map selection, or choosing a city from the list');
                             
                             // Just center map on their location without setting form values
                             if (locationMarker) {
@@ -183,7 +183,7 @@ function initLocationFeatures() {
                                     iconAnchor: [12, 25]
                                 })
                             }).addTo(locationMap)
-                            .bindPopup('המיקום הנוכחי שלך (לא נבחר כמיקום הפרויקט)').openPopup();
+                            .bindPopup('Your current location (not selected as project location)').openPopup();
                             
                             // Remove temp marker after 5 seconds
                             setTimeout(() => {
@@ -193,17 +193,17 @@ function initLocationFeatures() {
                         
                         // Restore button state
                         getCurrentLocationBtn.disabled = false;
-                        getCurrentLocationBtn.innerHTML = '<i class="fas fa-map-marker-alt"></i> <span data-translate="get-current-location">מיקום נוכחי</span>';
+                        getCurrentLocationBtn.innerHTML = '<i class="fas fa-map-marker-alt"></i> <span data-translate="get-current-location">Current Location</span>';
                     },
                     function(error) {
                         console.error('Error locating position:', error);
                         
                         // Restore button state
                         getCurrentLocationBtn.disabled = false;
-                        getCurrentLocationBtn.innerHTML = '<i class="fas fa-map-marker-alt"></i> <span data-translate="get-current-location">מיקום נוכחי</span>';
+                        getCurrentLocationBtn.innerHTML = '<i class="fas fa-map-marker-alt"></i> <span data-translate="get-current-location">Current Location</span>';
                         
                         // Error notification
-                        showNotification('error', 'לא ניתן לאתר את מיקומך: ' + getGeolocationErrorMessage(error));
+                        showNotification('error', 'Unable to locate your position: ' + getGeolocationErrorMessage(error));
                     },
                     {
                         enableHighAccuracy: true,
@@ -212,14 +212,14 @@ function initLocationFeatures() {
                     }
                 );
             } else {
-                showNotification('error', 'הדפדפן שלך אינו תומך באיתור מיקום');
+                showNotification('error', 'Your browser does not support geolocation');
             }
         });
     }
     
 //     // Function to update the map marker
     function updateLocationMap(lat, lng) {
-        console.log(`עדכון מיקום במפה: [${lat}, ${lng}]`);
+        console.log(`Updating location on map: [${lat}, ${lng}]`);
         
         // Remove existing marker if any
         if (locationMarker) {
@@ -261,14 +261,14 @@ function initLocationFeatures() {
 function getGeolocationErrorMessage(error) {
     switch(error.code) {
         case error.PERMISSION_DENIED:
-            return "דחית את בקשת הרשאת המיקום";
+            return "You denied the location permission request";
         case error.POSITION_UNAVAILABLE:
-            return "מידע המיקום אינו זמין";
+            return "Location information is unavailable";
         case error.TIMEOUT:
-            return "הבקשה לאיתור המיקום נכשלה בשל פסק זמן";
+            return "The location request timed out";
         case error.UNKNOWN_ERROR:
-            return "אירעה שגיאה לא ידועה";
+            return "An unknown error occurred";
         default:
-            return "שגיאה באיתור המיקום";
+            return "Error determining location";
     }
 }

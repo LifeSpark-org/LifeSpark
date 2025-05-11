@@ -2,24 +2,24 @@
 let selectedProjectId = null;
 let selectedRegion = 'south'; // Default region
 let donationType = 'projects'; // Default donation type (projects or regions)
-// נקרא כשהמסמך מוכן
+// Called when document is ready
 document.addEventListener('DOMContentLoaded', function() {    
-    // בדיקת קיום אלמנטים קריטיים
+    // Check existence of critical elements
     const projectsCarousel = document.getElementById('approvedProjectsCarousel');
     setTimeout(() => {
         const selectedProjectFromMap = localStorage.getItem('selectedProjectFromMap');
         if (selectedProjectFromMap) {            
-            // ננקה את המידע הזה כדי שלא ידגיש שוב בטעינות עתידיות
+            // Clear this info so it doesn't highlight again in future loads
             localStorage.removeItem('selectedProjectFromMap');
             
-            // מחכים שהפרויקטים יטענו ואז מדגישים
+            // Wait for projects to load and then highlight
             setTimeout(() => {
                 if (typeof highlightProjectInCarousel === 'function') {
                     highlightProjectInCarousel(selectedProjectFromMap);
                 } else if (typeof window.highlightProjectInCarousel === 'function') {
                     window.highlightProjectInCarousel(selectedProjectFromMap);
                 } else {
-                    console.error("פונקציית הדגשת הפרויקט אינה זמינה");
+                    console.error("Project highlight function not available");
                 }
             }, 1000);
         }
@@ -29,9 +29,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const prevBtn = document.getElementById('prevProject');
     const nextBtn = document.getElementById('nextProject');
 
-    // פונקציה להדגשת פרויקט בקרוסלה
+    // Function to highlight project in carousel
     function highlightProjectInCarousel(projectId) {
-        // ננסה למצוא את הפרויקט בקרוסלה
+        // Try to find the project in carousel
         const projectSlides = document.querySelectorAll('.project-slide');
         
         let foundProject = false;
@@ -40,38 +40,38 @@ document.addEventListener('DOMContentLoaded', function() {
             if (slide.dataset.projectId === projectId) {
                 foundProject = true;
                 
-                // גלילה אל הפרויקט
+                // Scroll to the project
                 const carousel = document.getElementById('approvedProjectsCarousel');
                 if (carousel) {
-                    // חישוב המיקום לגלילה
+                    // Calculate scroll position
                     const slideLeft = slide.offsetLeft;
                     const carouselWidth = carousel.offsetWidth;
                     const scrollPosition = slideLeft - (carouselWidth / 2) + (slide.offsetWidth / 2);
                     
-                    // גלילה חלקה אל הפרויקט
+                    // Smooth scroll to project
                     carousel.scrollTo({
                         left: scrollPosition,
                         behavior: 'smooth'
                     });
                 }
                 
-                // הדגשת הפרויקט עם אנימציה
+                // Highlight project with animation
                 slide.classList.add('selected-from-map');
                 
-                // הוספת אנימציה מהבהבת כדי למשוך תשומת לב
+                // Add blinking animation to draw attention
                 slide.style.animation = 'pulse-highlight 2s ease-in-out';
                 
-                // בחירת הפרויקט
+                // Select the project
                 const radioInput = slide.querySelector('input[type="radio"]');
                 if (radioInput) {
                     radioInput.checked = true;
                     
-                    // הפעלת אירוע שינוי כדי לעדכן את הממשק
+                    // Trigger change event to update interface
                     const event = new Event('change');
                     radioInput.dispatchEvent(event);
                 }
                 
-                // אם קיים כפתור בחירה, נלחץ עליו אוטומטית
+                // If selection button exists, click it automatically
                 const selectBtn = slide.querySelector('.project-select-btn');
                 if (selectBtn) {
                     setTimeout(() => {
@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         
         if (!foundProject) {
-            console.warn(`לא נמצא פרויקט עם מזהה ${projectId} בקרוסלה`);
+            console.warn(`Project with ID ${projectId} not found in carousel`);
         }
     }
 
@@ -96,25 +96,25 @@ document.addEventListener('DOMContentLoaded', function() {
             scrollCarousel('next');
         });
     } else {
-        console.error("❌ כפתורי ניווט קרוסלה חסרים", {prevBtn, nextBtn});
+        console.error("❌ Carousel navigation buttons missing", {prevBtn, nextBtn});
     }
     
     try {        
-        // נקרא ישירות לפונקציה פנימית במקום לקרוא לפונקציה החיצונית שאולי נכשלת
+        // Call the internal function directly instead of calling the external function that might fail
         manuallyLoadProjects();
     } catch (error) {
-        console.error("❌❌❌ שגיאה חמורה בטעינת פרויקטים:", error);
+        console.error("❌❌❌ Severe error loading projects:", error);
     }
 
 });
 
-// פונקציה ידנית לטעינת פרויקטים (פתרון עוקף)
+// Manual function to load projects (workaround solution)
 function manuallyLoadProjects() {
     const projectsCarousel = document.getElementById('approvedProjectsCarousel');
     if (!projectsCarousel) {
         return;
     }
-    // הצג מסך טעינה
+    // Show loading screen
     projectsCarousel.innerHTML = `
         <div class="loading-placeholder">
             <div class="spinner"></div>
@@ -122,10 +122,10 @@ function manuallyLoadProjects() {
         </div>
     `;
     
-    // נסה כל אחד מהנתיבים בנפרד ובצורה מבוקרת
+    // Try each path separately and in a controlled manner
     fetch('/projects/approved')
         .then(response => {
-            console.log("📊 תשובה מ-/projects/approved:", {
+            console.log("📊 Response from /projects/approved:", {
                 status: response.status,
                 ok: response.ok
             });
@@ -150,7 +150,7 @@ function manuallyLoadProjects() {
                 }
             }
             
-            // אם הגענו לכאן, לא היו פרויקטים
+            // If we got here, there were no projects
             showNoProjectsMessage();
         })
         .catch(error => {
@@ -165,10 +165,10 @@ function showNoProjectsMessage() {
     
     projectsCarousel.innerHTML = `
         <div class="empty-projects">
-            <p>אין פרויקטים מאושרים זמינים כרגע. אנא בקר/י באתר מאוחר יותר או הגש/י פרויקט משלך.</p>
+            <p>No approved projects are currently available. Please check back later or submit your own project.</p>
             <div class="empty-projects-actions">
                 <button class="btn btn-primary btn-sm" onclick="showSection('submit-project')">
-                    <i class="fas fa-plus-circle"></i> הגשת פרויקט חדש
+                    <i class="fas fa-plus-circle"></i> Submit New Project
                 </button>
             </div>
         </div>
@@ -179,35 +179,35 @@ function renderProjects(projects, container) {
     try {
         container.innerHTML = '';
         projects.forEach((project, index) => {
-            // בדיקת מזהה
+            // Check ID
             if (!project._id) {
-                console.warn(`⚠️ פרויקט ללא מזהה, משתמש במזהה זמני`, project);
+                console.warn(`⚠️ Project without ID, using temporary ID`, project);
                 project._id = `temp-${index}`;
             }
             
-            // חישוב אחוזי התקדמות
+            // Calculate progress percentage
             let progress = 0;
             if (project.goal_amount && project.goal_amount > 0) {
                 progress = Math.min(100, Math.round((project.current_amount || 0) / project.goal_amount * 100));
             }
 
-            // קביעת מחלקת אזור
+            // Set region class
             const regionClass = project.region === 'south' ? 'south' : 'north';
             
-            // טקסט אזור - using direct text
+            // Region text - using direct text
             const regionText = project.region === 'south' ? 'Southern Israel' : 'Northern Israel';
 
-            // הכנת סגנון התמונה
+            // Prepare image style
             let projectImageStyle = '';
             if (project.project_image) {
-                // אם יש תמונת פרויקט, השתמש בה כרקע
+                // If there's a project image, use it as background
                 projectImageStyle = `background-image: url('${project.project_image}'); background-size: cover; background-position: center;`;
             } else {
-                // אחרת השתמש בתמונת ברירת המחדל לפי האזור
+                // Otherwise use default image based on region
                 projectImageStyle = `background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('/static/images/${regionClass}-project.jpg');`;
             }
 
-            // בניית אלמנט הפרויקט
+            // Build project element
             const projectSlide = document.createElement('div');
             projectSlide.className = 'project-slide';
             projectSlide.dataset.projectId = project._id;
@@ -265,21 +265,21 @@ function setupProjectSelection() {
     const projectSlides = document.querySelectorAll('.project-slide');
     projectSlides.forEach((slide, index) => {
         
-        // חשוב מאוד: הוסף מאזין אירוע לכפתור בחירה
+        // Very important: Add event listener to selection button
         const selectBtn = slide.querySelector('.project-select-btn');
         if (selectBtn) {
-            // הסר מאזיני אירועים קודמים אם יש
+            // Remove previous event listeners if any
             const newBtn = selectBtn.cloneNode(true);
             if (selectBtn.parentNode) {
                 selectBtn.parentNode.replaceChild(newBtn, selectBtn);
             }
         }
     });
-}
-
-
-// Function to select a project
-function selectProject(projectId, projectTitle, projectRegion) {    
+ }
+ 
+ 
+ // Function to select a project
+ function selectProject(projectId, projectTitle, projectRegion) {    
     // Update global variables
     selectedProjectId = projectId;
     selectedRegion = projectRegion;
@@ -306,10 +306,10 @@ function selectProject(projectId, projectTitle, projectRegion) {
     
     // Update donation summary
     // updateDonationSummaryWithProject(projectTitle, projectRegion);
-}
-
-// Function to scroll the carousel
-function scrollCarousel(direction) {
+ }
+ 
+ // Function to scroll the carousel
+ function scrollCarousel(direction) {
     const carousel = document.getElementById('approvedProjectsCarousel');
     if (!carousel) {
         return;
@@ -329,4 +329,4 @@ function scrollCarousel(direction) {
             behavior: 'smooth'
         });
     }
-}
+ }

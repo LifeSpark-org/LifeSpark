@@ -107,26 +107,26 @@ function initProjectSubmission() {
     
     if (!projectForm) return;
     
-    // תצוגה מקדימה של תמונת הפרויקט
+    // Project image preview
     const projectImage = document.getElementById('projectImage');
     const imagePreview = document.getElementById('projectImagePreview');
 
     if (projectImage && imagePreview) {
         projectImage.addEventListener('change', function() {
-            // נקה את התצוגה המקדימה הקודמת
+            // Clear previous preview
             imagePreview.innerHTML = '';
             
             if (this.files.length > 0) {
                 const file = this.files[0];
                 
-                // בדוק גודל קובץ (מקסימום 2MB)
+                // Check file size (max 2MB)
                 if (file.size > 2 * 1024 * 1024) {
                     showNotification('error', 'Image too large. Maximum size is 2MB.');
                     this.value = '';
                     return;
                 }
                 
-                // תצוגה מקדימה של התמונה
+                // Image preview
                 const img = document.createElement('img');
                 img.file = file;
                 imagePreview.appendChild(img);
@@ -203,11 +203,11 @@ function initProjectSubmission() {
         showFormLoading(projectForm);
         
         try {
-            // יצירת FormData לטיפול בקבצים
+            // Create FormData for file handling
             const formData = new FormData();
             const locationLat = parseFloat(document.getElementById('projectLocationLat').value);
             const locationLng = parseFloat(document.getElementById('projectLocationLng').value);
-            // הוסף את כל שדות הטופס הרגילים
+            // Add all regular form fields
             formData.append('title', title);
             formData.append('description', description);
             formData.append('region', region);
@@ -216,19 +216,19 @@ function initProjectSubmission() {
             formData.append('location_lat', locationLat);
             formData.append('location_lng', locationLng);
             
-            // הוסף שדות אופציונליים
+            // Add optional fields
             const contactPhone = document.getElementById('projectPhone')?.value || '';
             const organization = document.getElementById('projectOrganization')?.value || '';
             formData.append('contact_phone', contactPhone);
             formData.append('organization', organization);
-            // לאחר הוספת שדות אחרים ל-formData
+            // After adding other fields to formData
             formData.append('ethereum_address', document.getElementById('ethereumAddress')?.value || '');
-            // הוסף את תמונת הפרויקט אם קיימת
+            // Add project image if it exists
             if (projectImage && projectImage.files.length > 0) {
                 formData.append('project_image', projectImage.files[0]);
             }
             
-            // הוסף מסמכים תומכים אם קיימים
+            // Add supporting documents if they exist
             const projectDocuments = document.getElementById('projectDocuments');
             if (projectDocuments && projectDocuments.files.length > 0) {
                 for (let i = 0; i < projectDocuments.files.length; i++) {
@@ -248,7 +248,7 @@ function initProjectSubmission() {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`
-                    // אין להגדיר Content-Type כאן כי FormData יגדיר אותו אוטומטית
+                    // Don't set Content-Type here as FormData will set it automatically
                 },
                 body: formData
             });
@@ -272,7 +272,7 @@ function initProjectSubmission() {
                 projectForm.reset();
                 document.getElementById('uploadedFileNames').innerHTML = '';
                 
-                // נקה את תצוגת התמונה המקדימה
+                // Clear image preview
                 if (imagePreview) {
                     imagePreview.innerHTML = '';
                 }

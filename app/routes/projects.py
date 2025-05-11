@@ -145,22 +145,22 @@ def submit_project(current_user):
     if 'location_lat' in data and data['location_lat']:
         try:
             location_lat = float(data['location_lat'])
-            print(f"נתוני מיקום: רוחב - {location_lat}")
+            print(f"Location data: Latitude - {location_lat}")
         except ValueError:
             location_lat = 0.0
-            print("שגיאה בהמרת נתוני מיקום (רוחב)")
+            print("Error converting location data (latitude)")
             
     if 'location_lng' in data and data['location_lng']:
         try:
             location_lng = float(data['location_lng'])
-            print(f"נתוני מיקום: אורך - {location_lng}")
+            print(f"Location data: Longitude - {location_lng}")
         except ValueError:
             location_lng = 0.0
-            print("שגיאה בהמרת נתוני מיקום (אורך)")
+            print("Error converting location data (longitude)")
             
     if 'location_name' in data:
         location_name = data['location_name']
-        print(f"שם מיקום: {location_name}")
+        print(f"Location name: {location_name}")    
 
 
     # Create project data
@@ -172,9 +172,9 @@ def submit_project(current_user):
         'contact_email': data.get('contact_email', ''),
         'contact_phone': data.get('contact_phone', ''),
         'organization': data.get('organization', ''),
-        'ethereum_address': data.get('ethereum_address', ''),  # הוספת כתובת הארנק
+        'ethereum_address': data.get('ethereum_address', ''), 
         'proof_documents': proof_documents,
-        'project_image': project_image,  # הוספת תמונת הפרויקט
+        'project_image': project_image, 
         'user_id': str(current_user['_id']),
         'location_lat': location_lat,
         'location_lng': location_lng,
@@ -479,5 +479,3 @@ def update_project_donation(current_user, project_id):
             'status': 'error',
             'message': f'Error updating project donation: {str(e)}'
         }), 500
-    
-

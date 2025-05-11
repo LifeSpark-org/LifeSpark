@@ -151,9 +151,6 @@ The lifeSpark Team
     mail.send(user_msg)
 
 
-
-
-
 def send_newsletter_subscription_email(subscriber_email):
     """Send confirmation email to new newsletter subscribers"""
     msg = Message(

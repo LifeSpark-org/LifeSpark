@@ -35,16 +35,16 @@ function createForgotPasswordModal() {
     modal.innerHTML = `
         <div class="modal-content">
             <div class="modal-header">
-                <h3 data-translate="forgot-password-title">איפוס סיסמה</h3>
+                <h3 data-translate="forgot-password-title">Password Reset</h3>
                 <button class="close-button">&times;</button>
             </div>
             <div class="modal-body">
-                <p data-translate="forgot-password-instruction">אנא הזן את כתובת האימייל שלך ונשלח לך קוד לאיפוס הסיסמה:</p>
+                <p data-translate="forgot-password-instruction">Please enter your email address and we'll send you a password reset code:</p>
                 
                 <div id="forgotPasswordStep1">
                     <form id="forgotPasswordForm" class="auth-form">
                         <div class="form-group">
-                            <label for="resetEmail" data-translate="login-email">אימייל:</label>
+                            <label for="resetEmail" data-translate="login-email">Email:</label>
                             <div class="input-with-icon">
                                 <input type="email" id="resetEmail" required>
                                 <i class="fas fa-envelope input-icon"></i>
@@ -52,7 +52,7 @@ function createForgotPasswordModal() {
                         </div>
                         
                         <button type="submit" class="btn btn-primary" data-translate="forgot-password-submit">
-                            <i class="fas fa-paper-plane"></i> שלח קוד איפוס
+                            <i class="fas fa-paper-plane"></i> Send reset code
                         </button>
                     </form>
                 </div>
@@ -60,7 +60,7 @@ function createForgotPasswordModal() {
                 <div id="forgotPasswordStep2" style="display: none;">
                     <form id="resetPasswordForm" class="auth-form">
                         <div class="form-group">
-                            <label for="resetCode" data-translate="reset-code">קוד איפוס:</label>
+                            <label for="resetCode" data-translate="reset-code">Reset code:</label>
                             <div class="input-with-icon">
                                 <input type="text" id="resetCode" required autocomplete="new-password">
                                 <i class="fas fa-key input-icon"></i>
@@ -68,7 +68,7 @@ function createForgotPasswordModal() {
                         </div>
                         
                         <div class="form-group">
-                            <label for="newPassword" data-translate="new-password">סיסמה חדשה:</label>
+                            <label for="newPassword" data-translate="new-password">New password:</label>
                             <div class="input-with-icon password-input-container">
                                 <input type="password" id="newPassword" required autocomplete="new-password">
                                 <i class="fas fa-eye password-toggle" onclick="togglePasswordVisibility('newPassword')"></i>
@@ -80,23 +80,23 @@ function createForgotPasswordModal() {
                                     <div class="strength-segment"></div>
                                     <div class="strength-segment"></div>
                                 </div>
-                                <span class="strength-text">עוצמת הסיסמה</span>
+                                <span class="strength-text">Password strength</span>
                             </div>
                         </div>
                         
                         <div class="form-group">
-                            <label for="confirmNewPassword" data-translate="confirm-new-password">אימות סיסמה חדשה:</label>
+                            <label for="confirmNewPassword" data-translate="confirm-new-password">Confirm new password:</label>
                             <div class="input-with-icon password-input-container">
                                 <input type="password" id="confirmNewPassword" required autocomplete="new-password">
                                 <i class="fas fa-eye password-toggle" onclick="togglePasswordVisibility('confirmNewPassword')"></i>
                             </div>
                             <div class="password-error" id="newPasswordMatchError" style="display: none; color: red;">
-                                <small data-translate="register-password-mismatch">הסיסמאות אינן תואמות</small>
+                                <small data-translate="register-password-mismatch">Passwords do not match</small>
                             </div>
                         </div>
                         
                         <button type="submit" class="btn btn-primary" data-translate="reset-password-submit">
-                            <i class="fas fa-save"></i> עדכן סיסמה
+                            <i class="fas fa-save"></i> Update password
                         </button>
                     </form>
                 </div>
@@ -155,12 +155,12 @@ function createForgotPasswordModal() {
                     // שמירת האימייל לשלב הבא
                     document.getElementById('resetPasswordForm').dataset.email = email;
                     
-                    showNotification('success', 'קוד איפוס נשלח לאימייל שלך');
+                    showNotification('success', 'Reset code sent to your email');
                 } else {
-                    showNotification('error', result.error || 'שגיאה בשליחת קוד איפוס');
+                    showNotification('error', result.error || 'Error sending reset code');
                 }
             } catch (error) {
-                showNotification('error', 'אירעה שגיאה בתהליך איפוס הסיסמה');
+                showNotification('error', 'An error occurred during the password reset process');
             } finally {
                 hideFormLoading(forgotPasswordForm);
             }
@@ -203,7 +203,7 @@ function createForgotPasswordModal() {
                 const result = await response.json();
                 
                 if (response.ok) {
-                    showNotification('success', 'הסיסמה עודכנה בהצלחה');
+                    showNotification('success', 'Password updated successfully');
                     
                     // סגירת המודל
                     hideModal(modal);
@@ -215,16 +215,16 @@ function createForgotPasswordModal() {
                     }
                 } else {
                     if (result.error && result.error.includes('same as current')) {
-                        showNotification('error', 'הסיסמה החדשה חייבת להיות שונה מהסיסמה הנוכחית');
+                        showNotification('error', 'The new password must be different from the current password');
                         document.getElementById('newPassword').value = '';
                         document.getElementById('confirmNewPassword').value = '';
                         document.getElementById('newPassword').focus();
                     } else {
-                        showNotification('error', result.error || 'שגיאה באיפוס סיסמה');
+                        showNotification('error', result.error || 'Error resetting password');
                     }
                 }
             } catch (error) {
-                showNotification('error', 'אירעה שגיאה בתהליך עדכון הסיסמה');
+                showNotification('error', 'An error occurred during the password update process');
             } finally {
                 hideFormLoading(resetPasswordForm);
             }
@@ -269,7 +269,7 @@ function createForgotPasswordModal() {
                 });
                 
                 if (password.length === 0) {
-                    strengthText.textContent = 'עוצמת הסיסמה';
+                    strengthText.textContent = 'Password strength';
                     strengthText.className = 'strength-text';
                     return;
                 }
@@ -305,19 +305,19 @@ function createForgotPasswordModal() {
                 // עדכון טקסט
                 switch(strength) {
                     case 1:
-                        strengthText.textContent = 'חלשה';
+                        strengthText.textContent = 'Weak';
                         strengthText.className = 'strength-text weak';
                         break;
                     case 2:
-                        strengthText.textContent = 'בינונית';
+                        strengthText.textContent = 'Medium';
                         strengthText.className = 'strength-text medium';
                         break;
                     case 3:
-                        strengthText.textContent = 'חזקה';
+                        strengthText.textContent = 'Strong';
                         strengthText.className = 'strength-text strong';
                         break;
                     case 4:
-                        strengthText.textContent = 'חזקה מאוד';
+                        strengthText.textContent = 'Very Strong';
                         strengthText.className = 'strength-text very-strong';
                         break;
                 }

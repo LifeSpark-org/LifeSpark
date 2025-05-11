@@ -13,7 +13,7 @@ def donate():
     if not region or not amount or not sender_address:
         return jsonify({
             "status": "error",
-            "message": "חסרים פרטים נדרשים (אזור, סכום או כתובת השולח)"
+            "message": "Missing required details (region, amount, or sender address)"
         }), 400
     
     try:
@@ -35,12 +35,12 @@ def donate():
     except Exception as e:
         return jsonify({
             "status": "error",
-            "message": f"שגיאה בלתי צפויה: {str(e)}"
+            "message": f"Unexpected error: {str(e)}"
         }), 500
 
 @donations_bp.route('/get_transaction', methods=['POST'])
 def get_transaction():
-    """יצירת עסקה לחתימה בצד הלקוח"""
+    """Creating transaction for client-side signature"""
     data = request.json
     region = data.get('region')
     amount = data.get('amount')
@@ -49,7 +49,7 @@ def get_transaction():
     if not region or not amount or not sender_address:
         return jsonify({
             "status": "error",
-            "message": "חסרים פרטים נדרשים (אזור, סכום או כתובת השולח)"
+            "message": "Missing required details (region, amount, or sender address)"
         }), 400
     
     try:
