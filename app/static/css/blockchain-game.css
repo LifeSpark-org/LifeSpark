@@ -1,0 +1,400 @@
+/* משחק "עקוב אחר התרומה" - סגנונות */
+
+.game-container {
+    max-width: 900px;
+    margin: 0 auto;
+    background-color: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    overflow: hidden;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.game-header {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+
+.game-header h1 {
+    margin: 0;
+    font-size: 1.8rem;
+    background: none;
+    color: white;
+    -webkit-background-clip: initial;
+    background-clip: initial;
+}
+
+.game-description {
+    padding: 15px 20px;
+    background-color: rgba(59, 130, 246, 0.1);
+    border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+    font-size: 0.95rem;
+}
+
+.game-content {
+    padding: 20px;
+}
+
+.transaction-display {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.transaction-card {
+    flex: 1;
+    min-width: 200px;
+    background-color: white;
+    border: 1px solid #e2e8f0;
+    border-radius: var(--border-radius);
+    padding: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    cursor: pointer;
+    transition: var(--transition);
+    position: relative;
+}
+
+.transaction-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.transaction-card.selected {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+}
+
+.transaction-card.correct {
+    border-color: var(--secondary-color);
+    background-color: rgba(16, 185, 129, 0.1);
+}
+
+.transaction-card.incorrect {
+    border-color: var(--error-color);
+    background-color: rgba(239, 68, 68, 0.1);
+}
+
+.transaction-card h3 {
+    margin-top: 0;
+    font-size: 1rem;
+    color: var(--primary-color);
+}
+
+.transaction-details {
+    font-size: 0.9rem;
+}
+
+.transaction-hash {
+    font-family: monospace;
+    font-size: 0.85rem;
+    color: #64748b;
+    word-break: break-all;
+    margin-top: 10px;
+    padding: 5px;
+    background-color: #f1f5f9;
+    border-radius: 4px;
+}
+
+.blockchain-display {
+    margin-top: 30px;
+    position: relative;
+}
+
+.blockchain-track {
+    height: 10px;
+    background-color: #e2e8f0;
+    border-radius: 5px;
+    margin: 30px 0;
+    position: relative;
+}
+
+.blockchain-blocks {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    margin-bottom: 15px;
+}
+
+.block {
+    width: 60px;
+    height: 60px;
+    background-color: var(--primary-color);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: 0.9rem;
+    position: relative;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.block:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.block.active {
+    background-color: var(--secondary-color);
+}
+
+.block.visited {
+    background-color: #64748b;
+}
+
+.block::after {
+    content: "";
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    background-color: inherit;
+    bottom: -22px;
+    left: 50%;
+    transform: translateX(-50%) rotate(45deg);
+}
+
+.game-controls {
+    margin-top: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.btn {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-weight: bold;
+    transition: var(--transition);
+}
+
+.btn:hover {
+    background-color: #2563eb;
+    transform: translateY(-2px);
+}
+
+.btn:disabled {
+    background-color: #94a3b8;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.btn-secondary {
+    background-color: #64748b;
+}
+
+.btn-secondary:hover {
+    background-color: #475569;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 100;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background-color: white;
+    border-radius: var(--border-radius);
+    max-width: 600px;
+    width: 90%;
+    padding: 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    position: relative;
+}
+
+.modal-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #64748b;
+}
+
+.block-details {
+    background-color: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    border-radius: var(--border-radius);
+    padding: 15px;
+    margin: 20px 0;
+    text-align: right;
+}
+
+.game-progress {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.progress-step {
+    flex: 1;
+    position: relative;
+    padding: 10px 0;
+}
+
+.progress-step::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background-color: #e2e8f0;
+    z-index: 1;
+}
+
+.progress-step:first-child::after {
+    left: 50%;
+}
+
+.progress-step:last-child::after {
+    right: 50%;
+}
+
+.progress-step.active::after {
+    background-color: var(--primary-color);
+}
+
+.step-circle {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+    font-weight: bold;
+    color: #64748b;
+}
+
+.progress-step.active .step-circle {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.progress-step.completed .step-circle {
+    background-color: var(--secondary-color);
+    color: white;
+}
+
+.step-label {
+    font-size: 0.85rem;
+    text-align: center;
+    margin-top: 5px;
+    color: #64748b;
+}
+
+.progress-step.active .step-label {
+    color: var(--primary-color);
+    font-weight: bold;
+}
+
+.verification-icons {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 15px;
+}
+
+.verification-icon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+    border-radius: var(--border-radius);
+    background-color: rgba(59, 130, 246, 0.05);
+    transition: var(--transition);
+}
+
+.verification-icon:hover {
+    background-color: rgba(59, 130, 246, 0.1);
+    transform: translateY(-2px);
+}
+
+.verification-icon i {
+    font-size: 2rem;
+    color: var(--primary-color);
+    margin-bottom: 5px;
+}
+
+.verification-icon span {
+    font-size: 0.8rem;
+    text-align: center;
+}
+
+.lesson {
+    margin-top: 30px;
+    padding: 15px;
+    background-color: rgba(16, 185, 129, 0.1);
+    border-right: 4px solid var(--secondary-color);
+    border-radius: var(--border-radius);
+}
+
+.lesson h3 {
+    margin-top: 0;
+    color: var(--secondary-color);
+}
+
+/* התאמה למסכים קטנים */
+@media (max-width: 768px) {
+    .transaction-display {
+        flex-direction: column;
+    }
+
+    .blockchain-blocks {
+        overflow-x: auto;
+        padding-bottom: 15px;
+    }
+
+    .verification-icons {
+        flex-wrap: wrap;
+    }
+
+    .verification-icon {
+        width: 45%;
+        margin-bottom: 10px;
+    }
+}
+
+/* התאמה לעיצוב של lifeSpark */
+.game-container {
+    background-color: var(--card-bg);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--box-shadow);
+    margin-top: 2rem;
+    max-width: 100%;
+}
+
+.dark-theme .game-container {
+    background-color: #1e293b;
+}
+
+.game-container-wrapper {
+    margin-top: 4rem;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
