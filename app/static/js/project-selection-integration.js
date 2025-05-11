@@ -21,9 +21,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // פונקציה לשיפור חווית המשתמש בבחירת פרויקטים
-function enhanceProjectSelection() {
-    console.log("משפר את חווית בחירת הפרויקטים");
-    
+function enhanceProjectSelection() {    
     // משפר את כרטיסיות הפרויקטים
     enhanceProjectCards();
     

@@ -7,7 +7,6 @@ document.addEventListener('DOMContentLoaded', function() {
         if (e.target.matches('[onclick*="showSection(\'map\'"]') || 
             e.target.closest('[onclick*="showSection(\'map\'"]')) {
             setTimeout(function() {
-                console.log("יזמתי טעינת מפה בעקבות ניווט");
                 initMap();
                 // קורא לפונקציית הגודל פעמיים, בהפרש זמנים
                 if (mapInstance) {
@@ -30,13 +29,11 @@ document.addEventListener('DOMContentLoaded', function() {
 function initMap() {
     const mapContainer = document.getElementById('leafletMap');
     if (!mapContainer) {
-        console.error("מיכל המפה לא נמצא!");
         return;
     }
     
     // אם המפה כבר מאותחלת, רק נרענן את הגודל שלה
     if (mapInstance) {
-        console.log("המפה כבר קיימת, מרענן גודל...");
         mapInstance.invalidateSize();
         return;
     }
@@ -76,21 +73,17 @@ window.addEventListener('resize', function() {
 // הוסף את הלוגים האלה בפונקציית refreshMap (בערך שורה 190) ב-app/static/js/map.js:
 function refreshMap() {
     if (mapInstance) {
-        console.log("מרענן את המפה...");
         mapInstance.invalidateSize();
         
         // ניקוי סמנים קיימים
-        console.log(`מנקה ${projectMarkers.length} סמנים קודמים...`);
         projectMarkers.forEach(marker => {
             mapInstance.removeLayer(marker);
         });
         projectMarkers.length = 0;
         
         // טעינה מחדש של פרויקטים
-        console.log("מתחיל טעינה מחדש של פרויקטים למפה...");
         loadProjectsToMap();
         
-        console.log("מפה רועננה");
     } else {
         console.warn("לא ניתן לרענן את המפה - המפה לא אותחלה");
     }
@@ -98,9 +91,7 @@ function refreshMap() {
 
 
 async function loadProjectsToMap() {
-    console.log("טוען פרויקטים למפה...");
     if (!mapInstance) {
-        console.error("המפה לא אותחלה עדיין!");
         return;
     }
     
@@ -113,9 +104,7 @@ async function loadProjectsToMap() {
         
         const data = await response.json();
         
-        if (data && data.projects && Array.isArray(data.projects)) {
-            console.log("דוגמא של פרויקט ראשון:", data.projects[0]);
-            
+        if (data && data.projects && Array.isArray(data.projects)) {            
             // סופרים פרויקטים עם מיקום
             const projectsWithLocation = data.projects.filter(project => {
                 // המרה לערכים מספריים
@@ -125,15 +114,10 @@ async function loadProjectsToMap() {
                 // בדיקה מפורטת יותר
                 const hasValidLocation = !isNaN(lat) && !isNaN(lng) && 
                                        lat !== 0 && lng !== 0 &&
-                                       lat >= -90 && lat <= 90 && lng >= -180 && lng <= 180;
-                
-                console.log(`פרויקט ${project.title}: מיקום [${lat}, ${lng}], תקין: ${hasValidLocation}`);
-                
+                                       lat >= -90 && lat <= 90 && lng >= -180 && lng <= 180;                
                 return hasValidLocation;
             });
-            
-            console.log(`נמצאו ${projectsWithLocation.length} פרויקטים עם מיקום מתוך ${data.projects.length} פרויקטים מאושרים`);
-            console.log("פרויקטים עם מיקום:", projectsWithLocation);
+
             
             // מוסיפים סמנים למפה עבור כל פרויקט עם מיקום
             projectsWithLocation.forEach(project => {
@@ -156,10 +140,8 @@ function addProjectMarker(project) {
     // ודא שיש ערכי מיקום תקינים
     const lat = typeof project.location_lat === 'number' ? project.location_lat : parseFloat(project.location_lat);
     const lng = typeof project.location_lng === 'number' ? project.location_lng : parseFloat(project.location_lng);
-    console.log(`מנסה להוסיף סמן בנקודה [${lat}, ${lng}] לפרויקט ${project.title}`);
 
     if (isNaN(lat) || isNaN(lng) || lat === 0 || lng === 0) {
-        console.warn(`סמן לא תקין עבור פרויקט ${project.title}: [${lat}, ${lng}]`);
         return;
     }
     try {
@@ -172,16 +154,13 @@ function addProjectMarker(project) {
             popupAnchor: [0, -30]
         });
         // יצירת הסמן והוספתו למפה
-        console.log(`יוצר סמן במיקום [${lat}, ${lng}]`);
         const marker = L.marker(
             [lat, lng],
             { icon: markerIcon }
         ).addTo(mapInstance);
 
         projectMarkers.push(marker);
-        console.log(`הוספת סמן למפה בהצלחה`);
 
-    
         // חישוב אחוז ההתקדמות
         const progress = project.goal_amount ? 
             Math.min(100, Math.round((project.current_amount || 0) / project.goal_amount * 100)) : 0;
@@ -205,7 +184,6 @@ function addProjectMarker(project) {
         
         // שמירת הסמן במערך
         projectMarkers.push(marker);
-        console.log(`סמן נוסף בהצלחה למפה עבור פרויקט ${project.title}`);
     } catch (error) {
         console.error(`שגיאה ביצירת סמן לפרויקט ${project.title}:`, error);
     }

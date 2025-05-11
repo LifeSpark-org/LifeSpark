@@ -50,7 +50,6 @@ function loadCaptcha(formType) {
             captchaImage.classList.remove('loading');
         })
         .catch(error => {
-            console.error('Error loading CAPTCHA:', error);
             captchaImage.classList.remove('loading');
             // Fallback message on error
             captchaImage.alt = 'CAPTCHA loading failed. Please refresh.';

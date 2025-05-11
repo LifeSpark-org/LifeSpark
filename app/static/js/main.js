@@ -189,15 +189,10 @@ function initializeMobileMenu() {
     const navMenus = document.querySelector('.nav-menus'); 
 
     if (!menuBtn || !navMenus) {
-        console.error('❌ לא נמצא כפתור או תפריט:', { menuBtn, navMenus });
         return;
     }
-
-    console.log('📦 תפריט וכפתור אותרו');
-
     menuBtn.addEventListener('click', () => {
         const wasExpanded = navMenus.classList.contains('active');
-        console.log('🍔 נלחץ כפתור המבורגר');
         navMenus.classList.toggle('active');
         menuBtn.setAttribute('aria-expanded', !wasExpanded);
     });
@@ -225,12 +220,9 @@ function initGoogleTranslate() {
     // Add event listener to detect when Google Translate finishes loading
     const translateObserver = new MutationObserver(function(mutations) {
         mutations.forEach(function(mutation) {
-            if (mutation.type === 'childList' && document.querySelector('.goog-te-menu-frame')) {
-                console.log('Google Translate widget loaded');
-                
+            if (mutation.type === 'childList' && document.querySelector('.goog-te-menu-frame')) {                
                 // Apply custom styling to Google Translate elements
                 styleGoogleTranslate();
-                
                 // Stop observing once loaded
                 translateObserver.disconnect();
             }

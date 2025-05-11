@@ -131,7 +131,6 @@ async function connectWallet() {
         showNotification('success', 'הארנק חובר בהצלחה!');
             
     } catch (error) {
-        console.error('Error connecting to wallet:', error);
         showNotification('error', 'חיבור הארנק נכשל: ' + error.message);
         
         // איפוס הכפתור

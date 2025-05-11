@@ -2,8 +2,7 @@ from flask import Blueprint, render_template, jsonify, request
 from .. import mongo
 from ..models.project import Project
 from ..services.email_service import send_contact_form_email, send_newsletter_subscription_email
-
-
+from datetime import datetime
 
 main_bp = Blueprint('main', __name__)
 
@@ -44,9 +43,6 @@ def contact():
     
     return render_template('sections/contact.html')
 
-
-
-
 @main_bp.route('/map')
 def map():
     """Render the map page"""
@@ -56,7 +52,6 @@ def map():
 def get_public_approved_projects():
     """Return approved projects for public view"""
     approved_projects = Project.get_approved_projects(mongo)
-    # אם אין פרויקטים - נוסיף פרויקטים לדוגמה
 
     # המרת ObjectID למחרוזות
     for project in approved_projects:
@@ -65,7 +60,6 @@ def get_public_approved_projects():
         'status': 'success',
         'projects': approved_projects
     })
-
 
 @main_bp.errorhandler(404)
 def page_not_found(e):
@@ -77,37 +71,21 @@ def internal_server_error(e):
     """Handle 500 errors"""
     return jsonify({"error": "Internal server error"}), 500
 
-
-
-from datetime import datetime
-
-
 @main_bp.route('/subscribe-newsletter', methods=['POST'])
 def subscribe_newsletter():
     """Handle newsletter subscription"""
     try:
         data = request.get_json()
-        
-        # בדיקת תקינות הנתונים
         if not data or not data.get('email'):
             return jsonify({'success': False, 'message': 'Email address is required'}), 400
-            
         email = data.get('email')
-        
-        # בדיקה פשוטה של תקינות המייל (אפשר להרחיב)
         if '@' not in email or '.' not in email:
             return jsonify({'success': False, 'message': 'Invalid email address'}), 400
-        
-        # אפשר להוסיף כאן קוד לשמירת המייל במסד נתונים
-        # לדוגמה:
         mongo.db.newsletter_subscribers.insert_one({
            'email': email,
            'subscribed_at': datetime.utcnow()
         })
-        
-        # שליחת אימייל אישור
-        send_newsletter_subscription_email(email)
-        
+        send_newsletter_subscription_email(email)        
         return jsonify({'success': True, 'message': 'Subscription successful!'}), 200
         
     except Exception as e:

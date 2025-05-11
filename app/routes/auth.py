@@ -2,8 +2,6 @@ from flask import Blueprint, request, jsonify, session
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, timedelta
 import jwt
-import requests
-from bson.objectid import ObjectId
 from .. import mongo
 from ..config import Config
 from ..utils.decorators import token_required

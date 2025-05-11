@@ -14,7 +14,6 @@ class Project:
     @classmethod
     def create(cls, mongo, project_data):
         """Create a new project in pending status"""
-                # המרה של נתוני מיקום למספרים
         try:
             location_lat = float(project_data.get('location_lat', 0))
         except (ValueError, TypeError):
@@ -35,10 +34,10 @@ class Project:
             'contact_phone': project_data.get('contact_phone'),
             'organization': project_data.get('organization', ''),
             'proof_documents': project_data.get('proof_documents', []),
-            'project_image': project_data.get('project_image', ''),  # הוספת שדה תמונת פרויקט
+            'project_image': project_data.get('project_image', ''),  
             'ethereum_address': project_data.get('ethereum_address', ''),
-            'location_lat': location_lat,   # כאן שמנו את הערך המספרי
-            'location_lng': location_lng,   # כאן שמנו את הערך המספרי
+            'location_lat': location_lat,
+            'location_lng': location_lng,
             'location_name': project_data.get('location_name', ''),
             'status': cls.STATUS_PENDING,
             'status_notes': '',
@@ -48,7 +47,6 @@ class Project:
             'rejected_at': None,
             'admin_id': None
         }
-    
         result = mongo.db.projects.insert_one(project)
         project['_id'] = result.inserted_id
         return project

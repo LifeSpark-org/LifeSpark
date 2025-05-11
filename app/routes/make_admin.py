@@ -1,6 +1,3 @@
-# make_admin.py
-# Run this script to make a user an admin
-
 from pymongo import MongoClient
 import sys
 

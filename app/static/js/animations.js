@@ -1,6 +1,5 @@
 // Enhanced animations and interactive effects
 document.addEventListener('DOMContentLoaded', function() {
-    console.log("animations.js loaded");
     // Initialize scrolling animations
     initScrollAnimations();
     

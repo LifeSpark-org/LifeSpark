@@ -70,7 +70,6 @@ function initProjectWalletConnection() {
                 }
                 
             } catch (error) {
-                console.error('Error connecting wallet:', error);
                 showNotification('error', 'חיבור הארנק נכשל: ' + error.message);
                 
                 // החזרת הכפתור למצב הרגיל

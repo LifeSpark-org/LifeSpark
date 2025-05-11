@@ -23,12 +23,10 @@ document.addEventListener('DOMContentLoaded', function() {
     
     if (approveBtn) {
         approveBtn.addEventListener('click', approveProject);
-        console.log("Set up approve button event listener");
     }
     
     if (rejectBtn) {
         rejectBtn.addEventListener('click', rejectProject);
-        console.log("Set up reject button event listener");
     }
     
     // Tab switching functionality
@@ -92,9 +90,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // Initialize admin projects
-function initAdminProjects() {
-    console.log("Initializing admin projects interface");
-    
+function initAdminProjects() {    
     // Set up event listeners for the approve and reject buttons again
     // This redundancy helps ensure the buttons always work
     const approveProjectBtn = document.getElementById('approveProjectBtn');
@@ -513,7 +509,6 @@ async function loadRejectedProjects() {
                 });
             });
             
-            console.log("Loaded rejected projects successfully");
         } else {
             throw new Error(result.message || 'Failed to load rejected projects');
         }
@@ -531,7 +526,6 @@ async function loadRejectedProjects() {
 
 // Open project review modal
 async function openProjectReviewModal(projectId) {
-    console.log("Opening review modal for project:", projectId);
     const reviewModal = document.getElementById('projectReviewModal');
     const reviewContent = document.getElementById('projectReviewContent');
     
@@ -725,7 +719,6 @@ function viewProjectDetails(projectId) {
 }
 
 async function approveProject() {
-    console.log("Approve project function called");
     const modal = document.getElementById('projectReviewModal');
     const projectId = modal.getAttribute('data-project-id');
     const notes = document.getElementById('adminNotes').value;
@@ -733,10 +726,7 @@ async function approveProject() {
     if (!projectId) {
         console.error("No project ID found in modal");
         return;
-    }
-    
-    console.log("Approving project ID:", projectId);
-    
+    }    
     // Disable buttons to prevent double-submit
     const approveBtn = document.getElementById('approveProjectBtn');
     const rejectBtn = document.getElementById('rejectProjectBtn');
@@ -749,10 +739,7 @@ async function approveProject() {
         
         if (!token) {
             throw new Error('Authentication required');
-        }
-        
-        console.log("Sending approval request to server");
-        
+        }        
         // Send approve request
         const response = await fetch(`/admin/projects/${projectId}/approve`, {
             method: 'POST',
@@ -762,11 +749,7 @@ async function approveProject() {
             },
             body: JSON.stringify({ notes })
         });
-        
-        console.log("Server response status:", response.status);
-        const result = await response.json();
-        console.log("Server response:", result);
-        
+        const result = await response.json();        
         if (response.ok) {
             // Show success notification
             showNotification('success', result.message || 'Project approved successfully');
@@ -799,7 +782,6 @@ async function approveProject() {
 
 // Reject project
 async function rejectProject() {
-    console.log("Reject project function called");
     const modal = document.getElementById('projectReviewModal');
     const projectId = modal.getAttribute('data-project-id');
     const notes = document.getElementById('adminNotes').value;
@@ -828,10 +810,7 @@ async function rejectProject() {
         
         if (!token) {
             throw new Error('Authentication required');
-        }
-        
-        console.log("Sending rejection request to server");
-        
+        }        
         // Send reject request
         const response = await fetch(`/admin/projects/${projectId}/reject`, {
             method: 'POST',
@@ -841,11 +820,7 @@ async function rejectProject() {
             },
             body: JSON.stringify({ notes })
         });
-        
-        console.log("Server response status:", response.status);
-        const result = await response.json();
-        console.log("Server response:", result);
-        
+        const result = await response.json();        
         if (response.ok) {
             // Show success notification
             showNotification('success', result.message || 'Project rejected successfully');

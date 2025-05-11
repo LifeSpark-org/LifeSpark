@@ -74,11 +74,7 @@ def register_project(self, project_id, beneficiary, goal_amount, region):
         'nonce': nonce,
         'from': self.sender_address
     })
-    
-    # Note: In production, private key signing is needed
-    # Return the transaction so the client can sign it
     return transaction
 
-# הוספת פונקציה עוטפת
 def register_project(project_id, beneficiary, goal_amount, region):
     return blockchain_service.register_project(project_id, beneficiary, goal_amount, region)
