@@ -1,23 +1,14 @@
-// Project Donation System
-console.log("===== project-donations.js מתחיל לטעון =====");
-
 // Global variables
 let selectedProjectId = null;
 let selectedRegion = 'south'; // Default region
 let donationType = 'projects'; // Default donation type (projects or regions)
 // נקרא כשהמסמך מוכן
-document.addEventListener('DOMContentLoaded', function() {
-    console.log("✅ DOM נטען, מתחיל אתחול מערכת תרומות הפרויקט");
-    
+document.addEventListener('DOMContentLoaded', function() {    
     // בדיקת קיום אלמנטים קריטיים
     const projectsCarousel = document.getElementById('approvedProjectsCarousel');
-    console.log("🔍 אלמנט הקרוסלה קיים?", projectsCarousel ? "כן" : "לא");
-
     setTimeout(() => {
         const selectedProjectFromMap = localStorage.getItem('selectedProjectFromMap');
-        if (selectedProjectFromMap) {
-            console.log(`יש להדגיש פרויקט מהמפה: ${selectedProjectFromMap}`);
-            
+        if (selectedProjectFromMap) {            
             // ננקה את המידע הזה כדי שלא ידגיש שוב בטעינות עתידיות
             localStorage.removeItem('selectedProjectFromMap');
             
@@ -97,27 +88,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
     if (prevBtn && nextBtn) {
-        console.log("✅ כפתורי ניווט קרוסלה נמצאו ואירועים מתווספים");
         prevBtn.addEventListener('click', () => {
-            console.log("👆 לחיצה על כפתור הקודם");
             scrollCarousel('prev');
         });
         
         nextBtn.addEventListener('click', () => {
-            console.log("👆ֶֶ לחיצה על כפתור הבא");
             scrollCarousel('next');
         });
     } else {
         console.error("❌ כפתורי ניווט קרוסלה חסרים", {prevBtn, nextBtn});
     }
     
-    
-    // טעינה ראשונית של פרויקטים
-    console.log("⏳ מתחיל טעינת פרויקטים עם השהייה קצרה...");
-    
-    try {
-        console.log("🚀 מתחיל טעינת פרויקטים מאושרים");
-        
+    try {        
         // נקרא ישירות לפונקציה פנימית במקום לקרוא לפונקציה החיצונית שאולי נכשלת
         manuallyLoadProjects();
     } catch (error) {
@@ -128,10 +110,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // פונקציה ידנית לטעינת פרויקטים (פתרון עוקף)
 function manuallyLoadProjects() {
-    console.log("🔄 טעינת פרויקטים ידנית");
     const projectsCarousel = document.getElementById('approvedProjectsCarousel');
     if (!projectsCarousel) {
-        console.error("❌ מכיל קרוסלת פרויקטים לא נמצא");
         return;
     }
     // הצג מסך טעינה
@@ -143,7 +123,6 @@ function manuallyLoadProjects() {
     `;
     
     // נסה כל אחד מהנתיבים בנפרד ובצורה מבוקרת
-    console.log("🔎 מתחיל לבדוק נתיבי API שונים");
     fetch('/projects/approved')
         .then(response => {
             console.log("📊 תשובה מ-/projects/approved:", {
@@ -157,8 +136,6 @@ function manuallyLoadProjects() {
             return response.json();
         })
         .then(data => {
-            console.log("✅ נתונים התקבלו:", data);
-            console.log("✅ נתונים התקבלו:", data.projects[0]);
             if (data && data.projects && Array.isArray(data.projects)) {
                 if (data.projects.length > 0) {
                     renderProjects(data.projects, projectsCarousel);
@@ -177,13 +154,11 @@ function manuallyLoadProjects() {
             showNoProjectsMessage();
         })
         .catch(error => {
-            console.error("❌ שגיאה בקריאה לנתיב הראשי:", error);
             showNoProjectsMessage();
         });
 }
 
 function showNoProjectsMessage() {
-    console.log("⚠️ אין פרויקטים להצגה");
     const projectsCarousel = document.getElementById('approvedProjectsCarousel');
     
     if (!projectsCarousel) return;
@@ -200,14 +175,10 @@ function showNoProjectsMessage() {
     `;
 }
 
-function renderProjects(projects, container) {
-    console.log("🎨 מציג פרויקטים בקרוסלה, מספר פרויקטים:", projects.length);
-    
+function renderProjects(projects, container) {    
     try {
         container.innerHTML = '';
         projects.forEach((project, index) => {
-            console.log(`🏗️ מייצר תצוגת פרויקט ${index + 1}`);
-            console.log("project project project", project)
             // בדיקת מזהה
             if (!project._id) {
                 console.warn(`⚠️ פרויקט ללא מזהה, משתמש במזהה זמני`, project);
@@ -280,9 +251,7 @@ function renderProjects(projects, container) {
             `;
         }
         
-        console.log("✅ הצגת פרויקטים הושלמה בהצלחה");
     } catch (error) {
-        console.error("❌ שגיאה בהצגת פרויקטים:", error);
         container.innerHTML = `
             <div class="empty-projects">
                 <p>Error displaying projects: ${error.message}</p>
@@ -292,11 +261,9 @@ function renderProjects(projects, container) {
 }
 // Set up project selection
 function setupProjectSelection() {
-    console.log("🔄 מגדיר בחירת פרויקטים");
     // Add click event to project cards
     const projectSlides = document.querySelectorAll('.project-slide');
     projectSlides.forEach((slide, index) => {
-        console.log(`📌 מגדיר אירועי בחירה לפרויקט ${index + 1}`);
         
         // חשוב מאוד: הוסף מאזין אירוע לכפתור בחירה
         const selectBtn = slide.querySelector('.project-select-btn');
@@ -312,9 +279,7 @@ function setupProjectSelection() {
 
 
 // Function to select a project
-function selectProject(projectId, projectTitle, projectRegion) {
-    console.log(`🎯 בחירת פרויקט: ID=${projectId}, כותרת=${projectTitle}, אזור=${projectRegion}`);
-    
+function selectProject(projectId, projectTitle, projectRegion) {    
     // Update global variables
     selectedProjectId = projectId;
     selectedRegion = projectRegion;
@@ -345,10 +310,8 @@ function selectProject(projectId, projectTitle, projectRegion) {
 
 // Function to scroll the carousel
 function scrollCarousel(direction) {
-    console.log(`🔄 גלילת קרוסלה: ${direction}`);
     const carousel = document.getElementById('approvedProjectsCarousel');
     if (!carousel) {
-        console.error("❌ אלמנט קרוסלה לא נמצא");
         return;
     }
     

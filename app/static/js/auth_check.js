@@ -237,7 +237,6 @@ window.logout = async function() {
         showSection('home');
         
     } catch (error) {
-        console.error('Logout error:', error);
         showNotification('error', 'Error during logout');
     }
 };

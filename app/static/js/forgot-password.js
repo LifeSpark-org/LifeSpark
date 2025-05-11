@@ -161,7 +161,6 @@ function createForgotPasswordModal() {
                 }
             } catch (error) {
                 showNotification('error', 'אירעה שגיאה בתהליך איפוס הסיסמה');
-                console.error('Error requesting password reset:', error);
             } finally {
                 hideFormLoading(forgotPasswordForm);
             }
@@ -226,7 +225,6 @@ function createForgotPasswordModal() {
                 }
             } catch (error) {
                 showNotification('error', 'אירעה שגיאה בתהליך עדכון הסיסמה');
-                console.error('Error resetting password:', error);
             } finally {
                 hideFormLoading(resetPasswordForm);
             }

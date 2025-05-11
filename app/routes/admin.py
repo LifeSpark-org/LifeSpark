@@ -1,9 +1,5 @@
-from flask import Blueprint, request, jsonify
-from bson.objectid import ObjectId
-
-from .. import mongo
-from ..utils.decorators import token_required, admin_required
-from ..models.project import Project
+from flask import Blueprint, jsonify
+from ..utils.decorators import token_required
 
 admin_bp = Blueprint('admin', __name__)
 

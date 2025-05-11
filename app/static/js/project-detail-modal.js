@@ -9,10 +9,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function initProjectDetailModal() {
     if (window.projectModalInitialized) {
-        console.log("מודאל פרטי פרויקט כבר אותחל, מדלג על אתחול נוסף");
         return;
     }
-    console.log("מאתחל מערכת תצוגת פרטי פרויקט");
     window.projectModalInitialized = true;
     
     // יוצר את המודל אם הוא לא קיים
@@ -155,8 +153,6 @@ function addProjectButtonListeners() {
 
 // מציג את פרטי הפרויקט במודל
 function showProjectDetails(project) {
-    console.log("מציג פרטי פרויקט:", project);
-
     // הוספת שדה ethereum_address אם חסר
     if (!project.ethereum_address) {
         project.ethereum_address = '';
@@ -399,7 +395,6 @@ async function estimateGasFee(project, amount) {
         
         return gasCostInEther;
     } catch (error) {
-        console.error("שגיאה בהערכת עלות הגז:", error);
         // במקרה של שגיאה, החזר ערך ברירת מחדל
         return 0.001;
     }
@@ -457,16 +452,13 @@ async function processDonationToProject(project, amount, message) {
                 
                 if (projectDetails && projectDetails[3]) { // הערך הרביעי הוא exists
                     // אם הפרויקט רשום בחוזה, נשתמש בפונקציית donateToProject
-                    console.log('Project exists in contract, using donateToProject');
                     txHash = await contract.methods.donateToProject(projectId).send({
                         from: window.userWalletAddress,
                         value: amountInWei,
                         gas: 200000
                     });
                 } else {
-                    // אם הפרויקט לא רשום בחוזה, נבצע תרומה ישירה לכתובת הארנק של הפרויקט
-                    console.log('Project not registered in contract, sending directly to beneficiary');
-                    
+                    // אם הפרויקט לא רשום בחוזה, נבצע תרומה ישירה לכתובת הארנק של הפרויקט                    
                     txHash = await web3.eth.sendTransaction({
                         from: window.userWalletAddress,
                         to: project.ethereum_address,
@@ -557,7 +549,6 @@ async function processDonationToProject(project, amount, message) {
         }
         
     } catch (error) {
-        console.error('שגיאה בביצוע התרומה:', error);
         showNotification('error', error.message || 'שגיאה בביצוע התרומה');
         
         // מחזיר את הכפתור למצב הרגיל

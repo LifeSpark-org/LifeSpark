@@ -83,7 +83,6 @@ function initLocationFeatures() {
                             }
                         })
                         .catch(error => {
-                            console.error('Error geocoding address:', error);
                             showNotification('error', 'שגיאה בחיפוש הכתובת. נסה שוב.');
                         });
                 }
@@ -121,7 +120,6 @@ function initLocationFeatures() {
                         }
                     })
                     .catch(error => {
-                        console.error('Error geocoding address:', error);
                         showNotification('error', 'שגיאה בחיפוש הכתובת. נסה שוב.');
                     });
             }

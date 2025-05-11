@@ -95,7 +95,6 @@ async function logout() {
         showSection('home');
         
     } catch (error) {
-        console.error('Logout error:', error);
         showNotification('error', 'Error during logout');
     }
 }
@@ -126,9 +125,7 @@ async function checkAuthState() {
                 localStorage.removeItem('userData');
                 updateAuthMenu();
             }
-        } catch (error) {
-            console.error('Auth check error:', error);
-            
+        } catch (error) {            
             // If offline, try to use cached user data
             const cachedUserData = localStorage.getItem('userData');
             if (cachedUserData) {
@@ -559,9 +556,7 @@ registerForm?.addEventListener('submit', async (event) => {
                     }
                 }
             }
-        } catch (error) {
-            console.error('Error during login:', error);
-        
+        } catch (error) {        
             // בודק אם כבר הוצגה הודעת שגיאה לאחרונה
             const now = new Date().getTime();
             const lastError = window._lastLoginError || 0;
@@ -634,9 +629,7 @@ registerForm?.addEventListener('submit', async (event) => {
                 // הצגת הודעת שגיאה
                 showNotification('error', result.message || 'Failed to send message. Please try again later.');
             }
-        } catch (error) {
-            console.error('Error submitting contact form:', error);
-            
+        } catch (error) {            
             // הצגת הודעת שגיאה
             const formStatus = document.getElementById('formStatus');
             if (formStatus) {
@@ -930,7 +923,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     showNotification('error', result.message || 'Failed to subscribe. Please try again.');
                 }
             } catch (error) {
-                console.error('Error subscribing to newsletter:', error);
                 showNotification('error', 'An error occurred. Please try again later.');
             } finally {
                 // החזרת הכפתור למצבו הרגיל

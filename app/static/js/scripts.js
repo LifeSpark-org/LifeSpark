@@ -15,7 +15,6 @@ window.onload = () => {
             `;
         }
     } else {
-        console.log("האלמנט userMenu לא נמצא בדף");
     }
 
     showSection("home");
@@ -37,7 +36,6 @@ async function fetchConversionRate(currency) {
 const convertButton = document.getElementById("convertButton");
 if (convertButton) {
     convertButton.addEventListener("click", async () => {
-        console.log("Convert button clicked");
         const ethAmount = parseFloat(document.getElementById("ethInput").value);
         const selectedCurrency = document.getElementById("currencySelect").value;
         

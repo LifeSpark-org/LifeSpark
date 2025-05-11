@@ -1,10 +1,8 @@
-from flask import Blueprint, request, jsonify, render_template, redirect, url_for, current_app
-from bson.objectid import ObjectId
+from flask import Blueprint, request, jsonify, current_app
 from datetime import datetime
 import os
 import uuid
 from werkzeug.utils import secure_filename
-
 from .. import mongo
 from ..utils.decorators import token_required, admin_required
 from ..models.project import Project
@@ -12,7 +10,6 @@ from ..services.email_service import send_donation_confirmation_email, send_dona
 
 
 projects_bp = Blueprint('projects', __name__)
-
 # Allowed file extensions for proof documents
 ALLOWED_EXTENSIONS = {'pdf', 'png', 'jpg', 'jpeg', 'doc', 'docx'}
 
@@ -26,7 +23,6 @@ def allowed_file(filename, image=False):
         # רשימת סוגי קבצים מותרים למסמכים
         ALLOWED_EXTENSIONS = {'pdf', 'png', 'jpg', 'jpeg', 'doc', 'docx'}
         return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
 
 def save_uploaded_file(file, folder='documents'):
     """Save an uploaded file and return its path"""
@@ -55,7 +51,7 @@ def save_uploaded_file(file, folder='documents'):
     except Exception as e:
         print(f"Error saving file: {e}")
         return None
-    
+
     # החזרת נתיב הקובץ היחסי
     return f"/static/uploads/{folder}/{unique_filename}"
 

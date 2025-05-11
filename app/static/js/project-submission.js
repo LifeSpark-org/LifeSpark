@@ -207,7 +207,6 @@ function initProjectSubmission() {
             const formData = new FormData();
             const locationLat = parseFloat(document.getElementById('projectLocationLat').value);
             const locationLng = parseFloat(document.getElementById('projectLocationLng').value);
-            console.log(`שולח מיקום בטופס: [${locationLat}, ${locationLng}]`);
             // הוסף את כל שדות הטופס הרגילים
             formData.append('title', title);
             formData.append('description', description);
