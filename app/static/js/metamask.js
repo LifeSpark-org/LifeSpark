@@ -1,7 +1,7 @@
 // metamask.js
 
-// הגדרות החוזה החכם - גלובליות
-// העדכון העיקרי: הכתובת החדשה תואמת את הכתובת בקובץ Config.py
+// Smart contract settings - global
+// Main update: The new address matches the address in Config.py
 window.CONTRACT_ADDRESS = "0xd9145CCE52D386f254917e481eB44e9943F39138";
 window.CONTRACT_ABI = [
     {
@@ -60,7 +60,7 @@ window.CONTRACT_ABI = [
     }
 ];
 
-// משתנה גלובלי לכתובת הארנק
+// Global variable for wallet address
 window.userWalletAddress = null;
 
 function resetConnection() {
@@ -79,16 +79,16 @@ function resetConnection() {
 function checkMetaMask() {
     if (typeof window.ethereum === 'undefined') {
         window.open('https://metamask.io/download.html', '_blank');
-        showNotification('error', 'MetaMask אינו מותקן. אנא התקן אותו כדי לתרום.');
+        showNotification('error', 'MetaMask is not installed. Please install it to donate.');
         return false;
     }
     return true;
 }
 
 async function connectWallet() {
-    // בדיקה אם המשתמש מחובר - אם לא, נציג הודעה ונעביר אותו לדף ההתחברות
+    // Check if user is logged in - if not, show message and redirect to login page
     if (!isUserLoggedIn()) {
-        showNotification('error', 'עליך להתחבר למערכת לפני חיבור ארנק');
+        showNotification('error', 'You must log in to the system before connecting a wallet');
         setTimeout(() => {
             showSection('login');
         }, 1500);
@@ -100,21 +100,21 @@ async function connectWallet() {
     }
 
     try {
-        // הצגת חיווי טעינה
+        // Show loading indicator
         const connectButton = document.getElementById('connectWallet');
         if (connectButton) {
             connectButton.disabled = true;
-            connectButton.innerHTML = '<div class="loader-inline"></div> מתחבר...';
+            connectButton.innerHTML = '<div class="loader-inline"></div> Connecting...';
         }
 
-        // בקשת התחברות חדשה
+        // Request new connection
         const accounts = await window.ethereum.request({ 
             method: 'eth_requestAccounts' 
         });
         
         window.userWalletAddress = accounts[0];
         
-        // עדכון ממשק המשתמש
+        // Update user interface
         const walletStatus = document.getElementById('walletStatus');
         if (walletStatus) {
             walletStatus.textContent = 'Connected: ' + window.userWalletAddress.substring(0, 6) + '...';
@@ -124,38 +124,38 @@ async function connectWallet() {
         if (connectButton) {
             connectButton.style.display = 'none';
             connectButton.disabled = false;
-            connectButton.innerHTML = '<i class="fas fa-link"></i> <span data-translate="donate-connect-wallet">התחבר לארנק</span>';
+            connectButton.innerHTML = '<i class="fas fa-link"></i> <span data-translate="donate-connect-wallet">Connect to wallet</span>';
         }
         
-        // הצגת הודעה מוצלחת
-        showNotification('success', 'הארנק חובר בהצלחה!');
+        // Show success message
+        showNotification('success', 'Wallet connected successfully!');
             
     } catch (error) {
-        showNotification('error', 'חיבור הארנק נכשל: ' + error.message);
+        showNotification('error', 'Wallet connection failed: ' + error.message);
         
-        // איפוס הכפתור
+        // Reset the button
         const connectButton = document.getElementById('connectWallet');
         if (connectButton) {
             connectButton.disabled = false;
-            connectButton.innerHTML = '<i class="fas fa-link"></i> <span data-translate="donate-connect-wallet">התחבר לארנק</span>';
+            connectButton.innerHTML = '<i class="fas fa-link"></i> <span data-translate="donate-connect-wallet">Connect to wallet</span>';
         }
         
-        // במקרה של שגיאה, נוודא שהמצב מאופס
+        // In case of error, make sure the state is reset
         resetConnection();
     }
 }
 
-// פונקציה לבדיקה האם המשתמש מחובר
+// Function to check if user is logged in
 function isUserLoggedIn() {
     return localStorage.getItem('token') !== null;
 }
 
-// האזנה לשינויים בחשבונות
+// Listen for account changes
 if (window.ethereum) {
     window.ethereum.on('accountsChanged', function (accounts) {
         if (accounts.length === 0) {
             resetConnection();
-            showNotification('info', 'הארנק נותק');
+            showNotification('info', 'Wallet disconnected');
         } else {
             window.userWalletAddress = accounts[0];
             const walletStatus = document.getElementById('walletStatus');
@@ -163,26 +163,26 @@ if (window.ethereum) {
                 walletStatus.textContent = 'Connected: ' + window.userWalletAddress.substring(0, 6) + '...';
                 walletStatus.classList.add('connected');
             }
-            showNotification('info', 'חשבון הארנק שונה');
+            showNotification('info', 'Wallet account changed');
         }
     });
     
-    // האזנה לשינוי רשת
+    // Listen for network change
     window.ethereum.on('chainChanged', function () {
-        showNotification('info', 'רשת הבלוקצ\'יין השתנתה, מרענן דף...');
-        // מקובל לרענן את הדפדפן בעת שינוי רשת
+        showNotification('info', 'Blockchain network changed, refreshing page...');
+        // It's common to refresh the browser when the network changes
         setTimeout(() => {
             window.location.reload();
         }, 1500);
     });
 }
 
-// אתחול בטעינת העמוד
+// Initialize on page load
 document.addEventListener('DOMContentLoaded', async function() {
-    // קודם כל נאפס את החיבור
+    // First reset the connection
     resetConnection();
     
-    // בדיקת חיבור קיים
+    // Check for existing connection
     if (window.ethereum) {
         try {
             const accounts = await window.ethereum.request({
@@ -190,7 +190,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             });
             
             if (accounts.length > 0) {
-                // אם יש חיבור קיים, נעדכן את הממשק
+                // If there's an existing connection, update the interface
                 window.userWalletAddress = accounts[0];
                 
                 const walletStatus = document.getElementById('walletStatus');

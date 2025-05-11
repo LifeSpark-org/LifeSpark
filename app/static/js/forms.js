@@ -152,7 +152,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeFormToggles();
     initializeFormSubmissions();
     initializePasswordStrength();
-    initializePasswordConfirmValidation(); // קריאה לפונקציה החדשה
+    initializePasswordConfirmValidation();
     initializeAccordion();
     initializeAmountSuggestions();
     initializeDonationSummary();
@@ -418,7 +418,7 @@ registerForm?.addEventListener('submit', async (event) => {
         name: document.getElementById('registerName').value,
         email: document.getElementById('registerEmail').value,
         password: document.getElementById('registerPassword').value,
-        user_type: userType,  // הוספת סוג המשתמש לנתונים הנשלחים
+        user_type: userType,
         captcha: document.getElementById('registerCaptcha').value
     };
 

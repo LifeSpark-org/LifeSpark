@@ -1,8 +1,8 @@
 // project-selection-integration.js
-// קובץ זה מוסיף את הפונקציונליות לבחירת פרויקט ומשתלב עם המערכת הקיימת
+// This file adds project selection functionality and integrates with the existing system
 
 document.addEventListener('DOMContentLoaded', function() {
-    // נוסיף את סקריפט פרטי הפרויקט אם הוא לא קיים כבר
+    // Add the project details script if it doesn't already exist
     if (!document.getElementById('project-detail-script')) {
         const script = document.createElement('script');
         script.id = 'project-detail-script';
@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.body.appendChild(script);
     }
     
-    // מחכים לטעינת החלקים הרלוונטיים בדף
+    // Wait for relevant parts of the page to load
     const waitForElements = setInterval(function() {
         const projectsCarousel = document.getElementById('approvedProjectsCarousel');
         if (projectsCarousel) {
@@ -20,57 +20,57 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 500);
 });
 
-// פונקציה לשיפור חווית המשתמש בבחירת פרויקטים
+// Function to improve user experience in project selection
 function enhanceProjectSelection() {    
-    // משפר את כרטיסיות הפרויקטים
+    // Enhance project cards
     enhanceProjectCards();
     
-    // מוסיף האזנה לטעינת פרויקטים חדשים
+    // Add listener for loading new projects
     observeProjectCarousel();
 }
 
-// משפר את כרטיסיות הפרויקטים הנוכחיות
+// Enhance current project cards
 function enhanceProjectCards() {
     const projectSlides = document.querySelectorAll('.project-slide');
     
     projectSlides.forEach(slide => {
-        // הופך את כל הכרטיסייה ללחיצה
+        // Make the entire card clickable
         makeCardClickable(slide);
         
-        // מוסיף אירוע hover לאנימציה
+        // Add hover event for animation
         addHoverEffect(slide);
     });
 }
 
-// הופך את כל הכרטיסייה ללחיצה
+// Make the entire card clickable
 function makeCardClickable(slide) {
     const card = slide.querySelector('.approved-project-card');
     if (!card) return;
     
-    // מוסיף מאזין אירועים לכל הכרטיסייה (לא רק לכפתור)
+    // Add event listener to the entire card (not just the button)
     card.addEventListener('click', function(e) {
-        // מתעלם מלחיצה על הכפתור (יש לו כבר מאזין)
+        // Ignore clicks on the button (it already has a listener)
         if (e.target.closest('.project-select-btn')) {
             return;
         }
         
-        // מדמה לחיצה על כפתור הבחירה
+        // Simulate click on the select button
         const selectButton = slide.querySelector('.project-select-btn');
         if (selectButton) {
             selectButton.click();
         }
     });
     
-    // מוסיף סמן כדי לציין שהכרטיסייה ניתנת ללחיצה
+    // Add cursor to indicate card is clickable
     card.style.cursor = 'pointer';
 }
 
-// מוסיף אפקט hover לכרטיסיות
+// Add hover effect to cards
 function addHoverEffect(slide) {
     const card = slide.querySelector('.approved-project-card');
     if (!card) return;
     
-    // מוסיף מאזיני אירועים ל-hover
+    // Add event listeners for hover
     card.addEventListener('mouseenter', function() {
         this.style.transform = 'translateY(-5px)';
         this.style.boxShadow = 'var(--box-shadow-lg)';
@@ -82,22 +82,22 @@ function addHoverEffect(slide) {
     });
 }
 
-// מאזין לשינויים בקרוסלת הפרויקטים
+// Listen for changes in projects carousel
 function observeProjectCarousel() {
     const carousel = document.getElementById('approvedProjectsCarousel');
     if (!carousel) return;
     
-    // יוצר צופה מוטציות
+    // Create mutation observer
     const observer = new MutationObserver(function(mutations) {
         mutations.forEach(function(mutation) {
             if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
-                // כאשר פרויקטים חדשים נוספים, משפר אותם
+                // When new projects are added, enhance them
                 enhanceProjectCards();
             }
         });
     });
     
-    // מתחיל לצפות בשינויים
+    // Start observing changes
     observer.observe(carousel, {
         childList: true,
         subtree: true

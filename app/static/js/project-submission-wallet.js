@@ -1,15 +1,15 @@
-// חיבור MetaMask בטופס הגשת פרויקט
+// MetaMask connection in project submission form
 
-// דגל לניהול הודעות הצלחה
+// Flag for managing success messages
 let walletConnectSuccessShown = false;
 
 document.addEventListener('DOMContentLoaded', function() {
-    // בדיקה אם אנחנו בדף הגשת פרויקט
+    // Check if we're on the project submission page
     if (document.getElementById('submit-project')) {
         initProjectWalletConnection();
     }
     
-    // מאזין לשינוי סקשיינים
+    // Listen for section changes
     document.addEventListener('sectionChanged', function(e) {
         if (e.detail && e.detail.sectionId === 'submit-project') {
             initProjectWalletConnection();
@@ -22,75 +22,75 @@ function initProjectWalletConnection() {
     const ethereumAddressInput = document.getElementById('ethereumAddress');
     
     if (connectWalletBtn && ethereumAddressInput) {
-        // בדיקה אם יש כבר חיבור קיים
+        // Check if there's already an existing connection
         if (window.ethereum && window.userWalletAddress) {
             ethereumAddressInput.value = window.userWalletAddress;
             
-            // עדכון טקסט הכפתור כשיש כבר חיבור
+            // Update button text when there's already a connection
             updateButtonToConnected(connectWalletBtn, window.userWalletAddress);
         }
         
-        // מאזין לכפתור חיבור ארנק
+        // Listener for wallet connection button
         connectWalletBtn.addEventListener('click', async function() {
             try {
-                // בדיקה אם MetaMask מותקן
+                // Check if MetaMask is installed
                 if (typeof window.ethereum === 'undefined') {
                     window.open('https://metamask.io/download.html', '_blank');
-                    showNotification('error', 'MetaMask אינו מותקן. אנא התקן אותו תחילה.');
+                    showNotification('error', 'MetaMask is not installed. Please install it first.');
                     return;
                 }
                 
-                // איפוס הדגל בתחילת החיבור
+                // Reset flag at start of connection
                 walletConnectSuccessShown = false;
                 
-                // הצגת מצב טעינה
+                // Show loading state
                 this.disabled = true;
-                this.innerHTML = '<div class="loader-inline"></div> מתחבר...';
+                this.innerHTML = '<div class="loader-inline"></div> Connecting...';
                 
-                // בקשת חיבור לחשבונות
+                // Request connection to accounts
                 const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
                 
                 if (accounts.length > 0) {
-                    // שמירת הכתובת בשדה הטופס
+                    // Save address in form field
                     ethereumAddressInput.value = accounts[0];
                     window.userWalletAddress = accounts[0];
                     
-                    // הצגת הודעת הצלחה רק אם הדגל לא הוגדר
+                    // Show success message only if flag not set
                     if (!walletConnectSuccessShown) {
-                        showNotification('success', 'הארנק חובר בהצלחה!');
+                        showNotification('success', 'Wallet connected successfully!');
                         walletConnectSuccessShown = true;
                     }
                     
-                    // עדכון טקסט הכפתור לאחר חיבור מוצלח
+                    // Update button text after successful connection
                     updateButtonToConnected(this, accounts[0]);
                 } else {
-                    // אם אין חשבונות, החזרת הכפתור למצב הרגיל
+                    // If no accounts, restore button to normal state
                     this.disabled = false;
                     this.innerHTML = '<i class="fas fa-link"></i> <span data-translate="connect-wallet">Connect MetaMask</span>';
                 }
                 
             } catch (error) {
-                showNotification('error', 'חיבור הארנק נכשל: ' + error.message);
+                showNotification('error', 'Wallet connection failed: ' + error.message);
                 
-                // החזרת הכפתור למצב הרגיל
+                // Restore button to normal state
                 this.disabled = false;
                 this.innerHTML = '<i class="fas fa-link"></i> <span data-translate="connect-wallet">Connect MetaMask</span>';
             }
         });
         
-        // מאזין לשינויי חשבון ב-MetaMask
+        // Listen for account changes in MetaMask
         if (window.ethereum) {
             window.ethereum.on('accountsChanged', function (accounts) {
                 if (accounts.length > 0 && ethereumAddressInput) {
                     ethereumAddressInput.value = accounts[0];
                     window.userWalletAddress = accounts[0];
                     
-                    // עדכון טקסט הכפתור בעת שינוי חשבון
+                    // Update button text when account changes
                     if (connectWalletBtn) {
                         updateButtonToConnected(connectWalletBtn, accounts[0]);
                     }
                 } else {
-                    // אם התנתק, החזר את הכפתור למצב הרגיל
+                    // If disconnected, restore button to normal state
                     if (connectWalletBtn) {
                         connectWalletBtn.disabled = false;
                         connectWalletBtn.innerHTML = '<i class="fas fa-link"></i> <span data-translate="connect-wallet">Connect MetaMask</span>';
@@ -100,16 +100,16 @@ function initProjectWalletConnection() {
         }
     }
 }
-// פונקציה חדשה לעדכון טקסט הכפתור כשמתחבר
+// New function to update button text when connected
 function updateButtonToConnected(button, walletAddress) {
     if (!button) return;
     
     button.disabled = false;
     
-    // מציג כפתור עם קיצור הכתובת
+    // Display button with shortened address
     const shortAddress = walletAddress.substring(0, 6) + '...' + walletAddress.substring(walletAddress.length - 4);
     button.innerHTML = '<i class="fas fa-check-circle"></i> <span>wallet connected</span>';
     
-    // מוסיף סגנון לכפתור מחובר
+    // Add style to connected button
     button.classList.add('wallet-connected');
 }
