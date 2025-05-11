@@ -40,10 +40,10 @@
         <!-- Auth Check Message -->
         <div id="donationAuthCheck" class="auth-message-container" style="display: none;">
             <div class="auth-message">
-                <h3 data-translate="donate-auth-required">התחברות נדרשת</h3>
-                <p data-translate="donate-auth-message">עליך להתחבר למערכת כדי לבצע תרומה</p>
+                <h3 data-translate="donate-auth-required">Login Required</h3>
+                <p data-translate="donate-auth-message">You must be logged in to make a donation</p>
                 <button type="button" onclick="showSection('login')" class="btn btn-primary">
-                    <i class="fas fa-sign-in-alt"></i> <span data-translate="donate-auth-login">התחבר עכשיו</span>
+                    <i class="fas fa-sign-in-alt"></i> <span data-translate="donate-auth-login">Login Now</span>
                 </button>
             </div>
         </div>
@@ -142,21 +142,21 @@
             </div>
         </div>
     </div>
-    <!-- הוסף בסוף החלק של #donate -->
+    <!-- Add at the end of the #donate section -->
     <div id="projectDetailModal" class="modal project-detail-modal" style="display: none;">
         <div class="modal-content modal-lg">
             <div class="modal-header">
-                <h3 id="projectDetailTitle">פרטי הפרויקט</h3>
+                <h3 id="projectDetailTitle">Project Details</h3>
                 <button class="close-button">&times;</button>
             </div>
             <div class="modal-body">
                 <div class="project-detail-container">
                     <div class="project-detail-content">
-                        <!-- מידע על הפרויקט יוצג כאן -->
+                        <!-- Project information will be displayed here -->
                         <div id="projectDetailInfo"></div>
                     </div>
                     <div class="project-detail-sidebar">
-                        <!-- טופס התרומה יוצג כאן -->
+                        <!-- Donation form will be displayed here -->
                         <div id="projectDonationForm"></div>
                     </div>
                 </div>

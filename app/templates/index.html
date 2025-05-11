@@ -224,15 +224,11 @@
             window.projectModalInitialized = false;
 
             // בדיקה ואתחול של הפונקציות החיוניות
-            const waitForScriptsToLoad = function() {
-                console.log("בודק אם כל הסקריפטים הנטענים זמינים...");
-                
+            const waitForScriptsToLoad = function() {                
                 // בדיקה אם כל הפונקציות החיוניות קיימות
                 const allFunctionsExist = typeof initProjectDetailModal === 'function';
                 
-                if (allFunctionsExist) {
-                    console.log("כל הפונקציות זמינות, מאתחל אותן כעת.");
-                    
+                if (allFunctionsExist) {                    
                     // אתחול פונקציות מהפרויקט - אם לא אותחל קודם
                     if (typeof initProjectDetailModal === 'function' && !window.projectModalInitialized) {
                         initProjectDetailModal();
@@ -262,18 +258,16 @@
                     attempts++;
                     
                     if (waitForScriptsToLoad() || attempts >= maxAttempts) {
-                        clearInterval(checkInterval);
-                        console.log("פונקציות אותחלו אחרי", attempts * 200, "מילישניות");
-                        
+                        clearInterval(checkInterval);                        
                         // אם הגענו למספר הניסיונות המקסימלי, ננסה להפעיל שוב
                         if (attempts >= maxAttempts) {
-                            console.warn("זמן ההמתנה למקסימום ניסיונות הסתיים. מנסה להפעיל בכל זאת.");
+                            console.warn("Wait time for maximum attempts has expired. Trying to activate anyway.");
                             if (typeof initProjectDetailModal === 'function' && !window.projectModalInitialized) {
                                 try {
                                     initProjectDetailModal();
                                     window.projectModalInitialized = true;
                                 } catch (err) {
-                                    console.error("שגיאה באתחול מודאל פרטי פרויקט:", err);
+                                    console.error("Error initializing project details modal:", err);
                                 }
                             }
                         }
@@ -288,11 +282,10 @@
                     // בדיקה אם המודאל כבר אותחל
                     if (!window.projectModalInitialized && typeof initProjectDetailModal === 'function') {
                         try {
-                            console.log("מאתחל מודאל פרטי פרויקט בעקבות לחיצה על תפריט התרומה");
                             initProjectDetailModal();
                             window.projectModalInitialized = true;
                         } catch (err) {
-                            console.error("שגיאה באתחול מודאל פרטי פרויקט בעת לחיצה על תפריט:", err);
+                            console.error("Error initializing project details modal when clicking on menu:", err);
                         }
                     }
                 }
@@ -303,18 +296,17 @@
                 document.getElementById('donate').classList.contains('active')) {
                 if (!window.projectModalInitialized && typeof initProjectDetailModal === 'function') {
                     try {
-                        console.log("מאתחל מודאל פרטי פרויקט בטעינה ישירה לעמוד התרומה");
                         initProjectDetailModal();
                         window.projectModalInitialized = true;
                     } catch (err) {
-                        console.error("שגיאה באתחול מודאל פרטי פרויקט בטעינה ישירה:", err);
+                        console.error("Error initializing project details modal in direct loading:", err);
                     }
                 }
             }
             
             // הגדרת טיפול בשגיאות לאבחון
             window.addEventListener('error', function(e) {
-                console.error("שגיאת JavaScript:", e.message, "בקובץ:", e.filename, "שורה:", e.lineno);
+                console.error("JavaScript Error:", e.message, "in file:", e.filename, "line:", e.lineno);
             });
         });
     </script>
@@ -376,9 +368,9 @@
 
     <!-- בדיקה לזיהוי שגיאות -->
     <script>
-    window.addEventListener('error', function(e) {
-        console.error('שגיאת JavaScript:', e.message, 'בקובץ:', e.filename, 'שורה:', e.lineno);
-    });
+        window.addEventListener('error', function(e) {
+            console.error('JavaScript Error:', e.message, 'in file:', e.filename, 'line:', e.lineno);
+        });
     </script>
     <script src="/static/js/project-submission-wallet.js"></script>
     <script src="{{ url_for('static', filename='js/blockchain-game.js') }}"></script>
