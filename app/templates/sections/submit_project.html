@@ -65,15 +65,15 @@
                     </div>
                     
                     <div class="form-group">
-                        <label data-translate="project-location-coordinates">מיקום הפרויקט:</label>
+                        <label data-translate="project-location-coordinates">Project Location:</label>
                         <div class="location-input-group">
                             <!-- Add this new div for address search at the top -->
                             <div class="location-search">
-                                <label for="addressSearch" data-translate="project-location-search">חיפוש כתובת:</label>
+                                <label for="addressSearch" data-translate="project-location-search">Address Search:</label>
                                 <div class="input-row">
-                                    <input type="text" id="addressSearch" name="address_search" placeholder="הזן עיר וכתובת (לדוגמה: שדרות, רחוב אלון 5)">
+                                    <input type="text" id="addressSearch" name="address_search" placeholder="Enter city and address (for example: Sderot, Alon Street 5)">
                                     <button type="button" id="searchAddressBtn" class="btn btn-sm btn-outline">
-                                        <i class="fas fa-search"></i> <span data-translate="search-address">חפש</span>
+                                        <i class="fas fa-search"></i> <span data-translate="search-address">Search</span>
                                     </button>
                                 </div>
                             </div>
@@ -81,7 +81,7 @@
                             <div class="location-help">
                                 <p class="location-warning">
                                     <i class="fas fa-exclamation-triangle"></i> 
-                                    <strong>חשוב:</strong> יש מספר דרכים לבחור את מיקום הפרויקט:
+                                    <strong>Important:</strong> There are several ways to choose the project location:
                                 </p>
                                 <ul class="location-options">
                                     <li>Search for the exact address using the search field above</li>
@@ -93,18 +93,18 @@
                                 
                             <div class="input-row">
                                 <div class="input-group half">
-                                    <label for="projectLocationLat" data-translate="project-location-lat">קו רוחב:</label>
+                                    <label for="projectLocationLat" data-translate="project-location-lat">Latitude:</label>
                                     <input type="number" id="projectLocationLat" name="location_lat" step="0.000001" required>
                                 </div>
                                 <div class="input-group half">
-                                    <label for="projectLocationLng" data-translate="project-location-lng">קו אורך:</label>
+                                    <label for="projectLocationLng" data-translate="project-location-lng">Longitude:</label>
                                     <input type="number" id="projectLocationLng" name="location_lng" step="0.000001" required>
                                 </div>
                             </div>
                                 
                             <div class="location-buttons">
                                 <button type="button" id="getCurrentLocation" class="btn btn-sm btn-outline">
-                                    <i class="fas fa-map-marker-alt"></i> <span data-translate="get-current-location">מיקום נוכחי</span>
+                                    <i class="fas fa-map-marker-alt"></i> <span data-translate="get-current-location">Current Location</span>
                                 </button>
                             </div>
                         </div>
