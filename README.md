@@ -81,15 +81,6 @@ function donate(string memory region) public payable {
     require(msg.value > 0, "Donation must be greater than 0");
     balances[region] += msg.value;
 }
-
-// Direct project donations
-function donateToProject(string memory projectId) public payable {
-    require(projects[projectId].exists, "Project does not exist");
-    projects[projectId].currentAmount += msg.value;
-    // Transfer directly to project beneficiary
-    (bool sent, ) = projects[projectId].beneficiary.call{value: msg.value}("");
-    require(sent, "Failed to send Ether");
-}
 ```
 
 ## Project Structure
