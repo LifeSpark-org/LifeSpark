@@ -1,8 +1,7 @@
 # LifeSpark
 ## Development of a Blockchain-Based Donation System Using Digital Currencies to Support Iron Swords War Victims
 
-![LifeSpark Animation](.app/static/Images/original-31b2ae6e1d4bbe7d11c1e0a41e93f85e.gif)
-
+![Image](https://github.com/user-attachments/assets/b830093e-2866-457b-b9ca-35e363b8fdb0)
 ### Final Year Project 2025
 **Ben-Gurion University of the Negev**  
 **Faculty of Engineering Sciences**  
