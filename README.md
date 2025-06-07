@@ -11,9 +11,9 @@
 **Faculty of Engineering Sciences**  
 **Department of Software and Information Systems Engineering**
 
-**Developers:** Omer Sabag & Avital Gelper  
+**Developers:** Omer Sabag & Avital Galper  
 **Academic Year:** 2025
-
+ 
 ---
 
 ## Overview
