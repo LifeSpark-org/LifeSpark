@@ -1,7 +1,7 @@
 # LifeSpark
 ## Development of a Blockchain-Based Donation System Using Digital Currencies to Support Iron Swords War Victims
 
-![LifeSpark Animation](app\static\Images\original-31b2ae6e1d4bbe7d11c1e0a41e93f85e.gif)
+![LifeSpark Animation](.app/static/Images/original-31b2ae6e1d4bbe7d11c1e0a41e93f85e.gif)
 
 ### Final Year Project 2025
 **Ben-Gurion University of the Negev**  
@@ -9,7 +9,7 @@
 **Department of Software and Information Systems Engineering**
 
 **Developers:** Omer Sabag & Avital Gelper  
-**Academic Year:** 2024-2025
+**Academic Year:** 2025
 
 ---
 
