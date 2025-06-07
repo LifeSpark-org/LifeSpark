@@ -3,7 +3,10 @@
 
 <div align="center">
   <img src="https://github.com/user-attachments/assets/b830093e-2866-457b-b9ca-35e363b8fdb0" alt="LifeSpark Animation" width="400">
-</div>### Final Year Project 2025
+</div>
+
+
+### Final Year Project 2025
 **Ben-Gurion University of the Negev**  
 **Faculty of Engineering Sciences**  
 **Department of Software and Information Systems Engineering**
