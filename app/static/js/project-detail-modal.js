@@ -498,8 +498,12 @@ async function processDonationToProject(project, amount, message) {
                 }
                 
                 // Display success message
+                const txId = txHash.transactionHash || txHash;
                 showNotification('success', 
-                    `Donation completed successfully! ${txHash.transactionHash ? `Transaction: ${txHash.transactionHash.substring(0, 10)}...` : ''}`
+                    `Donation completed successfully! Transaction: ${txId.substring(0, 10)}... 
+                    <a href="#" onclick="alert('Transaction Hash:\\n${txId}\\n\\nThis transaction was executed on your local Ganache network.\\nYou can view full details in Ganache GUI or console.'); return false;" style="color: #fff; text-decoration: underline; margin-left: 10px;">
+                        <i class="fas fa-info-circle"></i> View Full Hash
+                    </a>`
                 );
                 
             } catch (contractError) {
