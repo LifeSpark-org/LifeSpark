@@ -58,7 +58,7 @@ lifeSpark provides:
 ### For Donors
 - Connect crypto wallet (MetaMask)
 - Browse approved projects on interactive map
-- Donate to specific projects or regions
+- Donate to specific projects
 - Track donation progress in real-time
 - Receive blockchain transaction confirmations
 
