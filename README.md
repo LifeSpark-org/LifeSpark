@@ -70,7 +70,6 @@ lifeSpark provides:
 
 ### For Administrators
 - Review and approve/reject project submissions
-- Monitor platform activity
 - Manage user accounts and project status
 
 ## Smart Contract Features
